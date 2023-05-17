@@ -1,0 +1,10 @@
+prefix = @CMAKE_INSTALL_PREFIX@
+libdir = ${prefix}/@CMAKE_INSTALL_FULL_LIBDIR@
+includedir = ${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+
+Name: @PROJECT_NAME@
+Description: FRICTION is a library containing routines for calculating the frictional response of contacting bodies.
+Version: @PROJECT_VERSION@
+URL: https://github.com/jchristopherson/friction
+Libs: -L${libdir} -l@PROJECT_NAME@
+Cflags: -I${includedir}
