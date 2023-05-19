@@ -46,9 +46,7 @@ module friction
     !!
     !!     ! Compute the friction force
     !!     mdl%friction_coefficient = mu
-    !!     do i = 1, npts
-    !!         F(i) = mdl%evaluate(t(i), x(i), v(i), Fnrm)
-    !!     end do
+    !!     F = (/ (mdl%evaluate(t(i), x(i), v(i), Fnrm), i = 1, npts) /)
     !!
     !!     ! Plot the resulting friction force - velocity curve
     !!     call plt%initialize()
