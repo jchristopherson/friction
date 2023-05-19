@@ -26,6 +26,7 @@ add_fortran_library(
     ${FRICTION_SOURCES}
 )
 link_library(${PROJECT_NAME} ${ferror_LIBRARY} ${ferror_INCLUDE_DIR})
+link_library(${PROJECT_NAME} ${diffeq_LIBRARY} ${diffeq_INCLUDE_DIR})
 
 # Installation
 add_subdirectory(install)
