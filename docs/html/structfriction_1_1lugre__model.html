@@ -165,8 +165,112 @@ Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Defines the Lu-Gre friction model. </p>
+<dl class="section user"><dt>Remarks</dt><dd>The Lu-Gre model is a heuristic-type model that attempts to describe friction using a bristle-type interpretation of the frictional surfaces. The bristle-type models assume that the frictional behavior is represented by an average deflection of elastic springs. These springs have their own stiffness and damping properties and act as a typical spring-damper pair under small velocities; however, once sufficient velocity occurs, the bristles slip resulting in Coulomb-like sliding behavior.</dd></dl>
+<dl class="section user"><dt>Example</dt><dd>The following example illustrates the use of the Lu-Gre model to define the behavior of a spring-restrained mass riding on a frictional belt moving at a constant velocity. The normal force is the weight of the sprung mass.</dd></dl>
+<dl class="section user"><dt></dt><dd>The system has the equation of motion \( m \frac{d^2x}{dt^2} + k x = F_{f}(t) \), where \( F_{f}(t) \) is the friction force output by the Lu-Gre model.</dd></dl>
+<div class="image">
+<img src="schematic.png" alt=""/>
+</div>
+<dl class="section user"><dt></dt><dd>This example utilizes the <a href="https://github.com/jchristopherson/diffeq">DIFFEQ</a> library to solve the differential equations using a Dormand-Prince Runge-Kutta integrator. <div class="fragment"><div class="line"><span class="keyword">module</span> model</div>
+<div class="line">    <span class="keywordtype">use </span>iso_fortran_env</div>
+<div class="line">    <span class="keywordtype">use </span><a class="code hl_namespace" href="namespacefriction.html">friction</a></div>
+<div class="line">    <span class="keywordtype">implicit none</span></div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">! Lu-Gre Friction Model</span></div>
+<div class="line">    <span class="keywordtype">type</span>(lugre_model) :: mdl</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">! Dynamic System Parameters</span></div>
+<div class="line"><span class="keywordtype">    real</span>(real64), <span class="keywordtype">parameter</span> :: m = 5.0d0</div>
+<div class="line"><span class="keywordtype">    real</span>(real64), <span class="keywordtype">parameter</span> :: k = 5.0d3</div>
+<div class="line"><span class="keywordtype">    real</span>(real64), <span class="keywordtype">parameter</span> :: g = 9.81d0</div>
+<div class="line"><span class="keywordtype">    real</span>(real64), <span class="keywordtype">parameter</span> :: v = 0.1d0</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">contains</span></div>
+<div class="line">    <span class="keyword">subroutine </span>equations(t, x, dxdt)</div>
+<div class="line">        <span class="comment">! Arguments</span></div>
+<div class="line"><span class="keywordtype">        real</span>(real64), <span class="keywordtype">intent(in)</span> :: t, x(:)</div>
+<div class="line"><span class="keywordtype">        real</span>(real64), <span class="keywordtype">intent(out)</span> :: dxdt(:)</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">! Local Variables</span></div>
+<div class="line"><span class="keywordtype">        real</span>(real64) :: vr, F, N, s(1), dsdt(1)</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">! Compute the friction model</span></div>
+<div class="line">        n = m * g       <span class="comment">! normal force</span></div>
+<div class="line">        vr = v - x(2)   <span class="comment">! relative velocity</span></div>
+<div class="line">        s(1) = x(3)</div>
+<div class="line">        <span class="keyword">call </span>mdl%state(t, 0.0d0, vr, n, s, dsdt)</div>
+<div class="line">        f = mdl%evaluate(t, 0.0d0, vr, n, s)</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">! Compute the model</span></div>
+<div class="line">        dxdt(1) = x(2)</div>
+<div class="line">        dxdt(2) = (f - k * x(1)) / m</div>
+<div class="line">        dxdt(3) = dsdt(1)</div>
+<div class="line">    <span class="keyword">end subroutine</span></div>
+<div class="line"><span class="keyword">end module</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">program</span> example</div>
+<div class="line">    <span class="keywordtype">use </span>iso_fortran_env</div>
+<div class="line">    <span class="keywordtype">use </span>diffeq</div>
+<div class="line">    <span class="keywordtype">use </span>fplot_core</div>
+<div class="line">    <span class="keywordtype">use </span>model</div>
+<div class="line">    <span class="keywordtype">implicit none</span></div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">! Local Variables</span></div>
+<div class="line">    <span class="keywordtype">type</span>(bsrk32_integrator) :: integrator</div>
+<div class="line">    <span class="keywordtype">type</span>(ode_container) :: sys</div>
+<div class="line"><span class="keywordtype">    real</span>(real64), <span class="keywordtype">allocatable</span> :: sol(:,:)</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">! Plot Variables</span></div>
+<div class="line">    <span class="keywordtype">type</span>(plot_2d) :: plt</div>
+<div class="line">    <span class="keywordtype">type</span>(plot_data_2d) :: pd</div>
+<div class="line">    <span class="keywordtype">class</span>(plot_axis), <span class="keywordtype">pointer</span> :: xAxis, yAxis, y2Axis</div>
+<div class="line">    <span class="keywordtype">class</span>(legend), <span class="keywordtype">pointer</span> :: lgnd</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">! Set up the friction model</span></div>
+<div class="line">    mdl%static_coefficient = 0.598d0</div>
+<div class="line">    mdl%coulomb_coefficient = 0.40d0</div>
+<div class="line">    mdl%stribeck_velocity = 3.5d-3</div>
+<div class="line">    mdl%stiffness = 45.089d3</div>
+<div class="line">    mdl%damping = 2.6234d3</div>
+<div class="line">    mdl%viscous_damping = 0.0d0</div>
+<div class="line">    mdl%shape_parameter = 2.0d0</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">! Set up the integrator and solve the differential equations</span></div>
+<div class="line">    sys%fcn =&gt; equations</div>
+<div class="line">    sol = integrator%solve(sys, [0.0d0, 1.0d0], [0.0d0, 0.0d0, 0.0d0])</div>
+<div class="line"> </div>
+<div class="line">    <span class="comment">! Plot the solution</span></div>
+<div class="line">    <span class="keyword">call </span>plt%initialize()</div>
+<div class="line">    <span class="keyword">call </span>plt%set_use_y2_axis(.true.)</div>
+<div class="line"> </div>
+<div class="line">    xaxis =&gt; plt%get_x_axis()</div>
+<div class="line">    yaxis =&gt; plt%get_y_axis()</div>
+<div class="line">    y2axis =&gt; plt%get_y2_axis()</div>
+<div class="line">    lgnd =&gt; plt%get_legend()</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">call </span>xaxis%set_title(<span class="stringliteral">&quot;t&quot;</span>)</div>
+<div class="line">    <span class="keyword">call </span>yaxis%set_title(<span class="stringliteral">&quot;x(t)&quot;</span>)</div>
+<div class="line">    <span class="keyword">call </span>y2axis%set_title(<span class="stringliteral">&quot;v_{drive} - v(t)&quot;</span>)</div>
+<div class="line">    <span class="keyword">call </span>lgnd%set_is_visible(.true.)</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">call </span>pd%define_data(sol(:,1), sol(:,2))</div>
+<div class="line">    <span class="keyword">call </span>pd%set_name(<span class="stringliteral">&quot;Position&quot;</span>)</div>
+<div class="line">    <span class="keyword">call </span>pd%set_line_width(2.0)</div>
+<div class="line">    <span class="keyword">call </span>plt%push(pd)</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">call </span>pd%define_data(sol(:,1), v - sol(:,3))</div>
+<div class="line">    <span class="keyword">call </span>pd%set_draw_against_y2(.true.)</div>
+<div class="line">    <span class="keyword">call </span>pd%set_name(<span class="stringliteral">&quot;Velocity&quot;</span>)</div>
+<div class="line">    <span class="keyword">call </span>plt%push(pd)</div>
+<div class="line">    <span class="keyword">call </span>plt%draw()</div>
+<div class="line"><span class="keyword">end program</span></div>
+<div class="ttc" id="anamespacefriction_html"><div class="ttname"><a href="namespacefriction.html">friction</a></div><div class="ttdoc">Provides a collection of routines for modeling frictional behaviors of contacting bodies.</div><div class="ttdef"><b>Definition:</b> <a href="friction_8f90_source.html#l00003">friction.f90:3</a></div></div>
+</div><!-- fragment --> The above program produces the following plot using the <a href="https://github.com/jchristopherson/fplot">FPLOT</a> library. <div class="image">
+<img src="lugre_example.png" alt=""/>
+</div>
+ </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00284">284</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00410">410</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
 </div><h2 class="groupheader">Member Function/Subroutine Documentation</h2>
 <a id="a4a879fea449dce4e881860c076ad1ebb" name="a4a879fea449dce4e881860c076ad1ebb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4a879fea449dce4e881860c076ad1ebb">&#9670;&#160;</a></span>evaluate()</h2>
@@ -203,7 +307,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The friction force. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00327">327</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00453">453</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
 
 </div>
 </div>
@@ -232,7 +336,7 @@ Public Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns true if the model utilizes internal state variables; else, returns false. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00341">341</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00467">467</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
 
 </div>
 </div>
@@ -272,7 +376,7 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00370">370</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00496">496</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
 
 </div>
 </div>
@@ -291,7 +395,7 @@ Public Attributes</h2></td></tr>
 
 <p>The Coulomb (dynamic) friction coefficient. </p>
 
-<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00288">288</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00414">414</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
 
 </div>
 </div>
@@ -309,7 +413,7 @@ Public Attributes</h2></td></tr>
 
 <p>The frictional damping coefficient. </p>
 
-<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00294">294</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00420">420</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
 
 </div>
 </div>
@@ -327,7 +431,7 @@ Public Attributes</h2></td></tr>
 
 <p>The Stribeck curve shape parameter. </p>
 
-<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00298">298</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00424">424</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
 
 </div>
 </div>
@@ -345,7 +449,7 @@ Public Attributes</h2></td></tr>
 
 <p>The static friction coefficient. </p>
 
-<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00286">286</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00412">412</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
 
 </div>
 </div>
@@ -363,7 +467,7 @@ Public Attributes</h2></td></tr>
 
 <p>The frictional stiffness. </p>
 
-<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00292">292</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00418">418</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
 
 </div>
 </div>
@@ -381,7 +485,7 @@ Public Attributes</h2></td></tr>
 
 <p>The Stribeck velocity. </p>
 
-<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00290">290</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00416">416</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
 
 </div>
 </div>
@@ -399,7 +503,7 @@ Public Attributes</h2></td></tr>
 
 <p>The viscous damping coefficient. </p>
 
-<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00296">296</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
+<p class="definition">Definition at line <a class="el" href="friction_8f90_source.html#l00422">422</a> of file <a class="el" href="friction_8f90_source.html">friction.f90</a>.</p>
 
 </div>
 </div>

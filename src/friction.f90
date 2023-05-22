@@ -289,7 +289,7 @@ module friction
     !! represented by an average deflection of elastic springs.  These springs
     !! have their own stiffness and damping properties and act as a typical
     !! spring-damper pair under small velocities; however, once sufficient 
-    !! velocity occurs, the bristles slip resulting in near-Coulomb like 
+    !! velocity occurs, the bristles slip resulting in Coulomb-like sliding 
     !! behavior.
     !!
     !! @par Example
@@ -298,11 +298,17 @@ module friction
     !! belt moving at a constant velocity.  The normal force is the weight of
     !! the sprung mass.
     !!
-    !! TO DO: Insert schematic of the problem
-    !!
+    !! @par
     !! The system has the equation of motion 
     !! \f$ m \frac{d^2x}{dt^2} + k x = F_{f}(t) \f$, where \f$ F_{f}(t) \f$ is
     !! the friction force output by the Lu-Gre model.
+    !!
+    !! @image html schematic.png
+    !!
+    !! @par
+    !! This example utilizes the 
+    !! [DIFFEQ](https://github.com/jchristopherson/diffeq) library to solve the
+    !! differential equations using a Dormand-Prince Runge-Kutta integrator.
     !! @code{.f90}
     !! module model
     !!     use iso_fortran_env
