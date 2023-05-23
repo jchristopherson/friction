@@ -4,6 +4,7 @@ add_subdirectory(fortran_test_helper)
 
 set(friction_test_sources
     friction_test.f90
+    friction_model_tests.f90
 )
 
 add_executable(friction_tests ${friction_test_sources})
