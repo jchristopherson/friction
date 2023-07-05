@@ -31,4 +31,27 @@ module subroutine cf_state_model(this, t, x, dxdt, nrm, svars, dsdt)
 end subroutine
 
 ! ------------------------------------------------------------------------------
+module subroutine cf_to_array(this, x, err)
+    class(coulomb_model), intent(in) :: this
+    real(real64), intent(out), dimension(:) :: x
+    class(errors), intent(inout), optional, target :: err
+    x(1) = this%friction_coefficient
+end subroutine
+
+! ------------------------------------------------------------------------------
+module subroutine cf_from_array(this, x, err)
+    class(coulomb_model), intent(inout) :: this
+    real(real64), intent(in), dimension(:) :: x
+    class(errors), intent(inout), optional, target :: err
+    this%friction_coefficient = x(1)
+end subroutine
+
+! ------------------------------------------------------------------------------
+pure module function cf_parameter_count(this) result(rst)
+    class(coulomb_model), intent(in) :: this
+    integer(int32) :: rst
+    rst = 1
+end function
+
+! ------------------------------------------------------------------------------
 end submodule

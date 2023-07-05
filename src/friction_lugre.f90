@@ -1,4 +1,6 @@
 submodule (friction) friction_lugre
+    use fstats
+    use diffeq
 contains
 ! ------------------------------------------------------------------------------
 module function lg_eval(this, t, x, dxdt, nrm, svars) result(rst)
@@ -42,6 +44,41 @@ module subroutine lg_state_model(this, t, x, dxdt, nrm, svars, dsdt)
         exp(-abs(dxdt / this%stribeck_velocity)**this%shape_parameter)
     dsdt(1) = dxdt - this%stiffness * abs(dxdt) * svars(1) / g
 end subroutine
+
+! ------------------------------------------------------------------------------
+module subroutine lg_to_array(this, x, err)
+    class(lugre_model), intent(in) :: this
+    real(real64), intent(out), dimension(:) :: x
+    class(errors), intent(inout), optional, target :: err
+    x(1) = this%static_coefficient
+    x(2) = this%coulomb_coefficient
+    x(3) = this%stribeck_velocity
+    x(4) = this%stiffness
+    x(5) = this%damping
+    x(6) = this%viscous_damping
+    x(7) = this%shape_parameter
+end subroutine
+
+! ------------------------------------------------------------------------------
+module subroutine lg_from_array(this, x, err)
+    class(lugre_model), intent(inout) :: this
+    real(real64), intent(in), dimension(:) :: x
+    class(errors), intent(inout), optional, target :: err
+    this%static_coefficient = x(1)
+    this%coulomb_coefficient = x(2)
+    this%stribeck_velocity = x(3)
+    this%stiffness = x(4)
+    this%damping = x(5)
+    this%viscous_damping = x(6)
+    this%shape_parameter = x(7)
+end subroutine
+
+! ------------------------------------------------------------------------------
+pure module function lg_parameter_count(this) result(rst)
+    class(lugre_model), intent(in) :: this
+    integer(int32) :: rst
+    rst = 7
+end function
 
 ! ------------------------------------------------------------------------------
 end submodule

@@ -2,11 +2,22 @@
 !! of contacting bodies.
 module friction
     use iso_fortran_env
+    use fstats, only : convergence_info, regression_statistics, &
+        iteration_controls, lm_solver_options
+    use ferror
     implicit none
     private
+    public :: FRICTION_ARRAY_SIZE_ERROR
+    public :: FRICTION_MEMORY_ERROR
     public :: friction_model
+    public :: heuristic_friction_model
     public :: coulomb_model
     public :: lugre_model
+
+    !> Defines an array size error.
+    integer(int32), parameter :: FRICTION_ARRAY_SIZE_ERROR = 100000
+    !> Defines a memory allocation error.
+    integer(int32), parameter :: FRICTION_MEMORY_ERROR = 100001
 
     !> @brief Defines a generic friction model.
     type, abstract :: friction_model
@@ -83,6 +94,10 @@ module friction
         !! @param[out] dsdt An N-element array where the state variable 
         !!  derivatives are to be written.
         procedure(friction_state_model), deferred, public :: state
+        procedure(friction_model_to_array), deferred, public :: to_array
+        procedure(friction_model_from_array), deferred, public :: from_array
+        procedure(friction_integer_query), deferred, public :: parameter_count
+        procedure, public :: fit => fmdl_fit
     end type
 
     interface
@@ -109,7 +124,57 @@ module friction
             real(real64), intent(in), dimension(:) :: svars
             real(real64), intent(out), dimension(:) :: dsdt
         end subroutine
+
+        subroutine friction_model_to_array(this, x, err)
+            use iso_fortran_env, only : real64
+            use ferror
+            import friction_model
+            class(friction_model), intent(in) :: this
+            real(real64), intent(out), dimension(:) :: x
+            class(errors), intent(inout), optional, target :: err
+        end subroutine
+
+        subroutine friction_model_from_array(this, x, err)
+            use iso_fortran_env, only : real64
+            use ferror
+            import friction_model
+            class(friction_model), intent(inout) :: this
+            real(real64), intent(in), dimension(:) :: x
+            class(errors), intent(inout), optional, target :: err
+        end subroutine
+
+        pure function friction_integer_query(this) result(rst)
+            use iso_fortran_env, only : int32
+            import friction_model
+            class(friction_model), intent(in) :: this
+            integer(int32) :: rst
+        end function
     end interface
+
+    ! friction_fitting.f90
+    interface
+        module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, &
+            minp, alpha, controls, settings, info, fmod, resid, err)
+            class(friction_model), intent(inout) :: this
+            real(real64), intent(in), target, dimension(:) :: t, x, v, f, n
+            logical, intent(in), optional :: usevel
+            real(real64), intent(in), optional, dimension(:) :: weights, maxp, &
+                minp
+            real(real64), intent(in), optional :: alpha
+            type(iteration_controls), intent(in), optional :: controls
+            type(lm_solver_options), intent(in), optional :: settings
+            type(convergence_info), intent(out), optional :: info
+            real(real64), intent(out), optional, target, dimension(:) :: fmod, &
+                resid
+            class(errors), intent(inout), optional, target :: err
+        end subroutine
+    end interface
+
+! ------------------------------------------------------------------------------
+    !> @brief Defines a basic heuristic friction model.
+    type, abstract, extends(friction_model) :: heuristic_friction_model
+    contains
+    end type
 
 ! ------------------------------------------------------------------------------
     !> @brief Defines the basic Coulomb friction model.
@@ -255,6 +320,9 @@ module friction
         !! @param[out] dsdt An N-element array where the state variable 
         !!  derivatives are to be written.
         procedure, public :: state => cf_state_model
+        procedure, public :: to_array => cf_to_array
+        procedure, public :: from_array => cf_from_array
+        procedure, public :: parameter_count => cf_parameter_count
     end type
 
     ! friction_coulomb.f90
@@ -277,6 +345,23 @@ module friction
             real(real64), intent(in), dimension(:) :: svars
             real(real64), intent(out), dimension(:) :: dsdt
         end subroutine
+
+        module subroutine cf_to_array(this, x, err)
+            class(coulomb_model), intent(in) :: this
+            real(real64), intent(out), dimension(:) :: x
+            class(errors), intent(inout), optional, target :: err
+        end subroutine
+
+        module subroutine cf_from_array(this, x, err)
+            class(coulomb_model), intent(inout) :: this
+            real(real64), intent(in), dimension(:) :: x
+            class(errors), intent(inout), optional, target :: err
+        end subroutine
+
+        pure module function cf_parameter_count(this) result(rst)
+            class(coulomb_model), intent(in) :: this
+            integer(int32) :: rst
+        end function
     end interface
 
 ! ------------------------------------------------------------------------------
@@ -407,7 +492,7 @@ module friction
     !! The above program produces the following plot using the 
     !! [FPLOT](https://github.com/jchristopherson/fplot) library.
     !! @image html lugre_example.png
-    type, extends(friction_model) :: lugre_model
+    type, extends(heuristic_friction_model) :: lugre_model
         !> @brief The static friction coefficient.
         real(real64) :: static_coefficient
         !> @brief The Coulomb (dynamic) friction coefficient.
@@ -494,6 +579,9 @@ module friction
         !! @param[out] dsdt An N-element array where the state variable 
         !!  derivatives are to be written.
         procedure, public :: state => lg_state_model
+        procedure, public :: to_array => lg_to_array
+        procedure, public :: from_array => lg_from_array
+        procedure, public :: parameter_count => lg_parameter_count
     end type
 
     ! friction_lugre.f90
@@ -516,6 +604,23 @@ module friction
             real(real64), intent(in), dimension(:) :: svars
             real(real64), intent(out), dimension(:) :: dsdt
         end subroutine
+
+        module subroutine lg_to_array(this, x, err)
+            class(lugre_model), intent(in) :: this
+            real(real64), intent(out), dimension(:) :: x
+            class(errors), intent(inout), optional, target :: err
+        end subroutine
+
+        module subroutine lg_from_array(this, x, err)
+            class(lugre_model), intent(inout) :: this
+            real(real64), intent(in), dimension(:) :: x
+            class(errors), intent(inout), optional, target :: err
+        end subroutine
+
+        pure module function lg_parameter_count(this) result(rst)
+            class(lugre_model), intent(in) :: this
+            integer(int32) :: rst
+        end function
     end interface
 
 ! ------------------------------------------------------------------------------
