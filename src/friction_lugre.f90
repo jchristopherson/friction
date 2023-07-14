@@ -81,4 +81,11 @@ pure module function lg_parameter_count(this) result(rst)
 end function
 
 ! ------------------------------------------------------------------------------
+pure module function lg_get_state_var_count(this) result(rst)
+    class(lugre_model), intent(in) :: this
+    integer(int32) :: rst
+    rst = 1
+end function
+
+! ------------------------------------------------------------------------------
 end submodule

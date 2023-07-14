@@ -1,15 +1,17 @@
 submodule (friction) friction_fitting
     use fstats
+    use fitpack
 contains
 ! ------------------------------------------------------------------------------
 module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
-    alpha, controls, settings, info, fmod, resid, err)
+    alpha, integrator, controls, settings, info, fmod, resid, err)
     ! Arguments
     class(friction_model), intent(inout) :: this
     real(real64), intent(in), target, dimension(:) :: t, x, v, f, n
     logical, intent(in), optional :: usevel
     real(real64), intent(in), optional, dimension(:) :: weights, maxp, minp
     real(real64), intent(in), optional :: alpha
+    class(ode_integrator), target, optional :: integrator
     type(iteration_controls), intent(in), optional :: controls
     type(lm_solver_options), intent(in), optional :: settings
     type(convergence_info), intent(out), optional :: info
@@ -21,10 +23,15 @@ module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
     type(errors), target :: deferr
     logical :: uv
     integer(int32) :: npts, nparams, flag
-    real(real64), allocatable, dimension(:) :: params
+    real(real64), allocatable, dimension(:) :: params, initstate
+    real(real64), allocatable, dimension(:,:) :: dzdt
     real(real64), pointer, dimension(:) :: fmodptr, residptr, xptr
     real(real64), allocatable, target, dimension(:) :: fmoddef, residdef
     procedure(regression_function), pointer :: fcn
+    type(fitpack_curve) :: xinterp, vinterp, ninterp
+    type(sdirk4_integrator), target :: def_integrator
+    class(ode_integrator), pointer :: integrate
+    type(ode_container) :: mdl
     
     ! Initialization
     if (present(err)) then
@@ -39,11 +46,15 @@ module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
     end if
     npts = size(t)
     nparams = this%parameter_count()
-    fcn => fit_fcn
     if (uv) then
         xptr(1:npts) => v(1:npts)
     else
         xptr(1:npts) => x(1:npts)
+    end if
+    if (present(integrator)) then
+        integrate => integrator
+    else
+        integrate => def_integrator
     end if
 
     ! Input Checking
@@ -76,6 +87,26 @@ module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
     end if
 
     ! Compute the fit
+    if (this%has_internal_state()) then
+        fcn => internal_var_fit_fcn
+
+        ! Define the interpolation objects & generate the fit
+        flag = xinterp%new_fit(t, x)
+        if (flag /= 0) go to 40
+        flag = vinterp%new_fit(t, v)
+        if (flag /= 0) go to 41
+        flag = ninterp%new_fit(t, n)
+        if (flag /= 0) go to 42
+
+        ! Set up the integrator
+        mdl%fcn => internal_state_odes
+        allocate(initstate(this%get_state_variable_count()), source = 0.0d0, &
+            stat = flag)
+        if (flag /= 0) go to 30
+    else
+        fcn => fit_fcn
+    end if
+
     call nonlinear_least_squares(fcn, xptr, f, params, fmodptr, residptr, &
         weights = weights, maxp = maxp, minp = minp, alpha = alpha, &
         controls = controls, settings = settings, info = info, err = errmgr)
@@ -120,9 +151,21 @@ module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
     call write_memory_error("fmdl_fit", flag, errmgr)
     return
 
+    ! X Interpolation Error
+40  continue
+    return
+
+    ! V Interpolation Error
+41  continue
+    return
+
+    ! N Interpolation Error
+42  continue
+    return
+
 ! ------------------------------------------------------------------------------
 contains
-    ! Define the function to fit
+    ! Define the function to fit if no internal variables are present
     subroutine fit_fcn(x_, p_, f_, stop_)
         ! Arguments
         real(real64), intent(in), dimension(:) :: x_, p_
@@ -142,6 +185,50 @@ contains
 
         ! No need to stop
         stop_ = .false.
+    end subroutine
+
+    ! Defines the function to fit if internal variables are used by the model
+    subroutine internal_var_fit_fcn(x_, p_, f_, stop_)
+        ! Arguments
+        real(real64), intent(in), dimension(:) :: x_, p_
+        real(real64), intent(out), dimension(:) :: f_
+        logical, intent(out) :: stop_
+
+        ! Local Variables
+        integer(int32) :: i_
+
+        ! Assign the model parameters
+        call this%from_array(p_)
+
+        ! Integrate to determine the state variables
+        dzdt = integrate%solve(mdl, t, initstate)
+
+        ! Evaluate the friction model and compare teh results
+        do i_ = 1, size(x_)
+            f_(i) = this%evaluate(t(i), x(i), v(i), n(i), dzdt(i,2:))
+        end do
+
+        ! No need to stop
+        stop_ = .false.
+    end subroutine
+
+    subroutine internal_state_odes(t_, z_, dzdt_)
+        ! Arguments
+        real(real64), intent(in) :: t_
+        real(real64), intent(in), dimension(:) :: z_
+        real(real64), intent(out), dimension(:) :: dzdt_
+
+        ! Local Variables
+        real(real64) :: x_, v_, n_
+
+        ! Interpolate to obtain the position, velocity, and normal force values
+        ! corresponding to time t_
+        x_ = xinterp%eval(t_)
+        v_ = vinterp%eval(t_)
+        n_ = ninterp%eval(t_)
+
+        ! Evaluate the friction model state equation
+        call this%state(t_, x_, v_, n_, z_, dzdt_)
     end subroutine
 end subroutine
 
@@ -177,6 +264,24 @@ subroutine write_memory_error(fcn, flag, err)
     ! Process
     write(100, errmsg) "Memory allocation error flag ", flag, " encountered."
     call err%report_error(fcn, trim(errmsg), FRICTION_MEMORY_ERROR)
+
+    ! Formatting
+100 format(A, I0, A)
+end subroutine
+
+! ------------------------------------------------------------------------------
+subroutine write_interpolation_error(fcn, flag, err)
+    ! Arguments
+    character(len = *), intent(in) :: fcn
+    integer(int32), intent(in) :: flag
+    class(errors), intent(inout) :: err
+
+    ! Local Variables
+    character(len = 256) :: errmsg
+
+    ! Process
+    write(100, errmsg) "Interpolation error flag ", flag, " encountered."
+    call err%report_error(fcn, trim(errmsg), FRICTION_INVALID_OPERATION_ERROR)
 
     ! Formatting
 100 format(A, I0, A)

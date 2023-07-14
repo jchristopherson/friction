@@ -1,3 +1,3 @@
-if (NOT TARGET diffeq)
-    include("${CMAKE_CURRENT_LIST_DIR}/diffeqTargets.cmake")
+if (NOT TARGET friction)
+    include("${CMAKE_CURRENT_LIST_DIR}/frictionTargets.cmake")
 endif()

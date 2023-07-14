@@ -4,13 +4,14 @@ module friction
     use iso_fortran_env
     use fstats, only : convergence_info, regression_statistics, &
         iteration_controls, lm_solver_options
+    use diffeq
     use ferror
     implicit none
     private
     public :: FRICTION_ARRAY_SIZE_ERROR
     public :: FRICTION_MEMORY_ERROR
+    public :: FRICTION_INVALID_OPERATION_ERROR
     public :: friction_model
-    public :: heuristic_friction_model
     public :: coulomb_model
     public :: lugre_model
 
@@ -18,6 +19,8 @@ module friction
     integer(int32), parameter :: FRICTION_ARRAY_SIZE_ERROR = 100000
     !> Defines a memory allocation error.
     integer(int32), parameter :: FRICTION_MEMORY_ERROR = 100001
+    !> Defines an error within the opration of a routine.
+    integer(int32), parameter :: FRICTION_INVALID_OPERATION_ERROR = 100002
 
     !> @brief Defines a generic friction model.
     type, abstract :: friction_model
@@ -98,6 +101,7 @@ module friction
         procedure(friction_model_from_array), deferred, public :: from_array
         procedure(friction_integer_query), deferred, public :: parameter_count
         procedure, public :: fit => fmdl_fit
+        procedure, public :: get_state_variable_count => fm_get_state_var_count
     end type
 
     interface
@@ -151,16 +155,25 @@ module friction
         end function
     end interface
 
+    ! friction_model.f90
+    interface
+        pure module function fm_get_state_var_count(this) result(rst)
+            class(friction_model), intent(in) :: this
+            integer(int32) :: rst
+        end function
+    end interface
+
     ! friction_fitting.f90
     interface
         module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, &
-            minp, alpha, controls, settings, info, fmod, resid, err)
+            minp, alpha, integrator, controls, settings, info, fmod, resid, err)
             class(friction_model), intent(inout) :: this
             real(real64), intent(in), target, dimension(:) :: t, x, v, f, n
             logical, intent(in), optional :: usevel
             real(real64), intent(in), optional, dimension(:) :: weights, maxp, &
                 minp
             real(real64), intent(in), optional :: alpha
+            class(ode_integrator), target, optional :: integrator
             type(iteration_controls), intent(in), optional :: controls
             type(lm_solver_options), intent(in), optional :: settings
             type(convergence_info), intent(out), optional :: info
@@ -169,12 +182,6 @@ module friction
             class(errors), intent(inout), optional, target :: err
         end subroutine
     end interface
-
-! ------------------------------------------------------------------------------
-    !> @brief Defines a basic heuristic friction model.
-    type, abstract, extends(friction_model) :: heuristic_friction_model
-    contains
-    end type
 
 ! ------------------------------------------------------------------------------
     !> @brief Defines the basic Coulomb friction model.
@@ -492,7 +499,7 @@ module friction
     !! The above program produces the following plot using the 
     !! [FPLOT](https://github.com/jchristopherson/fplot) library.
     !! @image html lugre_example.png
-    type, extends(heuristic_friction_model) :: lugre_model
+    type, extends(friction_model) :: lugre_model
         !> @brief The static friction coefficient.
         real(real64) :: static_coefficient
         !> @brief The Coulomb (dynamic) friction coefficient.
@@ -582,6 +589,7 @@ module friction
         procedure, public :: to_array => lg_to_array
         procedure, public :: from_array => lg_from_array
         procedure, public :: parameter_count => lg_parameter_count
+        procedure, public :: get_state_variable_count => lg_get_state_var_count
     end type
 
     ! friction_lugre.f90
@@ -618,6 +626,11 @@ module friction
         end subroutine
 
         pure module function lg_parameter_count(this) result(rst)
+            class(lugre_model), intent(in) :: this
+            integer(int32) :: rst
+        end function
+
+        pure module function lg_get_state_var_count(this) result(rst)
             class(lugre_model), intent(in) :: this
             integer(int32) :: rst
         end function
