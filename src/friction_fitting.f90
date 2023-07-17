@@ -31,7 +31,7 @@ subroutine fit_fcn(x, p, f, stop_)
     call fmdl_%from_array(p)
 
     ! Evaluate the friction model and compare the results
-    do i = 1, size(x)
+    do i = 1, min(size(x), size(t_))
         f(i) = fmdl_%evaluate(t_(i), x_(i), v_(i), n_(i)) - f_(i)
     end do
 
@@ -57,7 +57,7 @@ subroutine internal_var_fit_fcn(x, p, f, stop_)
     dzdt = integrate_%solve(mdl_, t_, initstate_)
 
     ! Evaluate the friction model and compare the results
-    do i = 1, size(x)
+    do i = 1, min(size(x), size(t_))
         f(i) = fmdl_%evaluate(t_(i), x_(i), v_(i), n_(i), dzdt(i,2:)) - f_(i)
     end do
 
