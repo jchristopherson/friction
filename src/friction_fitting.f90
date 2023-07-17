@@ -11,7 +11,7 @@ module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
     logical, intent(in), optional :: usevel
     real(real64), intent(in), optional, dimension(:) :: weights, maxp, minp
     real(real64), intent(in), optional :: alpha
-    class(ode_integrator), target, optional :: integrator
+    class(ode_integrator), intent(inout) target, optional :: integrator
     type(iteration_controls), intent(in), optional :: controls
     type(lm_solver_options), intent(in), optional :: settings
     type(convergence_info), intent(out), optional :: info
@@ -94,9 +94,9 @@ module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
         flag = xinterp%new_fit(t, x)
         if (flag /= 0) go to 40
         flag = vinterp%new_fit(t, v)
-        if (flag /= 0) go to 41
+        if (flag /= 0) go to 40
         flag = ninterp%new_fit(t, n)
-        if (flag /= 0) go to 42
+        if (flag /= 0) go to 40
 
         ! Set up the integrator
         mdl%fcn => internal_state_odes
@@ -151,16 +151,9 @@ module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
     call write_memory_error("fmdl_fit", flag, errmgr)
     return
 
-    ! X Interpolation Error
+    ! Interpolation Error
 40  continue
-    return
-
-    ! V Interpolation Error
-41  continue
-    return
-
-    ! N Interpolation Error
-42  continue
+    call write_interpolation_error("fmdl_fit", flag, errmgr)
     return
 
 ! ------------------------------------------------------------------------------

@@ -97,11 +97,152 @@ module friction
         !! @param[out] dsdt An N-element array where the state variable 
         !!  derivatives are to be written.
         procedure(friction_state_model), deferred, public :: state
+        !> @brief Converts the parameters of the friction model into an array.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine to_array( &
+        !!  class(friction_model) this, &
+        !!  real(real64) x(:), &
+        !!  optional class(errors) err &
+        !! )
+        !! @endcode
+        !!
+        !! @param[in] this The @ref friction_model object.
+        !! @param[out] x The array used to store the parameters.  See @ref
+        !!  parameter_count to determine the size of this array.
+        !! @param[in,out] err An optional errors-based object that if provided 
+        !!  can be used to retrieve information relating to any errors 
+        !!  encountered during execution. If not provided, a default 
+        !!  implementation of the errors class is used internally to provide 
+        !!  error handling. Possible errors and warning messages that may be 
+        !!  encountered are as follows.
+        !!  - FRICTION_ARRAY_SIZE_ERROR: Occurs if @p x is not sized 
+        !!      appropriately.
         procedure(friction_model_to_array), deferred, public :: to_array
+        !> @brief Converts an array into the parameters for the friction model.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine from_array( &
+        !!  class(friction_model) this, &
+        !!  real(real64) x(:), &
+        !!  optional class(errors) err &
+        !! )
+        !! @endcode
+        !!
+        !! @param[in,out] this The @ref friction_model object.
+        !! @param[in] x The array of parameters.  See @ref parameter_count to 
+        !!  determine the size of this array.
+        !! @param[in,out] err An optional errors-based object that if provided 
+        !!  can be used to retrieve information relating to any errors 
+        !!  encountered during execution. If not provided, a default 
+        !!  implementation of the errors class is used internally to provide 
+        !!  error handling. Possible errors and warning messages that may be 
+        !!  encountered are as follows.
+        !!  - FRICTION_ARRAY_SIZE_ERROR: Occurs if @p x is not sized 
+        !!      appropriately.
         procedure(friction_model_from_array), deferred, public :: from_array
+        !> @brief Gets the number of model parameters.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! integer(int32) pure function parameter_count(class(friction_model) this)
+        !! @endcode
+        !!
+        !! @param[in] this The @ref friction_model object.
+        !! @return The number of model parameters.
         procedure(friction_integer_query), deferred, public :: parameter_count
+        !> @brief Gets the number of internal state variables used by the model.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! integer(int32) pure function get_state_variable_count( &
+        !!  class(friction_model) this &
+        !! )
+        !! 
+        !! @param[in] this The @ref friction_model object.
+        !! @return The internal state variable count.
+        procedure(friction_integer_query), deferred, public :: &
+            get_state_variable_count
+        !> @brief
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine fit( &
+        !!  class(friction_model) this, &
+        !!  real(real64) t(:), &
+        !!  real(real64) x(:), &
+        !!  real(real64) v(:), &
+        !!  real(real64) f(:), &
+        !!  real(real64) n(:), &
+        !!  optional logical usevel, &
+        !!  optional real(real64) weights(:), &
+        !!  optional real(real64) maxp(:), &
+        !!  optional real(real64) minp(:), &
+        !!  optional real(real64) alpha, &
+        !!  optional class(ode_integrator) integrator, &
+        !!  optional type(iteration_controls) controls, &
+        !!  optional type(lm_solver_options) settings, &
+        !!  optional type(convergence_info) info, &
+        !!  optional real(real64) fmod(:), &
+        !!  optional real(real64) resid(:), &
+        !!  optional class(errors) err &
+        !! )
+        !! @endcode
+        !!
+        !! @param[in,out] this The @ref friction_model.  On output, the model
+        !!  is updated with the final, fitted parameters.
+        !! @param[in] t An N-element array containing the time points at which
+        !!  the friction data was sampled.  This array must contain 
+        !!  monotonically increasing data.
+        !! @param[in] x An N-element array containing the relative position
+        !!  data.
+        !! @param[in] v An N-element array containing the relative velocity
+        !!  data.
+        !! @param[in] f An N-element array containing the friction force data.
+        !! @param[in] n An N-element array containing the normal force data.
+        !! @param[in] usevel An optional argument that specifies whether the
+        !!  force-velocity (true) or force-displacement (false) is fitted.  The
+        !!  default is true such that the force-velocity relationship is fitted.
+        !! @param[in] weights An optional N-element array that can be used to
+        !!  weight specific data points.  The default is an array of all ones
+        !!  such that all points are weighted equally.
+        !! @param[in] maxp An M-element array (M = the number of model 
+        !!  parameters) containing a maximum limit for each model parameter.
+        !! @param[in] minp An M-element array containing the minimum limit for
+        !!  each model parameter.
+        !! @param[in,out] integrator An optional input, used in the event the
+        !!  model has internal state variables, that provides integration of the
+        !!  state equations.  The defaults is a singly diagonally implicit
+        !!  Runge-Kutta method (4th order) that is suitable for stiff ODE's.
+        !! @param[in] alpha An optional input that defines the significance 
+        !!  level at which to evaluate the confidence intervals. The default 
+        !!  value is 0.05 such that a 95% confidence interval is calculated.
+        !! @param[in] controls An optional input providing custom iteration 
+        !!  controls.
+        !! @param[in] settings An optional input providing custom settings for 
+        !!  the solver.
+        !! @param[out] info An optional output that can be used to gain 
+        !!  information about the iterative solution and the nature of the 
+        !!  convergence.
+        !! @param[out] fmod An optional N-element array used to provide the
+        !!  fitted model results.
+        !! @param[out] resid An optional N-element array containing the fitted
+        !!  residuals.
+        !! @param[in,out] err An optional errors-based object that if provided 
+        !!  can be used to retrieve information relating to any errors 
+        !!  encountered during execution. If not provided, a default 
+        !!  implementation of the errors class is used internally to provide 
+        !!  error handling. Possible errors and warning messages that may be 
+        !!  encountered are as follows.
+        !!  - FRICTION_ARRAY_SIZE_ERROR: Occurs if any of the arrays are not
+        !!      sized correctly.
+        !!  - FRICTION_MEMORY_ERROR: Occurs if there is a memory allocation
+        !!      error.
+        !!  - FRICTION_INVALID_OPERATION_ERROR: Occurs if there is an error
+        !!      interpolating within the provided data set.
         procedure, public :: fit => fmdl_fit
-        procedure, public :: get_state_variable_count => fm_get_state_var_count
     end type
 
     interface
@@ -155,14 +296,6 @@ module friction
         end function
     end interface
 
-    ! friction_model.f90
-    interface
-        pure module function fm_get_state_var_count(this) result(rst)
-            class(friction_model), intent(in) :: this
-            integer(int32) :: rst
-        end function
-    end interface
-
     ! friction_fitting.f90
     interface
         module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, &
@@ -173,7 +306,7 @@ module friction
             real(real64), intent(in), optional, dimension(:) :: weights, maxp, &
                 minp
             real(real64), intent(in), optional :: alpha
-            class(ode_integrator), target, optional :: integrator
+            class(ode_integrator), intent(inout), target, optional :: integrator
             type(iteration_controls), intent(in), optional :: controls
             type(lm_solver_options), intent(in), optional :: settings
             type(convergence_info), intent(out), optional :: info
@@ -327,9 +460,73 @@ module friction
         !! @param[out] dsdt An N-element array where the state variable 
         !!  derivatives are to be written.
         procedure, public :: state => cf_state_model
+        !> @brief Converts the parameters of the friction model into an array.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine to_array( &
+        !!  class(coulomb_model) this, &
+        !!  real(real64) x(:), &
+        !!  optional class(errors) err &
+        !! )
+        !! @endcode
+        !!
+        !! @param[in] this The @ref coulomb_model object.
+        !! @param[out] x The array used to store the parameters.  See @ref
+        !!  parameter_count to determine the size of this array.
+        !! @param[in,out] err An optional errors-based object that if provided 
+        !!  can be used to retrieve information relating to any errors 
+        !!  encountered during execution. If not provided, a default 
+        !!  implementation of the errors class is used internally to provide 
+        !!  error handling. Possible errors and warning messages that may be 
+        !!  encountered are as follows.
+        !!  - FRICTION_ARRAY_SIZE_ERROR: Occurs if @p x is not sized 
+        !!      appropriately.
         procedure, public :: to_array => cf_to_array
+        !> @brief Converts an array into the parameters for the friction model.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine from_array( &
+        !!  class(coulomb_model) this, &
+        !!  real(real64) x(:), &
+        !!  optional class(errors) err &
+        !! )
+        !! @endcode
+        !!
+        !! @param[in,out] this The @ref coulomb_model object.
+        !! @param[in] x The array of parameters.  See @ref parameter_count to 
+        !!  determine the size of this array.
+        !! @param[in,out] err An optional errors-based object that if provided 
+        !!  can be used to retrieve information relating to any errors 
+        !!  encountered during execution. If not provided, a default 
+        !!  implementation of the errors class is used internally to provide 
+        !!  error handling. Possible errors and warning messages that may be 
+        !!  encountered are as follows.
+        !!  - FRICTION_ARRAY_SIZE_ERROR: Occurs if @p x is not sized 
+        !!      appropriately.
         procedure, public :: from_array => cf_from_array
+        !> @brief Gets the number of model parameters.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! integer(int32) pure function parameter_count(class(coulomb_model) this)
+        !! @endcode
+        !!
+        !! @param[in] this The @ref coulomb_model object.
+        !! @return The number of model parameters.
         procedure, public :: parameter_count => cf_parameter_count
+        !> @brief Gets the number of internal state variables used by the model.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! integer(int32) pure function get_state_variable_count( &
+        !!  class(coulomb_model) this &
+        !! )
+        !! 
+        !! @param[in] this The @ref coulomb_model object.
+        !! @return The internal state variable count.
+        procedure, public :: get_state_variable_count => cf_get_state_var_count
     end type
 
     ! friction_coulomb.f90
@@ -366,6 +563,11 @@ module friction
         end subroutine
 
         pure module function cf_parameter_count(this) result(rst)
+            class(coulomb_model), intent(in) :: this
+            integer(int32) :: rst
+        end function
+
+        pure module function cf_get_state_var_count(this) result(rst)
             class(coulomb_model), intent(in) :: this
             integer(int32) :: rst
         end function
@@ -586,9 +788,72 @@ module friction
         !! @param[out] dsdt An N-element array where the state variable 
         !!  derivatives are to be written.
         procedure, public :: state => lg_state_model
+        !> @brief Converts the parameters of the friction model into an array.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine to_array( &
+        !!  class(lugre_model) this, &
+        !!  real(real64) x(:), &
+        !!  optional class(errors) err &
+        !! )
+        !! @endcode
+        !!
+        !! @param[in] this The @ref lugre_model object.
+        !! @param[out] x The array used to store the parameters.  See @ref
+        !!  parameter_count to determine the size of this array.
+        !! @param[in,out] err An optional errors-based object that if provided 
+        !!  can be used to retrieve information relating to any errors 
+        !!  encountered during execution. If not provided, a default 
+        !!  implementation of the errors class is used internally to provide 
+        !!  error handling. Possible errors and warning messages that may be 
+        !!  encountered are as follows.
+        !!  - FRICTION_ARRAY_SIZE_ERROR: Occurs if @p x is not sized 
+        !!      appropriately.
         procedure, public :: to_array => lg_to_array
+        !> @brief Converts an array into the parameters for the friction model.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine from_array( &
+        !!  class(lugre_model) this, &
+        !!  real(real64) x(:), &
+        !!  optional class(errors) err &
+        !! )
+        !! @endcode
+        !!
+        !! @param[in,out] this The @ref lugre_model object.
+        !! @param[in] x The array of parameters.  See @ref parameter_count to 
+        !!  determine the size of this array.
+        !! @param[in,out] err An optional errors-based object that if provided 
+        !!  can be used to retrieve information relating to any errors 
+        !!  encountered during execution. If not provided, a default 
+        !!  implementation of the errors class is used internally to provide 
+        !!  error handling. Possible errors and warning messages that may be 
+        !!  encountered are as follows.
+        !!  - FRICTION_ARRAY_SIZE_ERROR: Occurs if @p x is not sized 
+        !!      appropriately.
         procedure, public :: from_array => lg_from_array
+        !> @brief Gets the number of model parameters.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! integer(int32) pure function parameter_count(class(lugre_model) this)
+        !! @endcode
+        !!
+        !! @param[in] this The @ref lugre_model object.
+        !! @return The number of model parameters.
         procedure, public :: parameter_count => lg_parameter_count
+        !> @brief Gets the number of internal state variables used by the model.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! integer(int32) pure function get_state_variable_count( &
+        !!  class(friction_model) this &
+        !! )
+        !! 
+        !! @param[in] this The @ref friction_model object.
+        !! @return The internal state variable count.
         procedure, public :: get_state_variable_count => lg_get_state_var_count
     end type
 

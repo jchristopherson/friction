@@ -54,4 +54,11 @@ pure module function cf_parameter_count(this) result(rst)
 end function
 
 ! ------------------------------------------------------------------------------
+pure module function cf_get_state_var_count(this) result(rst)
+    class(coulomb_model), intent(in) :: this
+    integer(int32) :: rst
+    rst = 0
+end function
+
+! ------------------------------------------------------------------------------
 end submodule

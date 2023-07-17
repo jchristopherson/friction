@@ -7,6 +7,5 @@ set(FRICTION_SOURCES
     ${dir}/friction_coulomb.f90
     ${dir}/friction_lugre.f90
     ${dir}/friction_fitting.f90
-    ${dir}/friction_model_routines.f90
 )
 set(FRICTION_SOURCES ${FRICTION_SOURCES} PARENT_SCOPE)
