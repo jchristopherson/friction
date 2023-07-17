@@ -11,7 +11,7 @@ module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
     logical, intent(in), optional :: usevel
     real(real64), intent(in), optional, dimension(:) :: weights, maxp, minp
     real(real64), intent(in), optional :: alpha
-    class(ode_integrator), intent(inout) target, optional :: integrator
+    class(ode_integrator), intent(inout), target, optional :: integrator
     type(iteration_controls), intent(in), optional :: controls
     type(lm_solver_options), intent(in), optional :: settings
     type(convergence_info), intent(out), optional :: info
