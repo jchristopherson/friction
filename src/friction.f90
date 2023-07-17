@@ -185,6 +185,7 @@ module friction
         !!  optional type(iteration_controls) controls, &
         !!  optional type(lm_solver_options) settings, &
         !!  optional type(convergence_info) info, &
+        !!  optional type(regression_statistics) stats(:), &
         !!  optional real(real64) fmod(:), &
         !!  optional real(real64) resid(:), &
         !!  optional class(errors) err &
@@ -226,6 +227,9 @@ module friction
         !! @param[out] info An optional output that can be used to gain 
         !!  information about the iterative solution and the nature of the 
         !!  convergence.
+        !! @param[out] stats An optional output array of M-elements that can be
+        !!  used to retrieve statistical information regarding the fit of each
+        !!  of the M model parameters.
         !! @param[out] fmod An optional N-element array used to provide the
         !!  fitted model results.
         !! @param[out] resid An optional N-element array containing the fitted
@@ -299,8 +303,9 @@ module friction
     ! friction_fitting.f90
     interface
         module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, &
-            minp, alpha, integrator, controls, settings, info, fmod, resid, err)
-            class(friction_model), intent(inout) :: this
+            minp, alpha, integrator, controls, settings, info, stats, fmod, &
+            resid, err)
+            class(friction_model), intent(inout), target :: this
             real(real64), intent(in), target, dimension(:) :: t, x, v, f, n
             logical, intent(in), optional :: usevel
             real(real64), intent(in), optional, dimension(:) :: weights, maxp, &
@@ -310,6 +315,7 @@ module friction
             type(iteration_controls), intent(in), optional :: controls
             type(lm_solver_options), intent(in), optional :: settings
             type(convergence_info), intent(out), optional :: info
+            type(regression_statistics), intent(out), optional, dimension(:) :: stats
             real(real64), intent(out), optional, target, dimension(:) :: fmod, &
                 resid
             class(errors), intent(inout), optional, target :: err

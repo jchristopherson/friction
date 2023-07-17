@@ -1,12 +1,95 @@
 submodule (friction) friction_fitting
     use fstats
     use fitpack
+
+    ! Variables specific to the fitting process
+    real(real64), pointer, dimension(:) :: t_
+    real(real64), pointer, dimension(:) :: x_
+    real(real64), pointer, dimension(:) :: v_
+    real(real64), pointer, dimension(:) :: f_
+    real(real64), pointer, dimension(:) :: n_
+    real(real64), pointer, dimension(:) :: initstate_
+    type(fitpack_curve), pointer :: xinterp_
+    type(fitpack_curve), pointer :: vinterp_
+    type(fitpack_curve), pointer :: ninterp_
+    type(ode_container), pointer :: mdl_
+    class(friction_model), pointer :: fmdl_
+    class(ode_integrator), pointer :: integrate_
 contains
 ! ------------------------------------------------------------------------------
-module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
-    alpha, integrator, controls, settings, info, fmod, resid, err)
+! Routine for fitting the friction model - uses module-level variables
+subroutine fit_fcn(x, p, f, stop_)
     ! Arguments
-    class(friction_model), intent(inout) :: this
+    real(real64), intent(in), dimension(:) :: x, p
+    real(real64), intent(out), dimension(:) :: f
+    logical, intent(out) :: stop_
+
+    ! Local Variables
+    integer(int32) :: i
+
+    ! Assign the model parameters
+    call fmdl_%from_array(p)
+
+    ! Evaluate the friction model and compare the results
+    do i = 1, size(x)
+        f(i) = fmdl_%evaluate(t_(i), x_(i), v_(i), n_(i)) - f_(i)
+    end do
+
+    ! No need to stop
+    stop_ = .false.
+end subroutine
+
+! Routine for fitting if internal variables are used by the model
+subroutine internal_var_fit_fcn(x, p, f, stop_)
+    ! Arguments
+    real(real64), intent(in), dimension(:) :: x, p
+    real(real64), intent(out), dimension(:) :: f
+    logical, intent(out) :: stop_
+
+    ! Local Variables
+    integer(int32) :: i
+    real(real64), allocatable, dimension(:,:) :: dzdt
+
+    ! Assign the model parameters
+    call fmdl_%from_array(p)
+
+    ! Integrate to determine the state variables
+    dzdt = integrate_%solve(mdl_, t_, initstate_)
+
+    ! Evaluate the friction model and compare the results
+    do i = 1, size(x)
+        f(i) = fmdl_%evaluate(t_(i), x_(i), v_(i), n_(i), dzdt(i,2:)) - f_(i)
+    end do
+
+    ! No need to stop
+    stop_ = .false.
+end subroutine
+
+! ODE Routine
+subroutine internal_state_odes(t, z, dzdt)
+    ! Arguments
+    real(real64), intent(in) :: t
+    real(real64), intent(in), dimension(:) :: z
+    real(real64), intent(out), dimension(:) :: dzdt
+
+    ! Local Variables
+    real(real64) :: x, v, n
+
+    ! Interpolate to obtain the position, velocity, and normal force values
+    ! corresponding to time t
+    x = xinterp_%eval(t)
+    v = vinterp_%eval(t)
+    n = ninterp_%eval(t)
+
+    ! Evaluate the friction model state equation
+    call fmdl_%state(t, x, v, n, z, dzdt)
+end subroutine
+
+! ------------------------------------------------------------------------------
+module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
+    alpha, integrator, controls, settings, info, stats, fmod, resid, err)
+    ! Arguments
+    class(friction_model), intent(inout), target :: this
     real(real64), intent(in), target, dimension(:) :: t, x, v, f, n
     logical, intent(in), optional :: usevel
     real(real64), intent(in), optional, dimension(:) :: weights, maxp, minp
@@ -15,6 +98,7 @@ module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
     type(iteration_controls), intent(in), optional :: controls
     type(lm_solver_options), intent(in), optional :: settings
     type(convergence_info), intent(out), optional :: info
+    type(regression_statistics), intent(out), optional, dimension(:) :: stats
     real(real64), intent(out), optional, target, dimension(:) :: fmod, resid
     class(errors), intent(inout), optional, target :: err
 
@@ -23,15 +107,14 @@ module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
     type(errors), target :: deferr
     logical :: uv
     integer(int32) :: npts, nparams, flag
-    real(real64), allocatable, dimension(:) :: params, initstate
+    real(real64), allocatable, target, dimension(:) :: params, initstate
     real(real64), allocatable, dimension(:,:) :: dzdt
     real(real64), pointer, dimension(:) :: fmodptr, residptr, xptr
     real(real64), allocatable, target, dimension(:) :: fmoddef, residdef
     procedure(regression_function), pointer :: fcn
-    type(fitpack_curve) :: xinterp, vinterp, ninterp
+    type(fitpack_curve), target :: xinterp, vinterp, ninterp
     type(sdirk4_integrator), target :: def_integrator
-    class(ode_integrator), pointer :: integrate
-    type(ode_container) :: mdl
+    type(ode_container), target :: mdl
     
     ! Initialization
     if (present(err)) then
@@ -52,9 +135,9 @@ module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
         xptr(1:npts) => x(1:npts)
     end if
     if (present(integrator)) then
-        integrate => integrator
+        integrate_ => integrator
     else
-        integrate => def_integrator
+        integrate_ => def_integrator
     end if
 
     ! Input Checking
@@ -86,6 +169,14 @@ module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
         residptr(1:npts) => residdef(1:npts)
     end if
 
+    ! Assign pointers
+    t_(1:npts) => t
+    x_(1:npts) => x
+    v_(1:npts) => v
+    f_(1:npts) => f
+    n_(1:npts) => n
+    fmdl_ => this
+
     ! Compute the fit
     if (this%has_internal_state()) then
         fcn => internal_var_fit_fcn
@@ -103,13 +194,21 @@ module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
         allocate(initstate(this%get_state_variable_count()), source = 0.0d0, &
             stat = flag)
         if (flag /= 0) go to 30
+
+        ! Assign pointers
+        mdl_ => mdl
+        initstate_ => initstate
+        xinterp_ => xinterp
+        vinterp_ => vinterp
+        ninterp_ => ninterp
     else
         fcn => fit_fcn
     end if
 
     call nonlinear_least_squares(fcn, xptr, f, params, fmodptr, residptr, &
         weights = weights, maxp = maxp, minp = minp, alpha = alpha, &
-        controls = controls, settings = settings, info = info, err = errmgr)
+        controls = controls, settings = settings, info = info, stats = stats, &
+        err = errmgr)
     if (errmgr%has_error_occurred()) return
     call this%from_array(params)
 
@@ -156,73 +255,6 @@ module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
     call write_interpolation_error("fmdl_fit", flag, errmgr)
     return
 
-! ------------------------------------------------------------------------------
-contains
-    ! Define the function to fit if no internal variables are present
-    subroutine fit_fcn(x_, p_, f_, stop_)
-        ! Arguments
-        real(real64), intent(in), dimension(:) :: x_, p_
-        real(real64), intent(out), dimension(:) :: f_
-        logical, intent(out) :: stop_
-
-        ! Local Variables
-        integer(int32) :: i_
-
-        ! Assign the model parameters
-        call this%from_array(p_)
-
-        ! Evaluate the friction model and compare the results
-        do i_ = 1, size(x_)
-            f_(i) = this%evaluate(t(i), x(i), v(i), n(i)) - f(i)
-        end do
-
-        ! No need to stop
-        stop_ = .false.
-    end subroutine
-
-    ! Defines the function to fit if internal variables are used by the model
-    subroutine internal_var_fit_fcn(x_, p_, f_, stop_)
-        ! Arguments
-        real(real64), intent(in), dimension(:) :: x_, p_
-        real(real64), intent(out), dimension(:) :: f_
-        logical, intent(out) :: stop_
-
-        ! Local Variables
-        integer(int32) :: i_
-
-        ! Assign the model parameters
-        call this%from_array(p_)
-
-        ! Integrate to determine the state variables
-        dzdt = integrate%solve(mdl, t, initstate)
-
-        ! Evaluate the friction model and compare teh results
-        do i_ = 1, size(x_)
-            f_(i) = this%evaluate(t(i), x(i), v(i), n(i), dzdt(i,2:))
-        end do
-
-        ! No need to stop
-        stop_ = .false.
-    end subroutine
-
-    subroutine internal_state_odes(t_, z_, dzdt_)
-        ! Arguments
-        real(real64), intent(in) :: t_
-        real(real64), intent(in), dimension(:) :: z_
-        real(real64), intent(out), dimension(:) :: dzdt_
-
-        ! Local Variables
-        real(real64) :: x_, v_, n_
-
-        ! Interpolate to obtain the position, velocity, and normal force values
-        ! corresponding to time t_
-        x_ = xinterp%eval(t_)
-        v_ = vinterp%eval(t_)
-        n_ = ninterp%eval(t_)
-
-        ! Evaluate the friction model state equation
-        call this%state(t_, x_, v_, n_, z_, dzdt_)
-    end subroutine
 end subroutine
 
 ! ------------------------------------------------------------------------------
