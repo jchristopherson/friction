@@ -176,7 +176,6 @@ module friction
         !!  real(real64) v(:), &
         !!  real(real64) f(:), &
         !!  real(real64) n(:), &
-        !!  optional logical usevel, &
         !!  optional real(real64) weights(:), &
         !!  optional real(real64) maxp(:), &
         !!  optional real(real64) minp(:), &
@@ -203,9 +202,6 @@ module friction
         !!  data.
         !! @param[in] f An N-element array containing the friction force data.
         !! @param[in] n An N-element array containing the normal force data.
-        !! @param[in] usevel An optional argument that specifies whether the
-        !!  force-velocity (true) or force-displacement (false) is fitted.  The
-        !!  default is true such that the force-velocity relationship is fitted.
         !! @param[in] weights An optional N-element array that can be used to
         !!  weight specific data points.  The default is an array of all ones
         !!  such that all points are weighted equally.
@@ -302,12 +298,11 @@ module friction
 
     ! friction_fitting.f90
     interface
-        module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, &
+        module subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, &
             minp, alpha, integrator, controls, settings, info, stats, fmod, &
             resid, err)
             class(friction_model), intent(inout), target :: this
             real(real64), intent(in), target, dimension(:) :: t, x, v, f, n
-            logical, intent(in), optional :: usevel
             real(real64), intent(in), optional, dimension(:) :: weights, maxp, &
                 minp
             real(real64), intent(in), optional :: alpha

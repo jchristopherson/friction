@@ -2,6 +2,7 @@ submodule (friction) friction_fitting
     use fstats
     use fitpack
 
+! ------------------------------------------------------------------------------
     ! Variables specific to the fitting process
     real(real64), pointer, dimension(:) :: t_
     real(real64), pointer, dimension(:) :: x_
@@ -86,12 +87,11 @@ subroutine internal_state_odes(t, z, dzdt)
 end subroutine
 
 ! ------------------------------------------------------------------------------
-module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
+module subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
     alpha, integrator, controls, settings, info, stats, fmod, resid, err)
     ! Arguments
     class(friction_model), intent(inout), target :: this
     real(real64), intent(in), target, dimension(:) :: t, x, v, f, n
-    logical, intent(in), optional :: usevel
     real(real64), intent(in), optional, dimension(:) :: weights, maxp, minp
     real(real64), intent(in), optional :: alpha
     class(ode_integrator), intent(inout), target, optional :: integrator
@@ -105,11 +105,10 @@ module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
     ! Local Variables
     class(errors), pointer :: errmgr
     type(errors), target :: deferr
-    logical :: uv
     integer(int32) :: npts, nparams, flag
     real(real64), allocatable, target, dimension(:) :: params, initstate
     real(real64), allocatable, dimension(:,:) :: dzdt
-    real(real64), pointer, dimension(:) :: fmodptr, residptr, xptr
+    real(real64), pointer, dimension(:) :: fmodptr, residptr
     real(real64), allocatable, target, dimension(:) :: fmoddef, residdef
     procedure(regression_function), pointer :: fcn
     type(fitpack_curve), target :: xinterp, vinterp, ninterp
@@ -122,18 +121,8 @@ module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
     else
         errmgr => deferr
     end if
-    if (present(usevel)) then
-        uv = usevel
-    else
-        uv = .true.
-    end if
     npts = size(t)
     nparams = this%parameter_count()
-    if (uv) then
-        xptr(1:npts) => v(1:npts)
-    else
-        xptr(1:npts) => x(1:npts)
-    end if
     if (present(integrator)) then
         integrate_ => integrator
     else
@@ -183,11 +172,11 @@ module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
 
         ! Define the interpolation objects & generate the fit
         flag = xinterp%new_fit(t, x)
-        if (flag /= 0) go to 40
+        if (flag > 0) go to 40
         flag = vinterp%new_fit(t, v)
-        if (flag /= 0) go to 40
+        if (flag > 0) go to 40
         flag = ninterp%new_fit(t, n)
-        if (flag /= 0) go to 40
+        if (flag > 0) go to 40
 
         ! Set up the integrator
         mdl%fcn => internal_state_odes
@@ -205,7 +194,7 @@ module subroutine fmdl_fit(this, t, x, v, f, n, usevel, weights, maxp, minp, &
         fcn => fit_fcn
     end if
 
-    call nonlinear_least_squares(fcn, xptr, f, params, fmodptr, residptr, &
+    call nonlinear_least_squares(fcn, t, f, params, fmodptr, residptr, &
         weights = weights, maxp = maxp, minp = minp, alpha = alpha, &
         controls = controls, settings = settings, info = info, stats = stats, &
         err = errmgr)
@@ -268,7 +257,7 @@ subroutine write_array_size_error(fcn, arrayname, nexpect, nactual, err)
     character(len = 256) :: errmsg
 
     ! Process
-    write(100, errmsg) "Expected " // arrayname // " to be ", nexpect, &
+    write(errmsg, 100) "Expected " // arrayname // " to be ", nexpect, &
         " in size, but found it to be ", nactual, " in size."
     call err%report_error(fcn, trim(errmsg), FRICTION_ARRAY_SIZE_ERROR)
 
@@ -287,7 +276,7 @@ subroutine write_memory_error(fcn, flag, err)
     character(len = 256) :: errmsg
 
     ! Process
-    write(100, errmsg) "Memory allocation error flag ", flag, " encountered."
+    write(errmsg, 100) "Memory allocation error flag ", flag, " encountered."
     call err%report_error(fcn, trim(errmsg), FRICTION_MEMORY_ERROR)
 
     ! Formatting
@@ -305,7 +294,7 @@ subroutine write_interpolation_error(fcn, flag, err)
     character(len = 256) :: errmsg
 
     ! Process
-    write(100, errmsg) "Interpolation error flag ", flag, " encountered."
+    write(errmsg, 100) "Interpolation error flag ", flag, " encountered."
     call err%report_error(fcn, trim(errmsg), FRICTION_INVALID_OPERATION_ERROR)
 
     ! Formatting

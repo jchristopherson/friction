@@ -29,3 +29,12 @@ add_executable(
 link_library(coulomb_fit_example ${PROJECT_NAME} ${PROJECT_INCLUDE_DIR})
 link_library(coulomb_fit_example ${fplot_LIBRARY} ${fplot_INCLUDE_DIR})
 link_library(coulomb_fit_example ${fortran-csv-module_LIBRARY} ${fortran-csv-module_INCLUDE_DIR})
+
+# Lu-Gre Fitting Example
+add_executable(
+    lugre_fit_example
+    lugre_fit_example.f90
+)
+link_library(lugre_fit_example ${PROJECT_NAME} ${PROJECT_INCLUDE_DIR})
+link_library(lugre_fit_example ${fplot_LIBRARY} ${fplot_INCLUDE_DIR})
+link_library(lugre_fit_example ${fortran-csv-module_LIBRARY} ${fortran-csv-module_INCLUDE_DIR})
