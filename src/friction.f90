@@ -897,7 +897,15 @@ module friction
         !!
         !! @param[in] this The @ref lugre_model object.
         !! @param[out] x The array used to store the parameters.  See @ref
-        !!  parameter_count to determine the size of this array.
+        !!  parameter_count to determine the size of this array.  The parameter 
+        !!  order is as follows:
+        !!  1. static_coefficient
+        !!  2. coulomb_coefficient
+        !!  3. stribeck_velocity
+        !!  4. stiffness
+        !!  5. damping
+        !!  6. viscous_damping
+        !!  7. shape_parameter
         !! @param[in,out] err An optional errors-based object that if provided 
         !!  can be used to retrieve information relating to any errors 
         !!  encountered during execution. If not provided, a default 
@@ -920,7 +928,15 @@ module friction
         !!
         !! @param[in,out] this The @ref lugre_model object.
         !! @param[in] x The array of parameters.  See @ref parameter_count to 
-        !!  determine the size of this array.
+        !!  determine the size of this array.  The parameter order is as 
+        !!  follows:
+        !!  1. static_coefficient
+        !!  2. coulomb_coefficient
+        !!  3. stribeck_velocity
+        !!  4. stiffness
+        !!  5. damping
+        !!  6. viscous_damping
+        !!  7. shape_parameter
         !! @param[in,out] err An optional errors-based object that if provided 
         !!  can be used to retrieve information relating to any errors 
         !!  encountered during execution. If not provided, a default 
