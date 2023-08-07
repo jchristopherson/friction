@@ -16,8 +16,8 @@ module function lg_eval(this, t, x, dxdt, nrm, svars) result(rst)
     ! Process
     call this%state(t, x, dxdt, nrm, svars, dsdt)
     s1 = this%damping * exp(-(dxdt / this%stribeck_velocity)**2)
-    rst = nrm * (this%stiffness * svars(1) + s1 * dsdt(1) + &
-        this%viscous_damping * dxdt)
+    rst = nrm * (this%stiffness * svars(1) + s1 * dsdt(1)) + &
+        this%viscous_damping * dxdt
 end function
 
 ! ------------------------------------------------------------------------------
