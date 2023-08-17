@@ -20,7 +20,7 @@ F = \sigma_{0} z + \sigma_{1} \frac{dz}{dt} e^{-\left( \frac{v}{v_s} \right)^{2}
 g(v) = a_{1} + \frac{a_2}{1 + s^{\alpha}}
 ```
 ```math
-a_{1} = \frac{\mu_c N}{\sigma_{0}}, a_{2} = \frac{\mu_s N + \mu_c N}{\sigma_{0}}, s = \frac{\left| v \right|}{v_s}
+a_{1} = \frac{\mu_c N}{\sigma_{0}}, a_{2} = \frac{\mu_s N - \mu_c N}{\sigma_{0}}, s = \frac{\left| v \right|}{v_s}
 ```
 
 ## References:
