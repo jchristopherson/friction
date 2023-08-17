@@ -11,12 +11,13 @@ module function lg_eval(this, t, x, dxdt, nrm, svars) result(rst)
     real(real64) :: rst
 
     ! Local Variables
-    real(real64) :: s1, dsdt(1)
+    ! real(real64) :: s1, dsdt(1)
+    real(real64) :: dsdt(1)
 
     ! Process
     call this%state(t, x, dxdt, nrm, svars, dsdt)
-    s1 = this%damping * exp(-(dxdt / this%stribeck_velocity)**2)
-    rst = this%stiffness * svars(1) + s1 * dsdt(1) + &
+    ! s1 = this%damping * exp(-(dxdt / this%stribeck_velocity)**2)
+    rst = this%stiffness * svars(1) + this%damping * dsdt(1) + &
         this%viscous_damping * dxdt
 end function
 
