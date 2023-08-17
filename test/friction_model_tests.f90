@@ -47,7 +47,7 @@ function test_lugre() result(rst)
 
     ! Local Variables
     real(real64) :: mus, mud, k, b, bv, vs, a, s, dsdt(1), v, n, f, &
-        fans, dsans, g
+        fans, dsans, g, a1, a2, Fc, Fs
     type(lugre_model) :: mdl
 
     ! Initialization
@@ -72,9 +72,13 @@ function test_lugre() result(rst)
     mdl%viscous_damping = bv
 
     ! Compute the solution
-    g = mud + (mus - mud) * exp(-abs(v / vs)**a)
-    dsans = v - k * abs(v) * s / g
-    fans = n * (k * s + b * dsans + bv * v)
+    Fc = mdl%coulomb_coefficient * n
+    Fs = mdl%static_coefficient * n
+    a1 = Fc / mdl%stiffness
+    a2 = (Fs - Fc) / mdl%stiffness
+    g = a1 + a2 / (1.0d0 + (abs(v) / mdl%stribeck_velocity)**mdl%shape_parameter)
+    dsans = v - abs(v) * s / g
+    fans = k * s + b * dsans + bv * v
 
     call mdl%state(0.0d0, 0.0d0, v, n, [s], dsdt)
     f = mdl%evaluate(0.0d0, 0.0d0, v, n, [s])
