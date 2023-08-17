@@ -7,11 +7,11 @@ This is a work in progress.  This library will eventually be a compilation of th
 ## Available Models
 - Coulomb Model
 ```math
-F = \sign{ \left( v \right)} \mu_{c} N
+F = sign{ \left( v \right)} \mu_{c} N
 ```
 - Lu-Gre Model
 ```math
-F = \sigma_{0} z + \sigma_{1} e^{-\left( \frac{v}{v_s} \right)^{2} } \frac{dz}{dt} + \sigma_{2} v
+F = \sigma_{0} z + \sigma_{1} \frac{dz}{dt} e^{-\left( \frac{v}{v_s} \right)^{2} } + \sigma_{2} v
 ```
 ```math
 \frac{dz}{dt} = v - \frac{\left| v \right| z}{g(v)}
