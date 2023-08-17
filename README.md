@@ -7,7 +7,7 @@ This is a work in progress.  This library will eventually be a compilation of th
 ## Available Models
 - Coulomb Model
 ```math
-F = sign{ \left( v \right)} \mu_{c} N
+F = sgn{ \left( v \right)} \mu_{c} N
 ```
 - Lu-Gre Model
 ```math
@@ -27,7 +27,7 @@ a_{1} = \frac{\mu_c N}{\sigma_{0}}, a_{2} = \frac{\mu_s N - \mu_c N}{\sigma_{0}}
 F = N k \delta
 ```
 ```math
-\delta_{i+1} = \sgn \left( x_{i+1} - x_{i} + \delta_{i} \right) \min \left( \left| x_{i+1} - x_{i} + \delta_{i} \right|, \Delta \right)
+\delta_{i+1} = sgn \left( x_{i+1} - x_{i} + \delta_{i} \right) \min \left( \left| x_{i+1} - x_{i} + \delta_{i} \right|, \Delta \right)
 ```
 ```math
 \Delta = \frac{\mu_c}{k}
