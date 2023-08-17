@@ -6,7 +6,32 @@ This is a work in progress.  This library will eventually be a compilation of th
 
 ## Available Models
 - Coulomb Model
+```math
+F = sgn{ \left( v \right)} \mu_{c} N
+```
 - Lu-Gre Model
+```math
+F = \sigma_{0} z + \sigma_{1} \frac{dz}{dt} + \sigma_{2} v
+```
+```math
+\frac{dz}{dt} = v - \frac{\left| v \right| z}{g(v)}
+```
+```math
+g(v) = a_{1} + \frac{a_2}{1 + s^{\alpha}}
+```
+```math
+a_{1} = \frac{\mu_c N}{\sigma_{0}}, a_{2} = \frac{\mu_s N - \mu_c N}{\sigma_{0}}, s = \frac{\left| v \right|}{v_s}
+```
+- Maxwell Model
+```math
+F = N k \delta
+```
+```math
+\delta_{i+1} = sgn \left( x_{i+1} - x_{i} + \delta_{i} \right) \min \left( \left| x_{i+1} - x_{i} + \delta_{i} \right|, \Delta \right)
+```
+```math
+\Delta = \frac{\mu_c}{k}
+```
 
 ## References:
 1. Al-Bender, Farid & Lampaert, Vincent & Swevers, Jan. (2004). Modeling of dry sliding friction dynamics: From heuristic models to physically motivated models and back. Chaos (Woodbury, N.Y.). 14. 446-60. 10.1063/1.1741752. 

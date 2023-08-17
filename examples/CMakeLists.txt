@@ -38,3 +38,11 @@ add_executable(
 link_library(lugre_fit_example ${PROJECT_NAME} ${PROJECT_INCLUDE_DIR})
 link_library(lugre_fit_example ${fplot_LIBRARY} ${fplot_INCLUDE_DIR})
 link_library(lugre_fit_example ${fortran-csv-module_LIBRARY} ${fortran-csv-module_INCLUDE_DIR})
+
+# Maxwell Example
+add_executable(
+    maxwell_example
+    maxwell_example.f90
+)
+link_library(maxwell_example ${PROJECT_NAME} ${PROJECT_INCLUDE_DIR})
+link_library(maxwell_example ${fplot_LIBRARY} ${fplot_INCLUDE_DIR})

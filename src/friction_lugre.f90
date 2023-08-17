@@ -11,12 +11,13 @@ module function lg_eval(this, t, x, dxdt, nrm, svars) result(rst)
     real(real64) :: rst
 
     ! Local Variables
-    real(real64) :: s1, dsdt(1)
+    ! real(real64) :: s1, dsdt(1)
+    real(real64) :: dsdt(1)
 
     ! Process
     call this%state(t, x, dxdt, nrm, svars, dsdt)
-    s1 = this%damping * exp(-(dxdt / this%stribeck_velocity)**2)
-    rst = nrm * (this%stiffness * svars(1) + s1 * dsdt(1)) + &
+    ! s1 = this%damping * exp(-(dxdt / this%stribeck_velocity)**2)
+    rst = this%stiffness * svars(1) + this%damping * dsdt(1) + &
         this%viscous_damping * dxdt
 end function
 
@@ -36,13 +37,18 @@ module subroutine lg_state_model(this, t, x, dxdt, nrm, svars, dsdt)
     real(real64), intent(out), dimension(:) :: dsdt
 
     ! Local Variables
-    real(real64) :: g
+    real(real64) :: g, a1, a2, Fc, Fs
+
+    ! Initialization
+    Fc = nrm * this%coulomb_coefficient
+    Fs = nrm * this%static_coefficient
+    a1 = Fc / this%stiffness
+    a2 = (Fs - Fc) / this%stiffness
 
     ! Compute the state variable derivative
-    g = this%coulomb_coefficient + (this%static_coefficient - &
-        this%coulomb_coefficient) * &
-        exp(-abs(dxdt / this%stribeck_velocity)**this%shape_parameter)
-    dsdt(1) = dxdt - this%stiffness * abs(dxdt) * svars(1) / g
+    g = a1 + a2 / &
+        (1.0d0 + (abs(dxdt) / this%stribeck_velocity)**this%shape_parameter)
+    dsdt(1) = dxdt - abs(dxdt) * svars(1) / g
 end subroutine
 
 ! ------------------------------------------------------------------------------

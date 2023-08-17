@@ -14,6 +14,7 @@ module friction
     public :: friction_model
     public :: coulomb_model
     public :: lugre_model
+    public :: maxwell_model
 
     !> Defines an array size error.
     integer(int32), parameter :: FRICTION_ARRAY_SIZE_ERROR = 100000
@@ -1009,6 +1010,270 @@ module friction
 
         pure module function lg_get_state_var_count(this) result(rst)
             class(lugre_model), intent(in) :: this
+            integer(int32) :: rst
+        end function
+    end interface
+
+! ------------------------------------------------------------------------------
+    !> @brief Defines a single-element, Maxwell Slip model.
+    !!
+    !! @par Example
+    !! The following example illustrates the evaluation of the Maxwell friction
+    !! model for a system exposed to a sinusoidal velocity with a constant
+    !! normal force.
+    !! @code{.f90}
+    !! program example
+    !!     use iso_fortran_env
+    !!     use friction
+    !!     use fplot_core
+    !!     implicit none
+    !!
+    !!     ! Parameters
+    !!     integer(int32), parameter :: npts = 1000
+    !!     real(real64), parameter :: k = 1.0d3
+    !!     real(real64), parameter :: mu = 0.15d0
+    !!     real(real64), parameter :: Fnrm = 1.0d2
+    !!     real(real64), parameter :: amp = 1.0d-1
+    !!     real(real64), parameter :: freq = 2.0d0
+    !!     real(real64), parameter :: pi = 2.0d0 * acos(0.0d0)
+    !!     real(real64), parameter :: dt = 1.0d-3
+    !!
+    !!     ! Local Variables
+    !!     integer(int32) :: i
+    !!     real(real64) :: t(npts), x(npts), v(npts), F(npts)
+    !!     type(maxwell_model) :: mdl
+    !!
+    !!     ! Plot Variables
+    !!     type(plot_2d) :: plt
+    !!     type(plot_data_2d) :: pd
+    !!     class(plot_axis), pointer :: xAxis, yAxis
+    !!
+    !!     ! Define the motion profiles
+    !!     t = (/ (dt * i, i = 0, npts - 1) /)
+    !!     x = amp * cos(2.0d0 * pi * freq * t)
+    !!     v = -2.0d0 * pi * freq * amp * sin(2.0d0 * pi * freq * t)
+    !!
+    !!     ! Compute the friction force
+    !!     mdl%stiffness = k
+    !!     mdl%friction_coefficient = mu
+    !!     F = (/ (mdl%evaluate(t(i), x(i), v(i), Fnrm), i = 1, npts) /)
+    !!
+    !!     ! Plot the resulting friction force - velocity curve
+    !!     call plt%initialize()
+    !!     xAxis => plt%get_x_axis()
+    !!     yAxis => plt%get_y_axis()
+    !!
+    !!     call xAxis%set_title("v(t)")
+    !!     call yAxis%set_title("F(t)")
+    !!     call yAxis%set_autoscale(.false.)
+    !!     call yAxis%set_limits(-1.5d0 * mu * Fnrm, 1.5d0 * mu * Fnrm)
+    !!
+    !!     call pd%define_data(v, F)
+    !!     call pd%set_line_width(2.0)
+    !!     call plt%push(pd)
+    !!     call plt%draw()
+    !!     call plt%clear_all()
+    !!
+    !!     ! Plot the friction force - time curve
+    !!     call xAxis%set_title("t")
+    !!     call pd%define_data(t, F)
+    !!     call plt%push(pd)
+    !!     call plt%draw()
+    !! end program
+    !! @endcode
+    !! The above program produces the following plot using the 
+    !! [FPLOT](https://github.com/jchristopherson/fplot) library.
+    !! @image html maxwell_force_velocity.png
+    !! @image html maxwell_force_time.png
+    type, extends(friction_model) :: maxwell_model
+        !> @brief The presliding stiffness term.
+        real(real64) :: stiffness
+        !> @brief The Coulomb friction coefficient.
+        real(real64) :: friction_coefficient
+        ! Private, internal variables
+        real(real64), private :: x_prev = 0.0d0
+        real(real64), private :: d_prev = 0.0d0
+    contains
+        !> @brief Evaluates the friction model given the defined parameter
+        !! state.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! real(real64) function evaluate( &
+        !!  class(maxwell_model) this, &
+        !!  real(real64) t, &
+        !!  real(real64) x, &
+        !!  real(real64) dxdt, &
+        !!  real(real64) nrm, &
+        !!  optional real(real64) svars(:) &
+        !! )
+        !! @endcode
+        !!
+        !! @param[in,out] this The @ref maxwell_model object.
+        !! @param[in] t The current simulation time value.
+        !! @param[in] x The current value of the relative position between
+        !!  the contacting bodies.
+        !! @param[in] dxdt The current value of the relative velocity between
+        !!  the contacting bodies.
+        !! @param[in] nrm The current normal force between the contacting 
+        !!  bodies.
+        !! @param[in] svars An optional array containing any internal state
+        !!  variables the model may rely upon.
+        !!
+        !! @return The friction force.
+        procedure, public :: evaluate => mx_eval
+        !> @brief Returns a value stating if the model relies upon internal
+        !! state variables.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! logical pure function has_internal_state( &
+        !!  class(maxwell_model) this &
+        !! )
+        !! @endcode
+        !!
+        !! @param[in] this The @ref maxwell_model object.
+        !! @return Returns true if the model utilizes internal state variables;
+        !!  else, returns false.
+        procedure, public :: has_internal_state => mx_has_state_vars
+        !> @brief Evaluates the time derivatives of the internal friction state
+        !! model.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine state( &
+        !!  class(maxwell_model) this, &
+        !!  real(real64) t, &
+        !!  real(real64) x, &
+        !!  real(real64) dxdt, &
+        !!  real(real64) nrm, &
+        !!  real(real64) svars(:), &
+        !!  real(real64) dsdt(:) &
+        !! )
+        !! @endcode
+        !!
+        !! @param[in,out] this The @ref maxwell_model object.
+        !! @param[in] t The current simulation time value.
+        !! @param[in] x The current value of the relative position between
+        !!  the contacting bodies.
+        !! @param[in] dxdt The current value of the relative velocity between
+        !!  the contacting bodies.
+        !! @param[in] nrm The current normal force between the contacting 
+        !!  bodies.
+        !! @param[in] svars An N-element array containing any internal state
+        !!  variables the model may rely upon.
+        !! @param[out] dsdt An N-element array where the state variable 
+        !!  derivatives are to be written.
+        procedure, public :: state => mx_state_model
+        !> @brief Converts the parameters of the friction model into an array.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine to_array( &
+        !!  class(maxwell_model) this, &
+        !!  real(real64) x(:), &
+        !!  optional class(errors) err &
+        !! )
+        !! @endcode
+        !!
+        !! @param[in] this The @ref maxwell_model object.
+        !! @param[out] x The array used to store the parameters.  See @ref
+        !!  parameter_count to determine the size of this array.
+        !! @param[in,out] err An optional errors-based object that if provided 
+        !!  can be used to retrieve information relating to any errors 
+        !!  encountered during execution. If not provided, a default 
+        !!  implementation of the errors class is used internally to provide 
+        !!  error handling. Possible errors and warning messages that may be 
+        !!  encountered are as follows.
+        !!  - FRICTION_ARRAY_SIZE_ERROR: Occurs if @p x is not sized 
+        !!      appropriately.
+        procedure, public :: to_array => mx_to_array
+        !> @brief Converts an array into the parameters for the friction model.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! subroutine from_array( &
+        !!  class(maxwell_model) this, &
+        !!  real(real64) x(:), &
+        !!  optional class(errors) err &
+        !! )
+        !! @endcode
+        !!
+        !! @param[in,out] this The @ref maxwell_model object.
+        !! @param[in] x The array of parameters.  See @ref parameter_count to 
+        !!  determine the size of this array.
+        !! @param[in,out] err An optional errors-based object that if provided 
+        !!  can be used to retrieve information relating to any errors 
+        !!  encountered during execution. If not provided, a default 
+        !!  implementation of the errors class is used internally to provide 
+        !!  error handling. Possible errors and warning messages that may be 
+        !!  encountered are as follows.
+        !!  - FRICTION_ARRAY_SIZE_ERROR: Occurs if @p x is not sized 
+        !!      appropriately.
+        procedure, public :: from_array => mx_from_array
+        !> @brief Gets the number of model parameters.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! integer(int32) pure function parameter_count(class(maxwell_model) this)
+        !! @endcode
+        !!
+        !! @param[in] this The @ref maxwell_model object.
+        !! @return The number of model parameters.
+        procedure, public :: parameter_count => mx_parameter_count
+        !> @brief Gets the number of internal state variables used by the model.
+        !!
+        !! @par Syntax
+        !! @code{.f90}
+        !! integer(int32) pure function get_state_variable_count( &
+        !!  class(maxwell_model) this &
+        !! )
+        !! 
+        !! @param[in] this The @ref maxwell_model object.
+        !! @return The internal state variable count.
+        procedure, public :: get_state_variable_count => mx_get_state_var_count
+    end type
+
+    ! friction_maxwell.f90
+    interface
+        module function mx_eval(this, t, x, dxdt, nrm, svars) result(rst)
+            class(maxwell_model), intent(inout) :: this
+            real(real64), intent(in) :: t, x, dxdt, nrm
+            real(real64), intent(in), optional, dimension(:) :: svars
+            real(real64) :: rst
+        end function
+
+        pure module function mx_has_state_vars(this) result(rst)
+            class(maxwell_model), intent(in) :: this
+            logical :: rst
+        end function
+
+        module subroutine mx_state_model(this, t, x, dxdt, nrm, svars, dsdt)
+            class(maxwell_model), intent(inout) :: this
+            real(real64), intent(in) :: t, x, dxdt, nrm
+            real(real64), intent(in), dimension(:) :: svars
+            real(real64), intent(out), dimension(:) :: dsdt
+        end subroutine
+
+        module subroutine mx_to_array(this, x, err)
+            class(maxwell_model), intent(in) :: this
+            real(real64), intent(out), dimension(:) :: x
+            class(errors), intent(inout), optional, target :: err
+        end subroutine
+
+        module subroutine mx_from_array(this, x, err)
+            class(maxwell_model), intent(inout) :: this
+            real(real64), intent(in), dimension(:) :: x
+            class(errors), intent(inout), optional, target :: err
+        end subroutine
+
+        pure module function mx_parameter_count(this) result(rst)
+            class(maxwell_model), intent(in) :: this
+            integer(int32) :: rst
+        end function
+
+        pure module function mx_get_state_var_count(this) result(rst)
+            class(maxwell_model), intent(in) :: this
             integer(int32) :: rst
         end function
     end interface
