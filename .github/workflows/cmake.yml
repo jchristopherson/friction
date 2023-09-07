@@ -18,15 +18,10 @@ jobs:
         os: [ubuntu-latest, macos-latest]
         toolchain:
           - {compiler: gcc, version: 11}
-          - {compiler: intel-classic, version: '2021.10'}
+          - {compiler: intel-classic, version: '2021.9'}
         include:
           - os: ubuntu-latest
             toolchain: {compiler: intel, version: '2023.2'}
-        exclude: # Only necessary as there seems to be an issue in awvwgk/setup-fortran
-          - os: macos-latest
-            toolchain: {compiler: intel-classic, version: '2021.10'}
-          - os: ubuntu-latest
-            toolchain: {compiler: intel-classic, version: '2021.10'}
 
     steps:
       - uses: awvwgk/setup-fortran@v1
@@ -43,7 +38,7 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_COMPILER=${{ env.CC }} -DCMAKE_Fortran_COMPILER=${{ env.FC }} -DBUILD_TESTING=TRUE
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_Fortran_COMPILER=${{ env.FC }} -DBUILD_TESTING=TRUE
         
       - name: Build with CMake
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
