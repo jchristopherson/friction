@@ -37,13 +37,15 @@ F = N k \delta
 F = \sum_{i=1}^{n} \left( k_i z_i + b_i \frac{dz_i}{dt} \right) + b_v v
 ```
 ```math
+\begin{equation}
 \frac{dz_i}{dt} = \begin{cases}
 v & \text{if \left| z_i \right| <= s(v)}
 sgn{ \left( v \right)} \nu_i C \left( 1 - \frac{z_i}{\nu_i s(v)} \right)
 \end{cases}
+\end{equation}
 ```
 ```math
-g(v) = a_{1} + \frac{a_2}{1 + s^{\alpha}}
+s(v) = a_{1} + \frac{a_2}{1 + s^{\alpha}}
 ```
 ```math
 a_{1} = \frac{\mu_c N}{\sigma_{0}}, a_{2} = \frac{\mu_s N - \mu_c N}{\sigma_{0}}, s = \frac{\left| v \right|}{v_s}
