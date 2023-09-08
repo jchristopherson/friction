@@ -37,10 +37,10 @@ F = N k \delta
 F = \sum_{i=1}^{n} \left( k_i z_i + b_i \frac{dz_i}{dt} \right) + b_v v
 ```
 ```math
-\frac{dz_i}{dt} = v & \text{if \left| z_i \right| <= s(v)}
+\frac{dz_i}{dt} = v \text{if \left| z_i \right| <= s(v)}
 ```
 ```math
-sgn{ \left( v \right)} \nu_i C \left( 1 - \frac{z_i}{\nu_i s(v)} \right) & \text{otherwise}
+sgn{ \left( v \right)} \nu_i C \left( 1 - \frac{z_i}{\nu_i s(v)} \right)  \text{otherwise}
 ```
 ```math
 s(v) = a_{1} + \frac{a_2}{1 + s^{\alpha}}
