@@ -39,6 +39,7 @@ F = \sum_{i=1}^{n} \left( k_i z_i + b_i \frac{dz_i}{dt} \right) + b_v v
 ```math
 \begin{equation}
 \frac{dz_i}{dt} = 
+\begin{cases}
 v \text{if $|z_i| <= s(v)$}
 sgn{ \left( v \right)} \nu_i C \left( 1 - \frac{z_i}{\nu_i s(v)} \right) \text{otherwise}
 \end{cases}
