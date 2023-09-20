@@ -15,6 +15,7 @@ module friction
     public :: coulomb_model
     public :: lugre_model
     public :: maxwell_model
+    public :: generalized_maxwell_slip_model
 
     !> Defines an array size error.
     integer(int32), parameter :: FRICTION_ARRAY_SIZE_ERROR = 100000
@@ -1015,7 +1016,7 @@ module friction
     end interface
 
 ! ------------------------------------------------------------------------------
-    !> @brief Defines a single-element, Maxwell Slip model.
+    !> @brief Defines a single-element, Maxwell model.
     !!
     !! @par Example
     !! The following example illustrates the evaluation of the Maxwell friction
@@ -1275,6 +1276,257 @@ module friction
         pure module function mx_get_state_var_count(this) result(rst)
             class(maxwell_model), intent(in) :: this
             integer(int32) :: rst
+        end function
+    end interface
+
+! ------------------------------------------------------------------------------
+    type, extends(friction_model) :: generalized_maxwell_slip_model
+        !! A representation of the Generalized Maxwell Slip model.
+        integer(int32), private :: m_nModels = 0
+            !! The number of elements in the model
+        real(real64), private, allocatable, dimension(:) :: m_params
+            !! An array containing the model parameters.
+        real(real64) :: static_coefficient
+            !! The static friction coefficient.
+        real(real64) :: coulomb_coefficient
+            !! The Coulomb (dynamic) friction coefficient.
+        real(real64) :: stribeck_velocity
+            !! The Stribeck velocity parameter.
+        real(real64) :: shape_parameter
+            !! The Stribeck curve shape parameter.
+        real(real64) :: attraction_coefficient
+            !! The attraction coefficient.
+        real(real64) :: viscous_damping
+            !! The viscous damping coefficient.
+        real(real64) :: stiffness
+            !! The frictional stiffness.
+    contains
+        procedure, public :: evaluate => gmsm_eval
+        procedure, public :: has_internal_state => gmsm_has_state_vars
+        procedure, public :: state => gmsm_state_model
+        procedure, public :: to_array => gmsm_to_array
+        procedure, public :: from_array => gmsm_from_array
+        procedure, public :: parameter_count => gmsm_parameter_count
+        procedure, public :: get_state_variable_count => gmsm_get_state_var_count
+        procedure, public :: get_element_count => gmsm_get_element_count
+        procedure, public :: initialize => gmsm_initialize
+        procedure, public :: get_element_stiffness => gmsm_get_element_stiffness
+        procedure, public :: set_element_stiffness => gmsm_set_element_stiffness
+        procedure, public :: get_element_damping => gmsm_get_element_damping
+        procedure, public :: set_element_damping => gmsm_set_element_damping
+        procedure, public :: get_element_scaling => gmsm_get_element_scaling
+        procedure, public :: set_element_scaling => gmsm_set_element_scaling
+        procedure, public :: stribeck_function => gmsm_stribeck_curve
+    end type
+
+    ! friction_gmsm.f90
+    interface
+        module function gmsm_eval(this, t, x, dxdt, nrm, svars) result(rst)
+            !! Evaluates the friction model given the defined parameter
+            !! state.
+            class(generalized_maxwell_slip_model), intent(inout) :: this
+                !! The generalized_maxwell_slip_model object.
+            real(real64), intent(in) :: t
+                !! The current simulation time value.
+            real(real64), intent(in) :: x
+                !! The current value of the relative position between
+                !! the contacting bodies.
+            real(real64), intent(in) :: dxdt
+                !! The current value of the relative velocity between
+                !! the contacting bodies.
+            real(real64), intent(in) :: nrm
+                !! The current normal force between the contacting 
+                !! bodies.
+            real(real64), intent(in), optional, dimension(:) :: svars
+                !! An optional array containing any internal state
+                !! variables the model may rely upon.
+            real(real64) :: rst
+                !! The friction force.
+        end function
+
+        pure module function gmsm_has_state_vars(this) result(rst)
+            !! Returns a value stating if the model relies upon internal
+            !! state variables.
+            class(generalized_maxwell_slip_model), intent(in) :: this
+                !! The generalized_maxwell_slip_model object.
+            logical :: rst
+                !! Returns true if the model utilizes internal state variables;
+                !! else, returns false.
+        end function
+
+        module subroutine gmsm_state_model(this, t, x, dxdt, nrm, svars, dsdt)
+            !! Evaluates the time derivatives of the internal friction state
+            !! model.
+            class(generalized_maxwell_slip_model), intent(inout) :: this
+                !! The generalized_maxwell_slip_model object.
+            real(real64), intent(in) :: t
+                !! The current simulation time value.
+            real(real64), intent(in) :: x
+                !! The current value of the relative position between
+                !! the contacting bodies.
+            real(real64), intent(in) :: dxdt
+                !! The current value of the relative velocity between
+                !! the contacting bodies.
+            real(real64), intent(in) :: nrm
+                !! The current normal force between the contacting 
+                !! bodies.
+            real(real64), intent(in), dimension(:) :: svars
+                !! An N-element array containing any internal state
+                !! variables the model may rely upon.
+            real(real64), intent(out), dimension(:) :: dsdt
+                !! An N-element array where the state variable 
+                !! derivatives are to be written.
+        end subroutine
+
+        module subroutine gmsm_to_array(this, x, err)
+            !! Converts the parameters of the friction model into an array.
+            class(generalized_maxwell_slip_model), intent(in) :: this
+                !! The generalized_maxwell_slip_model object.
+            real(real64), intent(out), dimension(:) :: x
+                !! The array used to store the parameters.  See @ref
+                !! parameter_count to determine the size of this array.
+            class(errors), intent(inout), optional, target :: err
+                !! An optional errors-based object that if provided 
+                !! can be used to retrieve information relating to any errors 
+                !! encountered during execution. If not provided, a default 
+                !! implementation of the errors class is used internally to
+                !! provide error handling.
+        end subroutine
+
+        module subroutine gmsm_from_array(this, x, err)
+            !! Converts an array into the parameters for the friction model.
+            class(generalized_maxwell_slip_model), intent(inout) :: this
+                !! The generalized_maxwell_slip_model object.
+            real(real64), intent(in), dimension(:) :: x
+                !! The array of parameters.  See @ref parameter_count to 
+                !! determine the size of this array.
+            class(errors), intent(inout), optional, target :: err
+                !! An optional errors-based object that if provided 
+                !! can be used to retrieve information relating to any errors 
+                !! encountered during execution. If not provided, a default 
+                !! implementation of the errors class is used internally to
+                !! provide error handling.
+        end subroutine
+
+        pure module function gmsm_parameter_count(this) result(rst)
+            !! Gets the number of model parameters.
+            class(generalized_maxwell_slip_model), intent(in) :: this
+                !! The generalized_maxwell_slip_model object.
+            integer(int32) :: rst
+                !! The number of model parameters.
+        end function
+
+        pure module function gmsm_get_state_var_count(this) result(rst)
+            !! Gets the number of internal state variables used by the model.
+            class(generalized_maxwell_slip_model), intent(in) :: this
+                !! The generalized_maxwell_slip_model object.
+            integer(int32) :: rst
+                !! The internal state variable count.
+        end function
+
+        pure module function gmsm_get_element_count(this) result(rst)
+            !! Gets the number of friction elements in the model.
+            class(generalized_maxwell_slip_model), intent(in) :: this
+                !! The generalized_maxwell_slip_model object.
+            integer(int32) :: rst
+                !! The number of friction elements in the model.
+        end function
+
+        module subroutine gmsm_initialize(this, n, err)
+            !! Initializes the model.
+            class(generalized_maxwell_slip_model), intent(inout) :: this
+                !! The generalized_maxwell_slip_model object.
+            integer(int32), intent(in) :: n
+                !! The number of friction elements.  This value must be at
+                !! least 1.
+            class(errors), intent(inout), optional, target :: err
+                !! An optional errors-based object that if provided 
+                !! can be used to retrieve information relating to any errors 
+                !! encountered during execution. If not provided, a default 
+                !! implementation of the errors class is used internally to
+                !! provide error handling.
+        end subroutine
+
+        pure module function gmsm_get_element_stiffness(this, i) result(rst)
+            !! Gets the stiffness term for the specified element.
+            class(generalized_maxwell_slip_model), intent(in) :: this
+                !! The generalized_maxwell_slip_model object.
+            integer(int32), intent(in) :: i
+                !! The index of the element.
+            real(real64) :: rst
+                !! The requested value.
+        end function
+
+        module function gmsm_set_element_stiffness(this, i, x) result(rst)
+            !! Sets the stiffness term for the specified element.
+            class(generalized_maxwell_slip_model), intent(inout) :: this
+                !! The generalized_maxwell_slip_model object.
+            integer(int32), intent(in) :: i
+                !! The index of the element.
+            real(real64), intent(in) :: x
+                !! The value.
+            logical :: rst
+                !! Returns true if the operation was successful; else, returns
+                !! false if the object has not yet been initialized.
+        end function
+
+        pure module function gmsm_get_element_damping(this, i) result(rst)
+            !! Gets the damping term for the specified element.
+            class(generalized_maxwell_slip_model), intent(in) :: this
+                !! The generalized_maxwell_slip_model object.
+            integer(int32), intent(in) :: i
+                !! The index of the element.
+            real(real64) :: rst
+                !! The requested value.
+        end function
+
+        module function gmsm_set_element_damping(this, i, x) result(rst)
+            !! Sets the damping term for the specified element.
+            class(generalized_maxwell_slip_model), intent(inout) :: this
+                !! The generalized_maxwell_slip_model object.
+            integer(int32), intent(in) :: i
+                !! The index of the element.
+            real(real64), intent(in) :: x
+                !! The value.
+            logical :: rst
+                !! Returns true if the operation was successful; else, returns
+                !! false if the object has not yet been initialized.
+        end function
+
+        pure module function gmsm_get_element_scaling(this, i) result(rst)
+            !! Gets the scaling factor for the specified element.
+            class(generalized_maxwell_slip_model), intent(in) :: this
+                !! The generalized_maxwell_slip_model object.
+            integer(int32), intent(in) :: i
+                !! The index of the element.
+            real(real64) :: rst
+                !! The requested value.
+        end function
+
+        module function gmsm_set_element_scaling(this, i, x) result(rst)
+            !! Sets the scaling factor for the specified element.
+            class(generalized_maxwell_slip_model), intent(inout) :: this
+                !! The generalized_maxwell_slip_model object.
+            integer(int32), intent(in) :: i
+                !! The index of the element.
+            real(real64), intent(in) :: x
+                !! The value.
+            logical :: rst
+                !! Returns true if the operation was successful; else, returns
+                !! false if the object has not yet been initialized.
+        end function
+
+        pure module function gmsm_stribeck_curve(this, dxdt, nrm) result(rst)
+            !! Evaluates the Stribeck function for the model.
+            class(generalized_maxwell_slip_model), intent(in) :: this
+                !! The generalized_maxwell_slip_model object.
+            real(real64), intent(in) :: dxdt
+                !! The relative velocity between the contacting bodies.
+            real(real64), intent(in) :: nrm
+                !! The normal force between the contacting bodies.
+            real(real64) :: rst
+                !! The value of the Stribeck function.  The units are units of
+                !! position.
         end function
     end interface
 

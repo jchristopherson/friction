@@ -61,3 +61,6 @@ a_{1} = \frac{\mu_c N}{\sigma_{0}}, a_{2} = \frac{\mu_s N - \mu_c N}{\sigma_{0}}
 3. Al-Bender, Farid & Lampaert, Vincent & Swevers, Jan. (2005). The generalized Maxwell-Slip model: A novel model for friction simulation and compensation. Automatic Control, IEEE Transactions on. 50. 1883 - 1887. 10.1109/TAC.2005.858676. 
 4. Tjahjowidodo, Tegoeh & Al-Bender, Farid & Brussel, H.. (2005). Friction identification and compensation in a DC motor. IFAC Proceedings Volumes. 32. 10.3182/20050703-6-CZ-1902.00093. 
 5. Lampaert, Vincent & Al-Bender, Farid & Swevers, Jan. (2003). A generalized Maxwell-slip friction model appropriate for control purposes. 4. 1170- 1177 vol.4. 10.1109/PHYCON.2003.1237071. 
+6. Al-Bender, Farid & Swevers, Jan. (2009). Characterization of friction force dynamics. Control Systems, IEEE. 28. 64 - 81. 10.1109/MCS.2008.929279. 
+7. Al-Bender, Farid. (2010). Fundamentals of friction modeling. Proceedings - ASPE Spring Topical Meeting on Control of Precision Systems, ASPE 2010. 48. 
+8. Al-Bender, Farid & Moerlooze, K.. (2011). Characterization and modeling of friction and wear: an overview. International Journal Sustainable Construction & Design. 2. 19-28. 10.21825/scad.v2i1.20431. 
