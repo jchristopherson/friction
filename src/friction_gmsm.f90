@@ -2,10 +2,10 @@ submodule (friction) friction_gmsm
     use :: ieee_arithmetic, only : ieee_value, IEEE_QUIET_NAN
 
     ! The number of model parameters per element
-    integer(int32), parameter, private :: PER_ELEMENT_COUNT = 3
+    integer(int32), parameter :: PER_ELEMENT_COUNT = 3
 
     ! The number of common model parameters
-    integer(int32), parameter, private :: COMMON_PARAMETER_COUNT = 7
+    integer(int32), parameter :: COMMON_PARAMETER_COUNT = 7
 contains
 ! ------------------------------------------------------------------------------
 module function gmsm_eval(this, t, x, dxdt, nrm, svars) result(rst)
@@ -207,7 +207,7 @@ pure module function gmsm_get_element_scaling(this, i) result(rst)
 end function
 
 ! --------------------
-module function gmsm_set_scaling(this, i, x) result(rst)
+module function gmsm_set_element_scaling(this, i, x) result(rst)
     ! Arguments
     class(generalized_maxwell_slip_model), intent(inout) :: this
     integer(int32), intent(in) :: i
@@ -255,16 +255,28 @@ pure module function gmsm_element_state_model(this, i, t, x, dxdt, nrm, z) &
     ! Arguments
     class(generalized_maxwell_slip_model), intent(in) :: this
     integer(int32), intent(in) :: i
-    real(real64), intent(in) :: t, x, dxdt, nrm, z
+    real(real64), intent(in) :: t
+    real(real64), intent(in) :: x
+    real(real64), intent(in) :: dxdt
+    real(real64), intent(in) :: nrm
+    real(real64), intent(in) :: z
     real(real64) :: rst
 
     ! Local Variables
-    real(real64) :: s
+    real(real64) :: s, vi, C
 
     ! Compute the Stribeck function
-end function
+    s = this%stribeck_function(dxdt, nrm)
 
-! ------------------------------------------------------------------------------
+    ! Process
+    if (abs(z) <= s) then
+        rst = dxdt
+    else
+        C = this%attraction_coefficient
+        vi = this%get_element_scaling(i)
+        rst = sign(1.0d0, dxdt) * vi * C * (1.0d0 - z / (vi * s))
+    end if
+end function
 
 ! ------------------------------------------------------------------------------
 end submodule

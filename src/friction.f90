@@ -1317,6 +1317,7 @@ module friction
         procedure, public :: get_element_scaling => gmsm_get_element_scaling
         procedure, public :: set_element_scaling => gmsm_set_element_scaling
         procedure, public :: stribeck_function => gmsm_stribeck_curve
+        procedure, public :: element_state => gmsm_element_state_model
     end type
 
     ! friction_gmsm.f90
@@ -1527,6 +1528,30 @@ module friction
             real(real64) :: rst
                 !! The value of the Stribeck function.  The units are units of
                 !! position.
+        end function
+
+        pure module function gmsm_element_state_model(this, i, t, x, dxdt, &
+            nrm, z) result(rst)
+            !! Computes the state equation for a single element.
+            class(generalized_maxwell_slip_model), intent(in) :: this
+                !! The generalized_maxwell_slip_model object.
+            integer(int32), intent(in) :: i
+                !! The index of the element.
+            real(real64), intent(in) :: t
+                !! The current simulation time value.
+            real(real64), intent(in) :: x
+                !! The current value of the relative position between
+                !! the contacting bodies.
+            real(real64), intent(in) :: dxdt
+                !! The current value of the relative velocity between
+                !! the contacting bodies.
+            real(real64), intent(in) :: nrm
+                !! The current normal force between the contacting 
+                !! bodies.
+            real(real64), intent(in) :: z
+                !! The current value of the state variable for the element.
+            real(real64) :: rst
+                !! The value of the state equation.
         end function
     end interface
 
