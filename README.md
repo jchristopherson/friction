@@ -40,13 +40,13 @@ F = \sum_{i=1}^{n} \left( k_i z_i + b_i \frac{dz_i}{dt} \right) + b_v v
 \begin{equation}
 \frac{dz_i}{dt} = 
 \begin{cases}
-v & \text{if $|z_i| \le s(v)$} \\
-sgn{ \left( v \right)} \nu_i C \left( 1 - \frac{z_i}{\nu_i s(v)} \right) & \text{otherwise}
+v & \text{if $|z_i| \le g(v)$} \\
+sgn{ \left( v \right)} \nu_i C \left( 1 - \frac{z_i}{\nu_i g(v)} \right) & \text{otherwise}
 \end{cases}
 \end{equation}
 ```
 ```math
-s(v) = a_{1} + \frac{a_2}{1 + s^{\alpha}}
+g(v) = a_{1} + \frac{a_2}{1 + s^{\alpha}}
 ```
 ```math
 a_{1} = \frac{\mu_c N}{\sigma_{0}}, a_{2} = \frac{\mu_s N - \mu_c N}{\sigma_{0}}, s = \frac{\left| v \right|}{v_s}

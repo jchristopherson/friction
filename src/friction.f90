@@ -223,6 +223,20 @@ module friction
 ! ------------------------------------------------------------------------------
     type, extends(friction_model) :: coulomb_model
         !! Defines the basic Coulomb friction model.
+        !!
+        !! The Coulomb model is defined as follows.
+        !!
+        !! $$ F = sgn{ \left( v \right)} \mu_{c} N $$
+        !!
+        !! where:
+        !!    
+        !! \( F = \) Friction Force 
+        !!    
+        !! \( N = \) Normal Force
+        !! 
+        !! \( v = \) Velocity
+        !!
+        !! \( \mu_c = \) Coulomb Friction Coefficient
         real(real64) :: friction_coefficient
             !! The Coulomb friction coefficient.
     contains
@@ -353,6 +367,37 @@ module friction
         !! typical spring-damper pair under small velocities; however, once 
         !! sufficient velocity occurs, the bristles slip resulting in 
         !! Coulomb-like sliding behavior.
+        !!
+        !! The Lu-Gre model is defined as follows.
+        !!
+        !! $$ F = \sigma_{0} z + \sigma_{1} \frac{dz}{dt} + \sigma_{2} v $$
+        !! $$ \frac{dz}{dt} = v - \frac{\left| v \right| z}{g(v)} $$
+        !! $$ g(v) = a_{1} + \frac{a_2}{1 + s^{\alpha}} $$
+        !! $$ a_{1} = \frac{\mu_c N}{\sigma_{0}} $$
+        !! $$ a_{2} = \frac{\mu_s N - \mu_c N}{\sigma_{0}} $$
+        !! $$ s = \frac{\left| v \right|}{v_s} $$
+        !!
+        !! where:
+        !!    
+        !! \( F = \) Friction Force 
+        !!    
+        !! \( N = \) Normal Force
+        !! 
+        !! \( v = \) Velocity
+        !!
+        !! \( \mu_c = \) Coulomb Friction Coefficient
+        !!
+        !! \( \mu_s = \) Static Friction Coefficient
+        !!
+        !! \( \sigma_{0} = \) Bristle Stiffness
+        !!
+        !! \( \sigma_{1} = \) Bristle Damping Coefficient
+        !!
+        !! \( \sigma_{2} = \) Viscous Damping Coefficient
+        !! 
+        !! \( \alpha = \) Stribeck Curve Shape Factor
+        !!
+        !! \( v_s = \) Stribeck Velocity Coefficient
         real(real64) :: static_coefficient
             !! The static friction coefficient.
         real(real64) :: coulomb_coefficient
@@ -498,6 +543,24 @@ module friction
 ! ------------------------------------------------------------------------------
     type, extends(friction_model) :: maxwell_model
         !! Defines a single-element, Maxwell model.
+        !!
+        !! The signle-element, Maxwell model is defined as follows.
+        !!
+        !! $$ F = N k \delta $$
+        !! $$ \delta_{i+1} = sgn \left( x_{i+1} - x_{i} + \delta_{i} \right) \min \left( \left| x_{i+1} - x_{i} + \delta_{i} \right|, \Delta \right) $$
+        !! $$ \Delta = \frac{\mu_c}{k} $$
+        !!
+        !! where:
+        !!    
+        !! \( F = \) Friction Force 
+        !!    
+        !! \( N = \) Normal Force
+        !! 
+        !! \( x = \) Position
+        !!
+        !! \( \mu_c = \) Coulomb Friction Coefficient
+        !!
+        !! \( k = \) Stiffness
         real(real64) :: stiffness
             !! The pre-sliding stiffness term.
         real(real64) :: friction_coefficient
@@ -625,6 +688,46 @@ module friction
 ! ------------------------------------------------------------------------------
     type, extends(friction_model) :: generalized_maxwell_slip_model
         !! A representation of the Generalized Maxwell Slip model.
+        !!
+        !! The Generalized Maxwell Slip model is defined as follows.
+        !!
+        !! $$ F = \sum\limits_{i=1}^{n} \left( k_i z_i + b_i \frac{dz_i}{dt} \right) + b_v v $$
+        !! $$ \frac{dz_i}{dt} = \begin{cases} v & \text{if } |z_i| \le g(v) \\ sgn{ \left( v \right)} \nu_i C \left( 1 - \frac{z_i}{\nu_i g(v)} \right) & \text{otherwise} \end{cases} $$
+        !! $$ g(v) = a_{1} + \frac{a_2}{1 + s^{\alpha}} $$
+        !! $$ a_{1} = \frac{\mu_c N}{\sigma_{0}} $$
+        !! $$ a_{2} = \frac{\mu_s N - \mu_c N}{\sigma_{0}} $$
+        !! $$ s = \frac{\left| v \right|}{v_s} $$
+        !! $$ \sum\limits_{i=1}^n {\nu_i} = 1 $$
+        !!
+        !! where:
+        !!    
+        !! \( F = \) Friction Force 
+        !!    
+        !! \( N = \) Normal Force
+        !!
+        !! \( C = \) Attraction Coefficient
+        !!
+        !! \( x = \) Position
+        !! 
+        !! \( v = \) Velocity
+        !!
+        !! \( \mu_c = \) Coulomb Friction Coefficient
+        !!
+        !! \( \mu_s = \) Static Friction Coefficient
+        !!
+        !! \( k_i = \) i-th Element Stiffness
+        !!
+        !! \( b_i = \) i-th Element Damping Coefficient
+        !!
+        !! \( b_v = \) Viscous Damping Coefficient
+        !!
+        !! \( \sigma_0 = \) Frictional Stiffness
+        !! 
+        !! \( \alpha = \) Stribeck Curve Shape Factor
+        !!
+        !! \( v_s = \) Stribeck Velocity Coefficient
+        !!
+        !! \( \nu_i = \) i-th Element Scaling Factor
         integer(int32), private :: m_nModels = 0
             !! The number of elements in the model
         real(real64), private, allocatable, dimension(:) :: m_params
