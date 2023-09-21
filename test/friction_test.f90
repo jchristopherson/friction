@@ -13,8 +13,8 @@ program test
     check = test_coulomb()
     if (.not.check) flag = 1
 
-    ! check = test_lugre()
-    ! if (.not.check) flag = 2
+    check = test_lugre()
+    if (.not.check) flag = 2
 
     ! check = test_maxwell()
     ! if (.not.check) flag = 3
