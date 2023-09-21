@@ -18,6 +18,9 @@ program test
 
     check = test_maxwell()
     if (.not.check) flag = 3
+
+    check = test_gmsm()
+    if (.not.check) flag = 4
     
     ! End
     stop flag
