@@ -104,7 +104,7 @@ function test_maxwell() result(rst)
     logical :: rst
 
     ! Local Variables
-    real(real64) :: stiff, normal, coeff, pos, ans, f, s, delta
+    real(real64) :: stiff, normal, coeff, pos, ans, f, sdelta, delta
     type(maxwell_model) :: mdl
 
     ! Initialization
@@ -114,13 +114,13 @@ function test_maxwell() result(rst)
     call random_number(coeff)
     call random_number(pos)
     pos = pos - 0.5d0
-    mdl%stiffness = 1.0d3 * stiff
+    mdl%stiffness = stiff
     mdl%friction_coefficient = coeff
 
     ! Compute the actual solution
     delta = mdl%friction_coefficient / mdl%stiffness
-    s = min(abs(pos), delta)
-    ans = normal * mdl%stiffness * min(abs(s), delta) * sign(1.0d0, s)
+    sdelta = min(abs(pos), delta) * sign(1.0d0, pos)
+    ans = normal * mdl%stiffness * sdelta
 
     ! Test
     f = mdl%evaluate(0.0d0, pos, 0.0d0, normal)
