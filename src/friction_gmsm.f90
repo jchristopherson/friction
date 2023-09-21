@@ -14,6 +14,21 @@ module function gmsm_eval(this, t, x, dxdt, nrm, svars) result(rst)
     real(real64), intent(in) :: t, x, dxdt, nrm
     real(real64), intent(in), optional, dimension(:) :: svars
     real(real64) :: rst
+
+    ! Local Variables
+    integer(int32) :: i, n
+    real(real64) :: dzdt, ki, bi
+
+    ! Process
+    n = this%get_element_count()
+    rst = 0.0d0
+    do i = 1, n
+        ki = this%get_element_stiffness(i)
+        bi = this%get_element_damping(i)
+        dzdt = this%element_state(i, t, x, dxdt, nrm, svars(i))
+        rst = rst + ki * svars(i) + bi * dzdt
+    end do
+    rst = rst + this%viscous_damping * dxdt
 end function
 
 ! ------------------------------------------------------------------------------
@@ -30,6 +45,15 @@ module subroutine gmsm_state_model(this, t, x, dxdt, nrm, svars, dsdt)
     real(real64), intent(in) :: t, x, dxdt, nrm
     real(real64), intent(in), dimension(:) :: svars
     real(real64), intent(out), dimension(:) :: dsdt
+
+    ! Local Variables
+    integer(int32) :: i, n
+
+    ! Process
+    n = this%get_element_count()
+    do i = 1, n
+        dsdt(i) = this%element_state(i, t, x, dxdt, nrm, svars(i))
+    end do
 end subroutine
 
 ! ------------------------------------------------------------------------------
@@ -38,6 +62,17 @@ module subroutine gmsm_to_array(this, x, err)
     class(generalized_maxwell_slip_model), intent(in) :: this
     real(real64), intent(out), dimension(:) :: x
     class(errors), intent(inout), optional, target :: err
+
+    ! Process
+    if (size(x) /= this%parameter_count()) return
+    x(1) = this%static_coefficient
+    x(2) = this%coulomb_coefficient
+    x(3) = this%attraction_coefficient
+    x(4) = this%stiffness
+    x(5) = this%viscous_damping
+    x(6) = this%stribeck_velocity
+    x(7) = this%shape_parameter
+    x(8:) = this%m_params
 end subroutine
 
 ! ------------------------------------------------------------------------------
@@ -46,6 +81,18 @@ module subroutine gmsm_from_array(this, x, err)
     class(generalized_maxwell_slip_model), intent(inout) :: this
     real(real64), intent(in), dimension(:) :: x
     class(errors), intent(inout), optional, target :: err
+
+    ! Process
+    if (.not.allocated(this%m_params)) return
+    if (size(x) /= this%parameter_count()) return
+    this%static_coefficient = x(1)
+    this%coulomb_coefficient = x(2)
+    this%attraction_coefficient = x(3)
+    this%stiffness = x(4)
+    this%viscous_damping = x(5)
+    this%stribeck_velocity = x(6)
+    this%shape_parameter = x(7)
+    this%m_params = x(8:)
 end subroutine
 
 ! ------------------------------------------------------------------------------

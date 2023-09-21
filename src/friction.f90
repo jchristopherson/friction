@@ -483,14 +483,21 @@ module friction
                 !! The lugre_model object.
             real(real64), intent(out), dimension(:) :: x
                 !! The array used to store the parameters.  See @ref
-                !!  parameter_count to determine the size of this array.  The 
-                !!  parameter order is as follows:
+                !! parameter_count to determine the size of this array.  The 
+                !! parameter order is as follows:
+                !!
                 !!  1. static_coefficient
+                !!
                 !!  2. coulomb_coefficient
+                !!
                 !!  3. stribeck_velocity
+                !!
                 !!  4. stiffness
+                !!
                 !!  5. damping
+                !!
                 !!  6. viscous_damping
+                !!
                 !!  7. shape_parameter
             class(errors), intent(inout), optional, target :: err
                 !! An optional errors-based object that if provided 
@@ -506,14 +513,21 @@ module friction
                 !! The lugre_model object.
             real(real64), intent(in), dimension(:) :: x
                 !! The array of parameters.  See parameter_count to 
-                !!  determine the size of this array.  The parameter order is as 
+                !! determine the size of this array.  The parameter order is as 
                 !!  follows:
+                !!
                 !!  1. static_coefficient
+                !!
                 !!  2. coulomb_coefficient
+                !!
                 !!  3. stribeck_velocity
+                !!
                 !!  4. stiffness
+                !!
                 !!  5. damping
+                !!
                 !!  6. viscous_damping
+                !!
                 !!  7. shape_parameter
             class(errors), intent(inout), optional, target :: err
                 !! An optional errors-based object that if provided 
@@ -643,8 +657,13 @@ module friction
             class(maxwell_model), intent(in) :: this
                 !! The maxwell_model object.
             real(real64), intent(out), dimension(:) :: x
-                !! The array used to store the parameters.  See @ref
-                !! parameter_count to determine the size of this array.
+                !! The array used to store the parameters.  See parameter_count 
+                !! to determine the size of this array.  The parameter order is
+                !! as follows.
+                !!
+                !! 1. stiffness
+                !!
+                !! 2. friction_coefficient
             class(errors), intent(inout), optional, target :: err
                 !! An optional errors-based object that if provided 
                 !! can be used to retrieve information relating to any errors 
@@ -658,8 +677,13 @@ module friction
             class(maxwell_model), intent(inout) :: this
                 !! The maxwell_model object.
             real(real64), intent(in), dimension(:) :: x
-                !! The array of parameters.  See parameter_count to 
-                !! determine the size of this array.
+                !! The array of parameters.  See parameter_count 
+                !! to determine the size of this array.  The parameter order is
+                !! as follows.
+                !!
+                !! 1. stiffness
+                !!
+                !! 2. friction_coefficient
             class(errors), intent(inout), optional, target :: err
                 !! An optional errors-based object that if provided 
                 !! can be used to retrieve information relating to any errors 
@@ -830,8 +854,29 @@ module friction
             class(generalized_maxwell_slip_model), intent(in) :: this
                 !! The generalized_maxwell_slip_model object.
             real(real64), intent(out), dimension(:) :: x
-                !! The array used to store the parameters.  See @ref
-                !! parameter_count to determine the size of this array.
+                !! The array used to store the parameters.  See parameter_count 
+                !! to determine the size of this array.  The parameter order is 
+                !! as follows:
+                !!
+                !!  1. static_coefficient
+                !!
+                !!  2. coulomb_coefficient
+                !!
+                !!  3. attraction_coefficient
+                !!
+                !!  4. stiffness
+                !!
+                !!  5. viscous_damping
+                !!
+                !!  6. stribeck_velocity
+                !!
+                !!  7. shape_parameter
+                !!
+                !!  8. element stiffness
+                !!  
+                !!  9. element damping
+                !!
+                !!  10. element scaling ...
             class(errors), intent(inout), optional, target :: err
                 !! An optional errors-based object that if provided 
                 !! can be used to retrieve information relating to any errors 
@@ -846,7 +891,28 @@ module friction
                 !! The generalized_maxwell_slip_model object.
             real(real64), intent(in), dimension(:) :: x
                 !! The array of parameters.  See parameter_count to 
-                !! determine the size of this array.
+                !! determine the size of this array. The parameter order is as 
+                !! follows:
+                !!
+                !!  1. static_coefficient
+                !!
+                !!  2. coulomb_coefficient
+                !!
+                !!  3. attraction_coefficient
+                !!
+                !!  4. stiffness
+                !!
+                !!  5. viscous_damping
+                !!
+                !!  6. stribeck_velocity
+                !!
+                !!  7. shape_parameter
+                !!
+                !!  8. element stiffness
+                !!  
+                !!  9. element damping
+                !!
+                !!  10. element scaling ...
             class(errors), intent(inout), optional, target :: err
                 !! An optional errors-based object that if provided 
                 !! can be used to retrieve information relating to any errors 

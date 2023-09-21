@@ -118,7 +118,7 @@ function test_maxwell() result(rst)
     mdl%friction_coefficient = coeff
 
     ! Compute the actual solution
-    delta = coeff / mdl%stiffness
+    delta = mdl%friction_coefficient / mdl%stiffness
     s = min(abs(pos), delta)
     ans = normal * mdl%stiffness * min(abs(s), delta) * sign(1.0d0, s)
 
