@@ -55,3 +55,12 @@ add_executable(
 link_library(maxwell_fit_example ${PROJECT_NAME} ${PROJECT_INCLUDE_DIR})
 link_library(maxwell_fit_example ${fplot_LIBRARY} ${fplot_INCLUDE_DIR})
 link_library(maxwell_fit_example ${fortran-csv-module_LIBRARY} ${fortran-csv-module_INCLUDE_DIR})
+
+# GMSM Fitting Example
+add_executable(
+    gmsm_fit_example
+    gmsm_fit_example.f90
+)
+link_library(gmsm_fit_example ${PROJECT_NAME} ${PROJECT_INCLUDE_DIR})
+link_library(gmsm_fit_example ${fplot_LIBRARY} ${fplot_INCLUDE_DIR})
+link_library(gmsm_fit_example ${fortran-csv-module_LIBRARY} ${fortran-csv-module_INCLUDE_DIR})
