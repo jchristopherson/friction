@@ -26,15 +26,25 @@ subroutine fit_fcn(x, p, f, stop_)
     logical, intent(out) :: stop_
 
     ! Local Variables
-    integer(int32) :: i
+    integer(int32) :: i, n, npts
+
+    ! Initialization
+    n = size(x)
+    npts = n - fmdl_%get_constraint_equation_count()
 
     ! Assign the model parameters
     call fmdl_%from_array(p)
 
     ! Evaluate the friction model and compare the results
-    do i = 1, min(size(x), size(t_))
+    do i = 1, npts
         f(i) = fmdl_%evaluate(t_(i), x_(i), v_(i), n_(i)) - f_(i)
     end do
+
+    ! Evaluate constraints
+    if (fmdl_%get_constraint_equation_count() > 0) then
+        call fmdl_%constraint_equations(t_(:npts), x_(:npts), v_(:npts), &
+            n_(:npts), f_(:npts), f(npts+1:))
+    end if
 
     ! No need to stop
     stop_ = .false.
@@ -48,8 +58,12 @@ subroutine internal_var_fit_fcn(x, p, f, stop_)
     logical, intent(out) :: stop_
 
     ! Local Variables
-    integer(int32) :: i
+    integer(int32) :: i, n, npts
     real(real64), allocatable, dimension(:,:) :: dzdt
+
+    ! Initialization
+    n = size(x)
+    npts = n - fmdl_%get_constraint_equation_count()
 
     ! Assign the model parameters
     call fmdl_%from_array(p)
@@ -58,9 +72,15 @@ subroutine internal_var_fit_fcn(x, p, f, stop_)
     dzdt = integrate_%solve(mdl_, t_, initstate_)
 
     ! Evaluate the friction model and compare the results
-    do i = 1, min(size(x), size(t_))
+    do i = 1, npts
         f(i) = fmdl_%evaluate(t_(i), x_(i), v_(i), n_(i), dzdt(i,2:)) - f_(i)
     end do
+
+    ! Evaluate constraints
+    if (fmdl_%get_constraint_equation_count() > 0) then
+        call fmdl_%constraint_equations(t_(:npts), x_(:npts), v_(:npts), &
+            n_(:npts), f_(:npts), f(npts+1:))
+    end if
 
     ! No need to stop
     stop_ = .false.
@@ -105,10 +125,11 @@ module subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
     ! Local Variables
     class(errors), pointer :: errmgr
     type(errors), target :: deferr
-    integer(int32) :: npts, nparams, flag
-    real(real64), allocatable, target, dimension(:) :: params, initstate
+    integer(int32) :: npts, nparams, flag, np
+    real(real64), allocatable, target, dimension(:) :: params, initstate, &
+        tc, fc, fmc, rc
     real(real64), allocatable, dimension(:,:) :: dzdt
-    real(real64), pointer, dimension(:) :: fmodptr, residptr
+    real(real64), pointer, dimension(:) :: fmodptr, residptr, tptr, fptr
     real(real64), allocatable, target, dimension(:) :: fmoddef, residdef
     procedure(regression_function), pointer :: fcn
     type(fitpack_curve), target :: xinterp, vinterp, ninterp
@@ -123,6 +144,7 @@ module subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
     end if
     npts = size(t)
     nparams = this%parameter_count()
+    np = npts + this%get_constraint_equation_count()
     if (present(integrator)) then
         integrate_ => integrator
     else
@@ -144,18 +166,45 @@ module subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
         if (size(fmod) /= npts) go to 14
         fmodptr(1:npts) => fmod(1:npts)
     else
-        allocate(fmoddef(npts), stat = flag, source = 0.0d0)
+        allocate(fmoddef(np), stat = flag, source = 0.0d0)
         if (flag /= 0) go to 30
-        fmodptr(1:npts) => fmoddef(1:npts)
+        fmodptr(1:np) => fmoddef(1:np)
     end if
 
     if (present(resid)) then
         if (size(resid) /= npts) go to 15
         residptr(1:npts) => resid(1:npts)
     else
-        allocate(residdef(npts), stat = flag, source = 0.0d0)
+        allocate(residdef(np), stat = flag, source = 0.0d0)
         if (flag /= 0) go to 30
-        residptr(1:npts) => residdef(1:npts)
+        residptr(1:np) => residdef(1:np)
+    end if
+
+    ! Are we using any additional constraints?
+    if (this%get_constraint_equation_count() > 0) then
+        allocate(tc(np), fc(np), stat = flag, source = 0.0d0)
+        if (flag /= 0) go to 30
+        tptr(1:np) => tc(1:np)
+        fptr(1:np) => fc(1:np)
+        do i = 1, npts
+            tptr(i) = t(i)
+            fptr(i) = f(i)
+        end do
+
+        if (present(fmod)) then
+            allocate(fmc(np), stat = flag, source = 0.0d0)
+            if (flag /= 0) go to 30
+            fmodptr(1:np) => fmc(1:np)
+        end if
+
+        if (present(resid)) then
+            allocate(rc(np), stat = flag, source = 0.0d0)
+            if (flag /= 0) go to 30
+            residptr(1:np) => rc(1:np)
+        end if
+    else
+        tptr(1:npts) => t
+        fptr(1:npts) => f
     end if
 
     ! Assign pointers
@@ -194,12 +243,18 @@ module subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
         fcn => fit_fcn
     end if
 
-    call nonlinear_least_squares(fcn, t, f, params, fmodptr, residptr, &
+    call nonlinear_least_squares(fcn, tptr, fptr, params, fmodptr, residptr, &
         weights = weights, maxp = maxp, minp = minp, alpha = alpha, &
         controls = controls, settings = settings, info = info, stats = stats, &
         err = errmgr)
     if (errmgr%has_error_occurred()) return
     call this%from_array(params)
+
+    ! Handle outputs, if constraints are employed
+    if (this%get_constraint_equation_count() > 0) then
+        if (present(fmod)) fmod = fmodptr(1:npts)
+        if (present(resid)) resid = residptr(1:npts)
+    end if
 
     ! End
     return
@@ -300,6 +355,25 @@ subroutine write_interpolation_error(fcn, flag, err)
     ! Formatting
 100 format(A, I0, A)
 end subroutine
+
+! ------------------------------------------------------------------------------
+module subroutine fmdl_constraints(this, t, x, dxdt, nrm, f, rst)
+    class(friction_model), intent(in) :: this
+    real(real64), intent(in), dimension(:) :: t
+    real(real64), intent(in), dimension(:) :: x
+    real(real64), intent(in), dimension(:) :: dxdt
+    real(real64), intent(in), dimension(:) :: nrm
+    real(real64), intent(in), dimension(:) :: f
+    real(real64), intent(out), dimension(:) :: rst
+    if (size(rst) > 0) rst = 0.0d0
+end subroutine
+
+! ------------------------------------------------------------------------------
+pure module function fmdl_get_constraint_count(this) result(rst)
+    class(friction_model), intent(in) :: this
+    integer(int32) :: rst
+    rst = 0
+end function
 
 ! ------------------------------------------------------------------------------
 end submodule

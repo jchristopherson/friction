@@ -37,6 +37,9 @@ module friction
         procedure(friction_integer_query), deferred, public :: &
             get_state_variable_count
         procedure, public :: fit => fmdl_fit
+        procedure, public :: constraint_equations => fmdl_constraints
+        procedure, public :: get_constraint_equation_count => &
+            fmdl_get_constraint_count
     end type
 
     interface
@@ -218,6 +221,37 @@ module friction
                 !! implementation of the errors class is used internally to
                 !! provide error handling.
         end subroutine
+
+        module subroutine fmdl_constraints(this, t, x, dxdt, nrm, f, rst)
+            !! Overload this routine to establish constraings for the model to
+            !! be enforced as part of the fitting operation.
+            class(friction_model), intent(in) :: this
+                !! The friction_model object.
+            real(real64), intent(in), dimension(:) :: t
+                !! An N-element array containing the time points at which the
+                !! data to be fit was sampled.
+            real(real64), intent(in), dimension(:) :: x
+                !! An N-element array containing the relative motion data.
+            real(real64), intent(in), dimension(:) :: dxdt
+                !! An N-element array containing the relative velocity data.
+            real(real64), intent(in), dimension(:) :: nrm
+                !! An N-element array containing the normal force data.
+            real(real64), intent(in), dimension(:) :: f
+                !! An N-element array containing the friction force data.
+            real(real64), intent(out), dimension(:) :: rst
+                !! An M-element array where the results of the constraint 
+                !! equations will be written.  M must be equal to the 
+                !! number of constraint equations for the model.
+        end subroutine
+
+        pure module function fmdl_get_constraint_count(this) result(rst)
+            !! Gets the number of constraint equations the model requires to
+            !! be satisfied when fitting to data.
+            class(friction_model), intent(in) :: this
+                !! The friction model object.
+            integer(int32) :: rst
+                !! The number of constraint equations.
+        end function
     end interface
 
 ! ------------------------------------------------------------------------------
@@ -788,6 +822,8 @@ module friction
         procedure, public :: set_element_scaling => gmsm_set_element_scaling
         procedure, public :: stribeck_function => gmsm_stribeck_curve
         procedure, public :: element_state => gmsm_element_state_model
+        procedure, public :: get_constraint_equation_count => &
+            gmsm_get_constraint_count
     end type
 
     ! friction_gmsm.f90
@@ -1064,6 +1100,35 @@ module friction
                 !! The current value of the state variable for the element.
             real(real64) :: rst
                 !! The value of the state equation.
+        end function
+
+        module subroutine gmsm_constraints(this, t, x, dxdt, nrm, f, rst)
+            !! Evaluates the constraint equation for the GMSM model.
+            class(generalized_maxwell_slip_model), intent(in) :: this
+            real(real64), intent(in), dimension(:) :: t
+                !! An N-element array containing the time points at which the
+                !! data to be fit was sampled.
+            real(real64), intent(in), dimension(:) :: x
+                !! An N-element array containing the relative motion data.
+            real(real64), intent(in), dimension(:) :: dxdt
+                !! An N-element array containing the relative velocity data.
+            real(real64), intent(in), dimension(:) :: nrm
+                !! An N-element array containing the normal force data.
+            real(real64), intent(in), dimension(:) :: f
+                !! An N-element array containing the friction force data.
+            real(real64), intent(out), dimension(:) :: rst
+                !! An M-element array where the results of the constraint 
+                !! equations will be written.  M must be equal to the 
+                !! number of constraint equations for the model.
+        end subroutine
+
+        pure module function gmsm_get_constraint_count(this) result(rst)
+            !! Gets the number of constraint equations the model requires to
+            !! be satisfied when fitting to data.
+            class(generalized_maxwell_slip_model), intent(in) :: this
+                !! The generalized_maxwell_slip_model object.
+            integer(int32) :: rst
+                !! The number of constraint equations.
         end function
     end interface
 

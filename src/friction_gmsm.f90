@@ -326,4 +326,35 @@ pure module function gmsm_element_state_model(this, i, t, x, dxdt, nrm, z) &
 end function
 
 ! ------------------------------------------------------------------------------
+module subroutine gmsm_constraints(this, t, x, dxdt, nrm, f, rst)
+    ! Arguments
+    class(generalized_maxwell_slip_model), intent(in) :: this
+    real(real64), intent(in), dimension(:) :: t
+    real(real64), intent(in), dimension(:) :: x
+    real(real64), intent(in), dimension(:) :: dxdt
+    real(real64), intent(in), dimension(:) :: nrm
+    real(real64), intent(in), dimension(:) :: f
+    real(real64), intent(out), dimension(:) :: rst
+
+    ! Local Variables
+    integer(int32) :: i, n
+    real(real64) :: sm
+
+    ! Process
+    if (size(rst) /= 1) return
+    sm = 0.0d0
+    do i = 1, this%get_element_count()
+        sm = sm + this%get_element_scaling(i)
+    end do
+    rst(1) = sm - 1.0d0 ! the sum of the scaling terms must be equal to 1
+end subroutine
+
+! ------------------------------------------------------------------------------
+pure module function gmsm_get_constraint_count(this) result(rst)
+    class(generalized_maxwell_slip_model), intent(in) :: this
+    integer(int32) :: rst
+    rst = 1
+end function
+
+! ------------------------------------------------------------------------------
 end submodule
