@@ -24,7 +24,7 @@ a_{1} = \frac{\mu_c N}{\sigma_{0}}, a_{2} = \frac{\mu_s N - \mu_c N}{\sigma_{0}}
 ```
 - Maxwell Model
 ```math
-F = N k \delta
+F = k \delta
 ```
 ```math
 \delta_{i+1} = sgn \left( x_{i+1} - x_{i} + \delta_{i} \right) \min \left( \left| x_{i+1} - x_{i} + \delta_{i} \right|, \Delta \right)
