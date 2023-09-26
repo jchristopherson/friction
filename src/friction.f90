@@ -594,9 +594,9 @@ module friction
         !!
         !! The signle-element, Maxwell model is defined as follows.
         !!
-        !! $$ F = N k \delta $$
+        !! $$ F = k \delta $$
         !! $$ \delta_{i+1} = sgn \left( x_{i+1} - x_{i} + \delta_{i} \right) \min \left( \left| x_{i+1} - x_{i} + \delta_{i} \right|, \Delta \right) $$
-        !! $$ \Delta = \frac{\mu_c}{k} $$
+        !! $$ \Delta = \frac{N \mu_c}{k} $$
         !!
         !! where:
         !!    

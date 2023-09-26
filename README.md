@@ -30,7 +30,7 @@ F = N k \delta
 \delta_{i+1} = sgn \left( x_{i+1} - x_{i} + \delta_{i} \right) \min \left( \left| x_{i+1} - x_{i} + \delta_{i} \right|, \Delta \right)
 ```
 ```math
-\Delta = \frac{\mu_c}{k}
+\Delta = \frac{N \mu_c}{k}
 ```
 - Generalized Maxwell Slip Model
 ```math

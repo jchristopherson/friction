@@ -9,10 +9,10 @@ module function mx_eval(this, t, x, dxdt, nrm, svars) result(rst)
 
     real(real64) :: s, d, delta
 
-    delta = this%friction_coefficient / this%stiffness
+    delta = nrm * this%friction_coefficient / this%stiffness
     s = x - this%x_prev + this%d_prev
     d = sign(1.0d0, s) * min(abs(s), delta)
-    rst = nrm * this%stiffness * d
+    rst = this%stiffness * d
     
     this%d_prev = d
     this%x_prev = x
