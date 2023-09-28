@@ -15,7 +15,7 @@ module function msf_eval(this, t, x, dxdt, nrm, svars) result(rst)
     gv = a1 + a2 * exp(-abs(dxdt / this%stribeck_velocity)**2)
     zeta = x - this%x_prev + this%d_prev
     delta = sign(1.0d0, zeta) * min(abs(zeta), gv)
-    rst = this%stiffness * delta
+    rst = this%stiffness * delta + this%viscous_damping * dxdt
     
     this%d_prev = delta
     this%x_prev = x

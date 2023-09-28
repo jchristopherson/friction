@@ -80,3 +80,12 @@ add_executable(
 )
 link_library(modified_stribeck_example ${PROJECT_NAME} ${PROJECT_INCLUDE_DIR})
 link_library(modified_stribeck_example ${fplot_LIBRARY} ${fplot_INCLUDE_DIR})
+
+# Modified Stribeck Fitting Example
+add_executable(
+    modified_stribeck_fit_example
+    modified_stribeck_fit_example.f90
+)
+link_library(modified_stribeck_fit_example ${PROJECT_NAME} ${PROJECT_INCLUDE_DIR})
+link_library(modified_stribeck_fit_example ${fplot_LIBRARY} ${fplot_INCLUDE_DIR})
+link_library(modified_stribeck_fit_example ${fortran-csv-module_LIBRARY} ${fortran-csv-module_INCLUDE_DIR})
