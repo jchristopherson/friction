@@ -1140,8 +1140,7 @@ module friction
         !!
         !! This model is defined as follows.
         !!
-        !! $$ F = \text{sgn}\left( v \right) f(v) $$
-        !! $$ f(v) = \mu_c N + N (\mu_s - \mu_c) e^{-|v / v_s|^2} + b_v v $$
+        !! $$ F = \text{sgn}\left( v \right) \left( \mu_c N + N (\mu_s - \mu_c) e^{-|v / v_s|^2} \right) + b_v v $$
         !!
         !! where:
         !!    
