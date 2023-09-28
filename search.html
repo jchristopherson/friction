@@ -8,7 +8,8 @@
     <meta name="author" content="Jason Christopherson" >
     <link rel="icon" href="./favicon.png">
 
-    <title> FRICTION </title>
+    <title>Search Results &ndash; FRICTION
+</title>
 
     <link href="./css/bootstrap.min.css" rel="stylesheet">
     <link href="./css/pygments.css" rel="stylesheet">
@@ -73,58 +74,29 @@
     </nav>
 
     <div class="container">
-      <!-- Main component for a primary marketing message or call to action -->
-      <div class="jumbotron">
-        <p>A library containing routines for calculating the frictional response of contacting bodies.</p>
-	<p> Find us on&hellip;</p>
-        <p>
-          <a class="btn btn-lg btn-primary" href="https://github.com/jchristopherson/friction" role="button">GitHub</a>
-        </p>
-      </div>
-
-      <div class="row" id='text'>
-        <div class="col-md-8">
-          <h1>FRICTION</h1>
-          
-        </div>
-        <div class="col-md-4">
-	  <div class="well">
-          <h2>Developer Info</h2>
-          <h4>Jason Christopherson</h4>
-          
-       </div>
-       </div>
-      </div>
       <div class="row">
-        <div class="col-xs-6 col-sm-4">
-              <h3>Source Files</h3>
-              <ul>                    <li><a href='./sourcefile/friction.f90.html'>friction.f90</a></li>
-                    <li><a href='./sourcefile/friction_coulomb.f90.html'>friction_coulomb.f90</a></li>
-                    <li><a href='./sourcefile/friction_fitting.f90.html'>friction_fitting.f90</a></li>
-                    <li><a href='./sourcefile/friction_gmsm.f90.html'>friction_gmsm.f90</a></li>
-                    <li><a href='./sourcefile/friction_lugre.f90.html'>friction_lugre.f90</a></li>
-                    <li><a href='./sourcefile/friction_maxwell.f90.html'>friction_maxwell.f90</a></li>
-                    <li><a href='./sourcefile/friction_modified_stribeck.f90.html'>friction_modified_stribeck.f90</a></li>
-                    <li><a href='./sourcefile/friction_stribeck.f90.html'>friction_stribeck.f90</a></li>
-</ul>
-          </div>
-		  <div class="col-xs-6 col-sm-4">
-              <h3>Modules</h3>
-              <ul>                    <li><a href='./module/friction.html'>friction</a></li>
-</ul>
-          </div>
-		  <div class="col-xs-6 col-sm-4">
-              <h3>Derived Types</h3>
-              <ul>                    <li><a href='./type/coulomb_model.html'>coulomb_model</a></li>
-                    <li><a href='./type/friction_model.html'>friction_model</a></li>
-                    <li><a href='./type/generalized_maxwell_slip_model.html'>generalized_maxwell_slip_model</a></li>
-                    <li><a href='./type/lugre_model.html'>lugre_model</a></li>
-                    <li><a href='./type/maxwell_model.html'>maxwell_model</a></li>
-                    <li><a href='./type/modified_stribeck_model.html'>modified_stribeck_model</a></li>
-                    <li><a href='./type/stribeck_model.html'>stribeck_model</a></li>
-</ul>
-          </div>
+        <div class="col-lg-12">
+			 <h1>Search Results</h1>
+             <div id="tipue_search_content"><div id="tipue_search_loading"></div></div>
+        </div>
       </div>
+<!--
+    <script>
+      $(document).ready(function() {
+           $('#tipue_search_input').tipuesearch({
+             'mode' : 'static',
+             'show': 10,
+             'newWindow': false,
+             'descriptiveWords': 35,
+         });
+      });
+    </script>
+-->
+<script>
+$(document).ready(function() {
+     $('#tipue_search_input').tipuesearch();
+});
+</script>
     <hr>    
     </div> <!-- /container -->
     <footer>

@@ -1,0 +1,2462 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="description" content="A library containing routines for calculating the frictional response of contacting bodies.">
+    <meta name="author" content="Jason Christopherson" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>generalized_maxwell_slip_model &ndash; FRICTION </title>
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/local.css" rel="stylesheet">
+    <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="../js/jquery-2.1.3.min.js"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
+
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">FRICTION </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
+              <a href="#" class="dropdown-toggle"
+              data-toggle="dropdown" role="button"
+              aria-haspopup="true"
+     aria-expanded="false">Contents <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li><a href="../lists/files.html">Source Files</a></li>
+            <li><a href="../lists/modules.html">Modules</a></li>
+                   <li><a href="../lists/types.html">Derived Types</a></li>
+       
+            </ul>
+        
+            </li>
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/files.html">Source Files</a></li>
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/modules.html">Modules</a></li>
+                             <li class="visible-xs hidden-sm visible-lg"><a href="../lists/types.html">Derived Types</a></li>
+          </ul>
+        <form action="../search.html" class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+        </div>
+<!--
+        <button type="submit" class="btn btn-default">Submit</button>
+-->
+        </form>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+  <div class="row">
+    <h1>generalized_maxwell_slip_model
+      <small>Derived Type</small>
+      
+    </h1>
+      <div class="row" id="info-bar">
+    <div class="col-lg-12">
+      <div class="well well-sm">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+          <li id="statements"><i class="fa fa-list-ol"></i>
+            <a data-toggle="tooltip"
+               data-placement="bottom" data-html="true"
+               title="<p>27.5% of total for derived types.</p>Including implementation: 30 statements, 27.5% of total for derived types.">30 statements</a>
+          </li>
+
+            <li id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/friction.f90"> Source File</a>
+            </li>
+        </ul>
+        <ol class="breadcrumb in-well text-right">
+              <li><a href='../sourcefile/friction.f90.html'>friction.f90</a></li>
+              <li><a href='../module/friction.html'>friction</a></li>
+          <li class="active">generalized_maxwell_slip_model</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+      <div class="panel panel-primary">
+      <div class="panel-heading text-left">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" href="#vars-0">Variables</a>
+        </h3>
+      </div>
+      <div id="vars-0" class="panel-collapse collapse">
+        <div class="list-group">
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#variable-attraction_coefficient">attraction_coefficient</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#variable-coulomb_coefficient~2">coulomb_coefficient</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#variable-shape_parameter~2">shape_parameter</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#variable-static_coefficient~2">static_coefficient</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#variable-stiffness~3">stiffness</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#variable-stribeck_velocity~2">stribeck_velocity</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#variable-viscous_damping~2">viscous_damping</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+      <div class="panel panel-primary">
+      <div class="panel-heading text-left">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" href="#boundprocs-0">Type-Bound Procedures</a>
+        </h3>
+      </div>
+      <div id="boundprocs-0" class="panel-collapse collapse">
+        <div class="list-group">
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-constraint_equations">constraint_equations</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-element_state">element_state</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-evaluate~3">evaluate</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-fit">fit</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-from_array~3">from_array</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-get_constraint_equation_count~2">get_constraint_equation_count</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-get_element_count">get_element_count</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-get_element_damping">get_element_damping</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-get_element_scaling">get_element_scaling</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-get_element_stiffness">get_element_stiffness</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-get_state_variable_count~3">get_state_variable_count</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-has_internal_state~3">has_internal_state</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-initialize">initialize</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-parameter_count~3">parameter_count</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-set_element_damping">set_element_damping</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-set_element_scaling">set_element_scaling</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-set_element_stiffness">set_element_stiffness</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-state~3">state</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-stribeck_function">stribeck_function</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-to_array~3">to_array</a>
+        </div>
+      </div>
+    </div>
+
+  
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+      <h2>type, public, extends(<a href='../type/friction_model.html'>friction_model</a>) :: generalized_maxwell_slip_model</h2>
+    <p>A representation of the Generalized Maxwell Slip model.</p>
+<p>The Generalized Maxwell Slip model is defined as follows.</p>
+<p>
+<script type="math/tex; mode=display"> F = \sum\limits_{i=1}^{n} \left( k_i z_i + b_i \frac{dz_i}{dt} \right) + b_v v </script>
+<script type="math/tex; mode=display"> \frac{dz_i}{dt} = \begin{cases} v & \text{if } |z_i| \le g(v) \\ sgn{ \left( v \right)} \nu_i C \left( 1 - \frac{z_i}{\nu_i g(v)} \right) & \text{otherwise} \end{cases} </script>
+<script type="math/tex; mode=display"> g(v) = a_{1} + \frac{a_2}{1 + s^{\alpha}} </script>
+<script type="math/tex; mode=display"> a_{1} = \frac{\mu_c N}{\sigma_{0}} </script>
+<script type="math/tex; mode=display"> a_{2} = \frac{\mu_s N - \mu_c N}{\sigma_{0}} </script>
+<script type="math/tex; mode=display"> s = \frac{\left| v \right|}{v_s} </script>
+<script type="math/tex; mode=display"> \sum\limits_{i=1}^n {\nu_i} = 1 </script>
+</p>
+<p>where:</p>
+<p>
+<script type="math/tex"> F = </script> Friction Force </p>
+<p>
+<script type="math/tex"> N = </script> Normal Force</p>
+<p>
+<script type="math/tex"> C = </script> Attraction Coefficient</p>
+<p>
+<script type="math/tex"> x = </script> Position</p>
+<p>
+<script type="math/tex"> v = </script> Velocity</p>
+<p>
+<script type="math/tex"> \mu_c = </script> Coulomb Friction Coefficient</p>
+<p>
+<script type="math/tex"> \mu_s = </script> Static Friction Coefficient</p>
+<p>
+<script type="math/tex"> k_i = </script> i-th Element Stiffness</p>
+<p>
+<script type="math/tex"> b_i = </script> i-th Element Damping Coefficient</p>
+<p>
+<script type="math/tex"> b_v = </script> Viscous Damping Coefficient</p>
+<p>
+<script type="math/tex"> \sigma_0 = </script> Frictional Stiffness</p>
+<p>
+<script type="math/tex"> \alpha = </script> Stribeck Curve Shape Factor</p>
+<p>
+<script type="math/tex"> v_s = </script> Stribeck Velocity Coefficient</p>
+<p>
+<script type="math/tex"> \nu_i = </script> i-th Element Scaling Factor</p>
+    <br>
+
+    <section class="visible-xs visible-sm hidden-md">
+        <h3>Contents</h3>
+  
+      <div class="panel panel-primary">
+      <div class="panel-heading text-left">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" href="#vars-1">Variables</a>
+        </h3>
+      </div>
+      <div id="vars-1" class="panel-collapse collapse">
+        <div class="list-group">
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#variable-attraction_coefficient">attraction_coefficient</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#variable-coulomb_coefficient~2">coulomb_coefficient</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#variable-shape_parameter~2">shape_parameter</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#variable-static_coefficient~2">static_coefficient</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#variable-stiffness~3">stiffness</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#variable-stribeck_velocity~2">stribeck_velocity</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#variable-viscous_damping~2">viscous_damping</a>
+        </div>
+      </div>
+    </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+      <div class="panel panel-primary">
+      <div class="panel-heading text-left">
+        <h3 class="panel-title">
+          <a data-toggle="collapse" href="#boundprocs-1">Type-Bound Procedures</a>
+        </h3>
+      </div>
+      <div id="boundprocs-1" class="panel-collapse collapse">
+        <div class="list-group">
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-constraint_equations">constraint_equations</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-element_state">element_state</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-evaluate~3">evaluate</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-fit">fit</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-from_array~3">from_array</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-get_constraint_equation_count~2">get_constraint_equation_count</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-get_element_count">get_element_count</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-get_element_damping">get_element_damping</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-get_element_scaling">get_element_scaling</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-get_element_stiffness">get_element_stiffness</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-get_state_variable_count~3">get_state_variable_count</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-has_internal_state~3">has_internal_state</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-initialize">initialize</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-parameter_count~3">parameter_count</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-set_element_damping">set_element_damping</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-set_element_scaling">set_element_scaling</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-set_element_stiffness">set_element_stiffness</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-state~3">state</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-stribeck_function">stribeck_function</a>
+            <a class="list-group-item" href="../type/generalized_maxwell_slip_model.html#boundprocedure-to_array~3">to_array</a>
+        </div>
+      </div>
+    </div>
+
+  
+
+
+    </section>
+    <br class="visible-xs visible-sm hidden-md">
+
+    <section>
+    <h2>Components</h2>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Visibility</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+<th></th><th>Initial</th>        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-attraction_coefficient"></span>
+              real(kind=real64),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>attraction_coefficient</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>The attraction coefficient.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-coulomb_coefficient~2"></span>
+              real(kind=real64),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>coulomb_coefficient</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>The Coulomb (dynamic) friction coefficient.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-shape_parameter~2"></span>
+              real(kind=real64),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>shape_parameter</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>The Stribeck curve shape parameter.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-static_coefficient~2"></span>
+              real(kind=real64),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>static_coefficient</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>The static friction coefficient.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-stiffness~3"></span>
+              real(kind=real64),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>stiffness</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>The frictional stiffness.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-stribeck_velocity~2"></span>
+              real(kind=real64),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>stribeck_velocity</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>The Stribeck velocity parameter.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-viscous_damping~2"></span>
+              real(kind=real64),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>viscous_damping</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+                <p>The viscous damping coefficient.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </section>
+    <br>
+    
+
+
+      <section>
+        <h2>Type-Bound Procedures</h2>
+            <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-constraint_equations"></span><h3>procedure, public :: <strong>constraint_equations</strong>  => fmdl_constraints         
+    </h3></div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private module subroutine fmdl_constraints(this, t, x, dxdt, nrm, f, rst)  
+</h3>
+  <p>Overload this routine to establish constraings for the model to
+be enforced as part of the fitting operation.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='../type/friction_model.html'>friction_model</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>The friction_model object.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>t</strong></td>
+            <td>
+                <p>An N-element array containing the time points at which the
+data to be fit was sampled.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>An N-element array containing the relative motion data.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>dxdt</strong></td>
+            <td>
+                <p>An N-element array containing the relative velocity data.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>nrm</strong></td>
+            <td>
+                <p>An N-element array containing the normal force data.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>f</strong></td>
+            <td>
+                <p>An N-element array containing the friction force data.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>rst</strong></td>
+            <td>
+                <p>An M-element array where the results of the constraint 
+equations will be written.  M must be equal to the 
+number of constraint equations for the model.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+        </li>
+    </ul>
+  </div>
+
+            <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-element_state"></span><h3>procedure, public :: <strong>element_state</strong>  => gmsm_element_state_model         
+    </h3></div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private pure module function gmsm_element_state_model(this, i, t, x, dxdt, nrm, z) result(rst)  
+</h3>
+  <p>Computes the state equation for a single element.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='../type/generalized_maxwell_slip_model.html'>generalized_maxwell_slip_model</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>The generalized_maxwell_slip_model object.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>i</strong></td>
+            <td>
+                <p>The index of the element.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>t</strong></td>
+            <td>
+                <p>The current simulation time value.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>The current value of the relative position between
+the contacting bodies.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dxdt</strong></td>
+            <td>
+                <p>The current value of the relative velocity between
+the contacting bodies.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nrm</strong></td>
+            <td>
+                <p>The current normal force between the contacting 
+bodies.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>z</strong></td>
+            <td>
+                <p>The current value of the state variable for the element.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=real64)</small>
+    </h4>
+    <p>The value of the state equation.</p>
+
+        </li>
+    </ul>
+  </div>
+
+            <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-evaluate~3"></span><h3>procedure, public :: <strong>evaluate</strong>  => gmsm_eval         
+    </h3></div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private module function gmsm_eval(this, t, x, dxdt, nrm, svars) result(rst)  
+</h3>
+  <p>Evaluates the friction model given the defined parameter
+state.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='../type/generalized_maxwell_slip_model.html'>generalized_maxwell_slip_model</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>The generalized_maxwell_slip_model object.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>t</strong></td>
+            <td>
+                <p>The current simulation time value.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>The current value of the relative position between
+the contacting bodies.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dxdt</strong></td>
+            <td>
+                <p>The current value of the relative velocity between
+the contacting bodies.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nrm</strong></td>
+            <td>
+                <p>The current normal force between the contacting 
+bodies.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>svars</strong></td>
+            <td>
+                <p>An optional array containing any internal state
+variables the model may rely upon.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=real64)</small>
+    </h4>
+    <p>The friction force.</p>
+
+        </li>
+    </ul>
+  </div>
+
+            <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-fit"></span><h3>procedure, public :: <strong>fit</strong>  => fmdl_fit         
+    </h3></div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private module subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, alpha, integrator, controls, settings, info, stats, fmod, resid, err)  
+</h3>
+  <p>Attempts to fit a friction model to the supplied data using a 
+Levenberg-Marquardt solver.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='../type/friction_model.html'>friction_model</a>),
+            </td>
+<td>intent(inout),</td>
+              <td></td>            <td>
+              target
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>The friction model.  On output, the model is updated with the
+final, fitted parameters.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              target, dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>t</strong></td>
+            <td>
+                <p>An N-element array containing the time points at which
+the friction data was sampled.  This array must contain 
+monotonically increasing data.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              target, dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>An N-element array containing the relative position
+data.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              target, dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>v</strong></td>
+            <td>
+                <p>An N-element array containing the relative velocity
+data.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              target, dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>f</strong></td>
+            <td>
+                <p>An N-element array containing the friction force data.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              target, dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+                <p>An N-element array containing the normal force data.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>weights</strong></td>
+            <td>
+                <p>An optional N-element array that can be used to
+ weight specific data points.  The default is an array of 
+all ones such that all points are weighted equally.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>maxp</strong></td>
+            <td>
+                <p>An M-element array (M = the number of model 
+parameters) containing a maximum limit for each model 
+parameter.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>minp</strong></td>
+            <td>
+                <p>An M-element array containing the minimum limit for
+each model parameter.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>alpha</strong></td>
+            <td>
+                <p>An optional input that defines the significance 
+level at which to evaluate the confidence intervals. The 
+default value is 0.05 such that a 95% confidence interval 
+is calculated.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(ode_integrator),
+            </td>
+<td>intent(inout),</td>
+              <td>optional,</td>            <td>
+              target
+            </td>
+            <td>::</td>
+            <td><strong>integrator</strong></td>
+            <td>
+                <p>An optional input, used in the event the model has internal 
+state variables, that provides integration of the state 
+equations.  The defaults is a singly diagonally implicit
+Runge-Kutta method (4th order) that is suitable for 
+stiff ODE's.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              type(iteration_controls),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>controls</strong></td>
+            <td>
+                <p>An optional input providing custom iteration controls.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              type(lm_solver_options),
+            </td>
+<td>intent(in),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>settings</strong></td>
+            <td>
+                <p>An optional input providing custom settings for 
+the solver.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              type(convergence_info),
+            </td>
+<td>intent(out),</td>
+              <td>optional</td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>info</strong></td>
+            <td>
+                <p>An optional output that can be used to gain 
+information about the iterative solution and the nature of 
+the convergence.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              type(regression_statistics),
+            </td>
+<td>intent(out),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>stats</strong></td>
+            <td>
+                <p>An optional output array of M-elements that can be
+used to retrieve statistical information regarding the fit of
+each of the M model parameters.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(out),</td>
+              <td>optional,</td>            <td>
+              target, dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>fmod</strong></td>
+            <td>
+                <p>An optional N-element array used to provide the fitted model 
+results.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(out),</td>
+              <td>optional,</td>            <td>
+              target, dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>resid</strong></td>
+            <td>
+                <p>An optional N-element array containing the fitted residuals.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(errors),
+            </td>
+<td>intent(inout),</td>
+              <td>optional,</td>            <td>
+              target
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                <p>An optional errors-based object that if provided 
+can be used to retrieve information relating to any errors 
+encountered during execution. If not provided, a default 
+implementation of the errors class is used internally to
+provide error handling.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+        </li>
+    </ul>
+  </div>
+
+            <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-from_array~3"></span><h3>procedure, public :: <strong>from_array</strong>  => gmsm_from_array         
+    </h3></div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private module subroutine gmsm_from_array(this, x, err)  
+</h3>
+  <p>Converts an array into the parameters for the friction model.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='../type/generalized_maxwell_slip_model.html'>generalized_maxwell_slip_model</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>The generalized_maxwell_slip_model object.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>The array of parameters.  See parameter_count to 
+determine the size of this array. The parameter order is as 
+follows:</p>
+<ol>
+<li>
+<p>static_coefficient</p>
+</li>
+<li>
+<p>coulomb_coefficient</p>
+</li>
+<li>
+<p>attraction_coefficient</p>
+</li>
+<li>
+<p>stiffness</p>
+</li>
+<li>
+<p>viscous_damping</p>
+</li>
+<li>
+<p>stribeck_velocity</p>
+</li>
+<li>
+<p>shape_parameter</p>
+</li>
+<li>
+<p>element stiffness</p>
+</li>
+<li>
+<p>element damping</p>
+</li>
+<li>
+<p>element scaling ...</p>
+</li>
+</ol>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(errors),
+            </td>
+<td>intent(inout),</td>
+              <td>optional,</td>            <td>
+              target
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                <p>An optional errors-based object that if provided 
+can be used to retrieve information relating to any errors 
+encountered during execution. If not provided, a default 
+implementation of the errors class is used internally to
+provide error handling.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+        </li>
+    </ul>
+  </div>
+
+            <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-get_constraint_equation_count~2"></span><h3>procedure, public :: <strong>get_constraint_equation_count</strong>  => gmsm_get_constraint_count         
+    </h3></div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private pure module function gmsm_get_constraint_count(this) result(rst)  
+</h3>
+  <p>Gets the number of constraint equations the model requires to
+be satisfied when fitting to data.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='../type/generalized_maxwell_slip_model.html'>generalized_maxwell_slip_model</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>The generalized_maxwell_slip_model object.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int32)</small>
+    </h4>
+    <p>The number of constraint equations.</p>
+
+        </li>
+    </ul>
+  </div>
+
+            <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-get_element_count"></span><h3>procedure, public :: <strong>get_element_count</strong>  => gmsm_get_element_count         
+    </h3></div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private pure module function gmsm_get_element_count(this) result(rst)  
+</h3>
+  <p>Gets the number of friction elements in the model.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='../type/generalized_maxwell_slip_model.html'>generalized_maxwell_slip_model</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>The generalized_maxwell_slip_model object.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int32)</small>
+    </h4>
+    <p>The number of friction elements in the model.</p>
+
+        </li>
+    </ul>
+  </div>
+
+            <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-get_element_damping"></span><h3>procedure, public :: <strong>get_element_damping</strong>  => gmsm_get_element_damping         
+    </h3></div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private pure module function gmsm_get_element_damping(this, i) result(rst)  
+</h3>
+  <p>Gets the damping term for the specified element.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='../type/generalized_maxwell_slip_model.html'>generalized_maxwell_slip_model</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>The generalized_maxwell_slip_model object.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>i</strong></td>
+            <td>
+                <p>The index of the element.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=real64)</small>
+    </h4>
+    <p>The requested value.</p>
+
+        </li>
+    </ul>
+  </div>
+
+            <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-get_element_scaling"></span><h3>procedure, public :: <strong>get_element_scaling</strong>  => gmsm_get_element_scaling         
+    </h3></div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private pure module function gmsm_get_element_scaling(this, i) result(rst)  
+</h3>
+  <p>Gets the scaling factor for the specified element.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='../type/generalized_maxwell_slip_model.html'>generalized_maxwell_slip_model</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>The generalized_maxwell_slip_model object.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>i</strong></td>
+            <td>
+                <p>The index of the element.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=real64)</small>
+    </h4>
+    <p>The requested value.</p>
+
+        </li>
+    </ul>
+  </div>
+
+            <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-get_element_stiffness"></span><h3>procedure, public :: <strong>get_element_stiffness</strong>  => gmsm_get_element_stiffness         
+    </h3></div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private pure module function gmsm_get_element_stiffness(this, i) result(rst)  
+</h3>
+  <p>Gets the stiffness term for the specified element.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='../type/generalized_maxwell_slip_model.html'>generalized_maxwell_slip_model</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>The generalized_maxwell_slip_model object.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>i</strong></td>
+            <td>
+                <p>The index of the element.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=real64)</small>
+    </h4>
+    <p>The requested value.</p>
+
+        </li>
+    </ul>
+  </div>
+
+            <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-get_state_variable_count~3"></span><h3>procedure, public :: <strong>get_state_variable_count</strong>  => gmsm_get_state_var_count         
+    </h3></div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private pure module function gmsm_get_state_var_count(this) result(rst)  
+</h3>
+  <p>Gets the number of internal state variables used by the model.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='../type/generalized_maxwell_slip_model.html'>generalized_maxwell_slip_model</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>The generalized_maxwell_slip_model object.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int32)</small>
+    </h4>
+    <p>The internal state variable count.</p>
+
+        </li>
+    </ul>
+  </div>
+
+            <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-has_internal_state~3"></span><h3>procedure, public :: <strong>has_internal_state</strong>  => gmsm_has_state_vars         
+    </h3></div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private pure module function gmsm_has_state_vars(this) result(rst)  
+</h3>
+  <p>Returns a value stating if the model relies upon internal
+state variables.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='../type/generalized_maxwell_slip_model.html'>generalized_maxwell_slip_model</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>The generalized_maxwell_slip_model object.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Returns true if the model utilizes internal state variables;
+else, returns false.</p>
+
+        </li>
+    </ul>
+  </div>
+
+            <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-initialize"></span><h3>procedure, public :: <strong>initialize</strong>  => gmsm_initialize         
+    </h3></div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private module subroutine gmsm_initialize(this, n, err)  
+</h3>
+  <p>Initializes the model.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='../type/generalized_maxwell_slip_model.html'>generalized_maxwell_slip_model</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>The generalized_maxwell_slip_model object.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+                <p>The number of friction elements.  This value must be at
+least 1.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(errors),
+            </td>
+<td>intent(inout),</td>
+              <td>optional,</td>            <td>
+              target
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                <p>An optional errors-based object that if provided 
+can be used to retrieve information relating to any errors 
+encountered during execution. If not provided, a default 
+implementation of the errors class is used internally to
+provide error handling.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+        </li>
+    </ul>
+  </div>
+
+            <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-parameter_count~3"></span><h3>procedure, public :: <strong>parameter_count</strong>  => gmsm_parameter_count         
+    </h3></div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private pure module function gmsm_parameter_count(this) result(rst)  
+</h3>
+  <p>Gets the number of model parameters.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='../type/generalized_maxwell_slip_model.html'>generalized_maxwell_slip_model</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>The generalized_maxwell_slip_model object.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>integer(kind=int32)</small>
+    </h4>
+    <p>The number of model parameters.</p>
+
+        </li>
+    </ul>
+  </div>
+
+            <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-set_element_damping"></span><h3>procedure, public :: <strong>set_element_damping</strong>  => gmsm_set_element_damping         
+    </h3></div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private module function gmsm_set_element_damping(this, i, x) result(rst)  
+</h3>
+  <p>Sets the damping term for the specified element.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='../type/generalized_maxwell_slip_model.html'>generalized_maxwell_slip_model</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>The generalized_maxwell_slip_model object.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>i</strong></td>
+            <td>
+                <p>The index of the element.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>The value.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Returns true if the operation was successful; else, returns
+false if the object has not yet been initialized.</p>
+
+        </li>
+    </ul>
+  </div>
+
+            <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-set_element_scaling"></span><h3>procedure, public :: <strong>set_element_scaling</strong>  => gmsm_set_element_scaling         
+    </h3></div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private module function gmsm_set_element_scaling(this, i, x) result(rst)  
+</h3>
+  <p>Sets the scaling factor for the specified element.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='../type/generalized_maxwell_slip_model.html'>generalized_maxwell_slip_model</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>The generalized_maxwell_slip_model object.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>i</strong></td>
+            <td>
+                <p>The index of the element.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>The value.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Returns true if the operation was successful; else, returns
+false if the object has not yet been initialized.</p>
+
+        </li>
+    </ul>
+  </div>
+
+            <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-set_element_stiffness"></span><h3>procedure, public :: <strong>set_element_stiffness</strong>  => gmsm_set_element_stiffness         
+    </h3></div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private module function gmsm_set_element_stiffness(this, i, x) result(rst)  
+</h3>
+  <p>Sets the stiffness term for the specified element.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='../type/generalized_maxwell_slip_model.html'>generalized_maxwell_slip_model</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>The generalized_maxwell_slip_model object.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              integer(kind=int32),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>i</strong></td>
+            <td>
+                <p>The index of the element.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>The value.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>logical</small>
+    </h4>
+    <p>Returns true if the operation was successful; else, returns
+false if the object has not yet been initialized.</p>
+
+        </li>
+    </ul>
+  </div>
+
+            <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-state~3"></span><h3>procedure, public :: <strong>state</strong>  => gmsm_state_model         
+    </h3></div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private module subroutine gmsm_state_model(this, t, x, dxdt, nrm, svars, dsdt)  
+</h3>
+  <p>Evaluates the time derivatives of the internal friction state
+model.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='../type/generalized_maxwell_slip_model.html'>generalized_maxwell_slip_model</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>The generalized_maxwell_slip_model object.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>t</strong></td>
+            <td>
+                <p>The current simulation time value.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>The current value of the relative position between
+the contacting bodies.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dxdt</strong></td>
+            <td>
+                <p>The current value of the relative velocity between
+the contacting bodies.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nrm</strong></td>
+            <td>
+                <p>The current normal force between the contacting 
+bodies.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>svars</strong></td>
+            <td>
+                <p>An N-element array containing any internal state
+variables the model may rely upon.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>dsdt</strong></td>
+            <td>
+                <p>An N-element array where the state variable 
+derivatives are to be written.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+        </li>
+    </ul>
+  </div>
+
+            <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-stribeck_function"></span><h3>procedure, public :: <strong>stribeck_function</strong>  => gmsm_stribeck_curve         
+    </h3></div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private pure module function gmsm_stribeck_curve(this, dxdt, nrm) result(rst)  
+</h3>
+  <p>Evaluates the Stribeck function for the model.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='../type/generalized_maxwell_slip_model.html'>generalized_maxwell_slip_model</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>The generalized_maxwell_slip_model object.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dxdt</strong></td>
+            <td>
+                <p>The relative velocity between the contacting bodies.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nrm</strong></td>
+            <td>
+                <p>The normal force between the contacting bodies.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <h4>
+    Return Value
+    <small>real(kind=real64)</small>
+    </h4>
+    <p>The value of the Stribeck function.  The units are units of
+position.</p>
+
+        </li>
+    </ul>
+  </div>
+
+            <div class="panel panel-default">
+    <div class="panel-heading codesum"><span class="anchor" id="boundprocedure-to_array~3"></span><h3>procedure, public :: <strong>to_array</strong>  => gmsm_to_array         
+    </h3></div>
+    <ul class="list-group">
+        <li class="list-group-item">
+              <h3>interface </h3>
+                  <h3>
+    private module subroutine gmsm_to_array(this, x, err)  
+</h3>
+  <p>Converts the parameters of the friction model into an array.</p>
+
+  <h4>Arguments</h4>
+      <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(<a href='../type/generalized_maxwell_slip_model.html'>generalized_maxwell_slip_model</a>),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>The generalized_maxwell_slip_model object.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              real(kind=real64),
+            </td>
+<td>intent(out),</td>
+              <td></td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>The array used to store the parameters.  See parameter_count 
+to determine the size of this array.  The parameter order is 
+as follows:</p>
+<ol>
+<li>
+<p>static_coefficient</p>
+</li>
+<li>
+<p>coulomb_coefficient</p>
+</li>
+<li>
+<p>attraction_coefficient</p>
+</li>
+<li>
+<p>stiffness</p>
+</li>
+<li>
+<p>viscous_damping</p>
+</li>
+<li>
+<p>stribeck_velocity</p>
+</li>
+<li>
+<p>shape_parameter</p>
+</li>
+<li>
+<p>element stiffness</p>
+</li>
+<li>
+<p>element damping</p>
+</li>
+<li>
+<p>element scaling ...</p>
+</li>
+</ol>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" ></span>
+              class(errors),
+            </td>
+<td>intent(inout),</td>
+              <td>optional,</td>            <td>
+              target
+            </td>
+            <td>::</td>
+            <td><strong>err</strong></td>
+            <td>
+                <p>An optional errors-based object that if provided 
+can be used to retrieve information relating to any errors 
+encountered during execution. If not provided, a default 
+implementation of the errors class is used internally to
+provide error handling.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+        </li>
+    </ul>
+  </div>
+
+      </section>
+
+    
+    </div>
+  </div>
+
+    <hr>    
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+      <div class="row">
+        <div class="col-xs-6 col-md-6"><p>FRICTION was developed by Jason Christopherson<br>&copy; 2023 
+</p>
+        </div>
+        <div class="col-xs-6 col-md-6">
+          <p class="text-right">
+            Documentation generated by 
+            <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2023-09-28 20:48            </p>
+        </div>
+      </div>
+      <br>
+      </div> <!-- /container -->    
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+-->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../js/ie10-viewport-bug-workaround.js"></script>
+
+    <!-- MathJax JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+        jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+        extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+      });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script src="../tipuesearch/tipuesearch_content.js"></script>
+    <script src="../tipuesearch/tipuesearch_set.js"></script>
+    <script src="../tipuesearch/tipuesearch.js"></script>
+    
+  </body>
+</html>
