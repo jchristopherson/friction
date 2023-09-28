@@ -7,7 +7,7 @@ This is a work in progress.  This library will eventually be a compilation of th
 ## Available Models
 - Coulomb Model
 ```math
-F = sgn{ \left( v \right)} \mu_{c} N
+F = \text{sgn} \left( v \right) \mu_{c} N
 ```
 - Lu-Gre Model
 ```math
@@ -27,7 +27,7 @@ a_{1} = \frac{\mu_c N}{\sigma_{0}}, a_{2} = \frac{\mu_s N - \mu_c N}{\sigma_{0}}
 F = k \delta
 ```
 ```math
-\delta_{i+1} = sgn \left( x_{i+1} - x_{i} + \delta_{i} \right) \min \left( \left| x_{i+1} - x_{i} + \delta_{i} \right|, \Delta \right)
+\delta_{i+1} = \text{sgn} \left( x_{i+1} - x_{i} + \delta_{i} \right) \min \left( \left| x_{i+1} - x_{i} + \delta_{i} \right|, \Delta \right)
 ```
 ```math
 \Delta = \frac{N \mu_c}{k}
@@ -41,7 +41,7 @@ F = \sum_{i=1}^{n} \left( k_i z_i + b_i \frac{dz_i}{dt} \right) + b_v v
 \frac{dz_i}{dt} = 
 \begin{cases}
 v & \text{if $|z_i| \le g(v)$} \\
-sgn{ \left( v \right)} \nu_i C \left( 1 - \frac{z_i}{\nu_i g(v)} \right) & \text{otherwise}
+\text{sgn} \left( v \right) \nu_i C \left( 1 - \frac{z_i}{\nu_i g(v)} \right) & \text{otherwise}
 \end{cases}
 \end{equation}
 ```
@@ -53,6 +53,23 @@ a_{1} = \frac{\mu_c N}{\sigma_{0}}, a_{2} = \frac{\mu_s N - \mu_c N}{\sigma_{0}}
 ```
 ```math
 \sum_{i=1}^{n} \nu_i = 1
+```
+- Stribeck Model
+```math
+F = \text{sgn} \left( v \right) \left( \mu_c N + N \left( mu_s - mu_c \right) \exp(-|\frac{v}{v_s}|^2) \right) + b_v v
+```
+- Modified Stribeck Model
+```math
+F = k \delta + b_v v
+```
+```math
+\delta_{i+1} = \text{sgn} \left( x_{i+1} - x_{i} + \delta_{i} \right) \min \left( \left| x_{i+1} - x_{i} + \delta_{i} \right|, g(v) \right)
+```
+```math
+g(v) = a_{1} + a_2 \exp(-|\frac{v}{v_s}|^2)
+```
+```math
+a_{1} = \frac{\mu_c N}{\sigma_{0}}, a_{2} = \frac{\mu_s N - \mu_c N}{\sigma_{0}}, s = \frac{\left| v \right|}{v_s}
 ```
 
 ## References:
