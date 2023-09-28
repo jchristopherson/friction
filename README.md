@@ -69,7 +69,7 @@ F = k \delta + b_v v
 g(v) = a_{1} + a_2 \exp(-|\frac{v}{v_s}|^2)
 ```
 ```math
-a_{1} = \frac{\mu_c N}{\sigma_{0}}, a_{2} = \frac{\mu_s N - \mu_c N}{\sigma_{0}}, s = \frac{\left| v \right|}{v_s}
+a_{1} = \frac{\mu_c N}{\sigma_{0}}, a_{2} = \frac{\mu_s N - \mu_c N}{\sigma_{0}}
 ```
 
 ## References:
