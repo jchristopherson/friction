@@ -14,9 +14,6 @@ module function sf_eval(this, t, x, dxdt, nrm, svars) result(rst)
     fv = Fc + (Fs - Fc) * exp(-abs(dxdt / this%stribeck_velocity)**2) + &
         this%viscous_damping * dxdt
     rst = sign(1.0d0, dxdt) * fv
-    
-    this%d_prev = delta
-    this%x_prev = x
 end function
 
 ! ------------------------------------------------------------------------------

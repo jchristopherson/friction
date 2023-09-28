@@ -72,3 +72,11 @@ add_executable(
 )
 link_library(stribeck_example ${PROJECT_NAME} ${PROJECT_INCLUDE_DIR})
 link_library(stribeck_example ${fplot_LIBRARY} ${fplot_INCLUDE_DIR})
+
+# Modified Stribeck Example
+add_executable(
+    modified_stribeck_example
+    modified_stribeck_example.f90
+)
+link_library(modified_stribeck_example ${PROJECT_NAME} ${PROJECT_INCLUDE_DIR})
+link_library(modified_stribeck_example ${fplot_LIBRARY} ${fplot_INCLUDE_DIR})
