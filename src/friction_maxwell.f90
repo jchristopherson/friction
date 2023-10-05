@@ -67,4 +67,11 @@ pure module function mx_get_state_var_count(this) result(rst)
 end function
 
 ! ------------------------------------------------------------------------------
+module subroutine mx_reset(this)
+    class(maxwell_model), intent(inout) :: this
+    this%x_prev = 0.0d0
+    this%d_prev = 0.0d0
+end subroutine
+
+! ------------------------------------------------------------------------------
 end submodule

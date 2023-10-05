@@ -42,6 +42,7 @@ module friction
         procedure, public :: constraint_equations => fmdl_constraints
         procedure, public :: get_constraint_equation_count => &
             fmdl_get_constraint_count
+        procedure, public :: reset => fmdl_reset
     end type
 
     interface
@@ -250,10 +251,16 @@ module friction
             !! Gets the number of constraint equations the model requires to
             !! be satisfied when fitting to data.
             class(friction_model), intent(in) :: this
-                !! The friction model object.
+                !! The friction_model object.
             integer(int32) :: rst
                 !! The number of constraint equations.
         end function
+
+        module subroutine fmdl_reset(this)
+            !! Resets the friction model to it's original state.
+            class(friction_model), intent(inout) :: this
+                !! The friction_model object.
+        end subroutine
     end interface
 
 ! ------------------------------------------------------------------------------
@@ -627,6 +634,7 @@ module friction
         procedure, public :: from_array => mx_from_array
         procedure, public :: parameter_count => mx_parameter_count
         procedure, public :: get_state_variable_count => mx_get_state_var_count
+        procedure, public :: reset => mx_reset
     end type
 
     ! friction_maxwell.f90
@@ -743,6 +751,12 @@ module friction
             integer(int32) :: rst
                 !! The internal state variable count.
         end function
+
+        module subroutine mx_reset(this)
+            !! Resets the friction model to it's original state.
+            class(maxwell_model), intent(inout) :: this
+                !! The maxwell_model object.
+        end subroutine
     end interface
 
 ! ------------------------------------------------------------------------------
@@ -1339,6 +1353,7 @@ module friction
         procedure, public :: to_array => msf_to_array
         procedure, public :: from_array => msf_from_array
         procedure, public :: parameter_count => msf_parameter_count
+        procedure, public :: reset => msf_reset
     end type
 
     ! friction_stribeck.f90
@@ -1425,6 +1440,12 @@ module friction
             integer(int32) :: rst
                 !! The number of model parameters.
         end function
+
+        module subroutine msf_reset(this)
+            !! Resets the friction model to it's original state.
+            class(modified_stribeck_model), intent(inout) :: this
+                !! The modified_stribeck_model object.
+        end subroutine
     end interface
 
 ! ------------------------------------------------------------------------------
