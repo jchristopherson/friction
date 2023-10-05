@@ -86,7 +86,7 @@
           <li id="statements"><i class="fa fa-list-ol"></i>
             <a data-toggle="tooltip"
                data-placement="bottom" data-html="true"
-               title="41.0% of total for modules and submodules.">522 statements</a>
+               title="41.1% of total for modules and submodules.">534 statements</a>
           </li>
 
             <li id="source-file">
@@ -180,10 +180,10 @@ of contacting bodies.</p>
       <ul class="list-group">
           <li class="list-group-item">
             <ul class="list-inline">
-                <li><a href="http://fortranwiki.org/fortran/show/iso_fortran_env">iso_fortran_env</a></li>
                 <li>ferror</li>
-                <li>diffeq</li>
                 <li>fstats</li>
+                <li><a href="http://fortranwiki.org/fortran/show/iso_fortran_env">iso_fortran_env</a></li>
+                <li>diffeq</li>
             </ul>
           </li>
       </ul>
@@ -477,6 +477,16 @@ parameter
                 <td>
                     procedure
                     ,                  public
+                  :: <strong><a href='../type/friction_model.html#boundprocedure-reset'>reset</a></strong>
+ =>
+                    fmdl_reset
+<small>Interface</small>                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>
+                    procedure
+                    ,                  public
                   :: <strong><a href='../type/coulomb_model.html#boundprocedure-state'>state</a></strong>
  =>
                     cf_state_model
@@ -584,6 +594,16 @@ parameter
 (friction_integer_query)                    ,                  public
                   :: <strong><a href='../type/friction_model.html#boundprocedure-parameter_count~2'>parameter_count</a></strong>
 <small></small>                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>
+                    procedure
+                    ,                  public
+                  :: <strong><a href='../type/friction_model.html#boundprocedure-reset'>reset</a></strong>
+ =>
+                    fmdl_reset
+<small>Interface</small>                </td>
                 <td></td>
               </tr>
               <tr>
@@ -902,6 +922,16 @@ parameter
                 <td>
                     procedure
                     ,                  public
+                  :: <strong><a href='../type/friction_model.html#boundprocedure-reset'>reset</a></strong>
+ =>
+                    fmdl_reset
+<small>Interface</small>                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>
+                    procedure
+                    ,                  public
                   :: <strong><a href='../type/generalized_maxwell_slip_model.html#boundprocedure-set_element_damping'>set_element_damping</a></strong>
  =>
                     gmsm_set_element_damping
@@ -1198,6 +1228,16 @@ parameter
                 <td>
                     procedure
                     ,                  public
+                  :: <strong><a href='../type/friction_model.html#boundprocedure-reset'>reset</a></strong>
+ =>
+                    fmdl_reset
+<small>Interface</small>                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>
+                    procedure
+                    ,                  public
                   :: <strong><a href='../type/lugre_model.html#boundprocedure-state~4'>state</a></strong>
  =>
                     lg_state_model
@@ -1362,6 +1402,16 @@ parameter
                   :: <strong><a href='../type/maxwell_model.html#boundprocedure-parameter_count~5'>parameter_count</a></strong>
  =>
                     mx_parameter_count
+<small>Interface</small>                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>
+                    procedure
+                    ,                  public
+                  :: <strong><a href='../type/maxwell_model.html#boundprocedure-reset~2'>reset</a></strong>
+ =>
+                    mx_reset
 <small>Interface</small>                </td>
                 <td></td>
               </tr>
@@ -1594,6 +1644,16 @@ slipping occurs.</p><a href="../type/modified_stribeck_model.html" class="pull-r
                 <td>
                     procedure
                     ,                  public
+                  :: <strong><a href='../type/modified_stribeck_model.html#boundprocedure-reset~3'>reset</a></strong>
+ =>
+                    msf_reset
+<small>Interface</small>                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>
+                    procedure
+                    ,                  public
                   :: <strong><a href='../type/stribeck_model.html#boundprocedure-state~6'>state</a></strong>
  =>
                     sf_state_model
@@ -1799,6 +1859,16 @@ slipping occurs.</p><a href="../type/modified_stribeck_model.html" class="pull-r
                 <td>
                     procedure
                     ,                  public
+                  :: <strong><a href='../type/friction_model.html#boundprocedure-reset'>reset</a></strong>
+ =>
+                    fmdl_reset
+<small>Interface</small>                </td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>
+                    procedure
+                    ,                  public
                   :: <strong><a href='../type/stribeck_model.html#boundprocedure-state~6'>state</a></strong>
  =>
                     sf_state_model
@@ -1842,7 +1912,7 @@ slipping occurs.</p><a href="../type/modified_stribeck_model.html" class="pull-r
           <p class="text-right">
             Documentation generated by 
             <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2023-09-28 21:09            </p>
+ on 2023-10-05 13:25            </p>
         </div>
       </div>
       <br>

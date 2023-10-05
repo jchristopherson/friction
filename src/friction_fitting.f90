@@ -36,6 +36,7 @@ subroutine fit_fcn(x, p, f, stop_)
     call fmdl_%from_array(p)
 
     ! Evaluate the friction model and compare the results
+    call fmdl_%reset()
     do i = 1, npts
         f(i) = fmdl_%evaluate(t_(i), x_(i), v_(i), n_(i)) - f_(i)
     end do
@@ -72,6 +73,7 @@ subroutine internal_var_fit_fcn(x, p, f, stop_)
     dzdt = integrate_%solve(mdl_, t_, initstate_)
 
     ! Evaluate the friction model and compare the results
+    call fmdl_%reset()
     do i = 1, npts
         f(i) = fmdl_%evaluate(t_(i), x_(i), v_(i), n_(i), dzdt(i,2:)) - f_(i)
     end do
@@ -374,6 +376,11 @@ pure module function fmdl_get_constraint_count(this) result(rst)
     integer(int32) :: rst
     rst = 0
 end function
+
+! ------------------------------------------------------------------------------
+module subroutine fmdl_reset(this)
+    class(friction_model), intent(inout) :: this
+end subroutine
 
 ! ------------------------------------------------------------------------------
 end submodule

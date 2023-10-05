@@ -53,4 +53,11 @@ pure module function msf_parameter_count(this) result(rst)
 end function
 
 ! ------------------------------------------------------------------------------
+module subroutine msf_reset(this)
+    class(modified_stribeck_model), intent(inout) :: this
+    this%x_prev = 0.0d0
+    this%d_prev = 0.0d0
+end subroutine
+
+! ------------------------------------------------------------------------------
 end submodule
