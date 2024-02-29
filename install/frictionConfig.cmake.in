@@ -1,3 +1,0 @@
-if (NOT TARGET friction)
-    include("${CMAKE_CURRENT_LIST_DIR}/frictionTargets.cmake")
-endif()

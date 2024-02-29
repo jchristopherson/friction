@@ -30,9 +30,6 @@ link_library(${PROJECT_NAME} ${diffeq_LIBRARY} ${diffeq_INCLUDE_DIR})
 link_library(${PROJECT_NAME} ${fstats_LIBRARY} ${fstats_INCLUDE_DIR})
 link_library(${PROJECT_NAME} ${fitpack_LIBRARY} ${fitpack_INCLUDE_DIR})
 
-# Installation
-add_subdirectory(install)
-
 # Testing
 option(BUILD_TESTING "Build tests")
 include(CTest)
