@@ -1,4 +1,5 @@
 submodule (friction) friction_maxwell
+    implicit none
 contains
 ! ------------------------------------------------------------------------------
 module function mx_eval(this, t, x, dxdt, nrm, svars) result(rst)

@@ -1,5 +1,6 @@
 submodule (friction) friction_gmsm
     use :: ieee_arithmetic, only : ieee_value, IEEE_QUIET_NAN
+    implicit none
 
     ! The number of model parameters per element
     integer(int32), parameter :: PER_ELEMENT_COUNT = 3

@@ -1,6 +1,6 @@
 submodule (friction) friction_lugre
     use fstats
-    use diffeq
+    implicit none
 contains
 ! ------------------------------------------------------------------------------
 module function lg_eval(this, t, x, dxdt, nrm, svars) result(rst)

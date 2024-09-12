@@ -1,4 +1,5 @@
 submodule (friction) friction_stribeck
+    implicit none
 contains
 ! ------------------------------------------------------------------------------
 module function sf_eval(this, t, x, dxdt, nrm, svars) result(rst)

@@ -1,4 +1,5 @@
 submodule (friction) friction_coulomb
+    implicit none
 contains
 ! ------------------------------------------------------------------------------
 module function cf_eval(this, t, x, dxdt, nrm, svars) result(rst)

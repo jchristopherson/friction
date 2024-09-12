@@ -1,6 +1,8 @@
 submodule (friction) friction_fitting
     use fstats
     use fitpack
+    use diffeq
+    implicit none
 
 ! ------------------------------------------------------------------------------
     ! Variables specific to the fitting process
@@ -70,7 +72,8 @@ subroutine internal_var_fit_fcn(x, p, f, stop_)
     call fmdl_%from_array(p)
 
     ! Integrate to determine the state variables
-    dzdt = integrate_%solve(mdl_, t_, initstate_)
+    call integrate_%solve(mdl_, t_, initstate_)
+    dzdt = integrate_%get_solution()
 
     ! Evaluate the friction model and compare the results
     call fmdl_%reset()
@@ -127,7 +130,7 @@ module subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
     ! Local Variables
     class(errors), pointer :: errmgr
     type(errors), target :: deferr
-    integer(int32) :: npts, nparams, flag, np
+    integer(int32) :: i, npts, nparams, flag, np
     real(real64), allocatable, target, dimension(:) :: params, initstate, &
         tc, fc, fmc, rc
     real(real64), allocatable, dimension(:,:) :: dzdt
@@ -135,7 +138,7 @@ module subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
     real(real64), allocatable, target, dimension(:) :: fmoddef, residdef
     procedure(regression_function), pointer :: fcn
     type(fitpack_curve), target :: xinterp, vinterp, ninterp
-    type(sdirk4_integrator), target :: def_integrator
+    type(rosenbrock), target :: def_integrator
     type(ode_container), target :: mdl
     
     ! Initialization

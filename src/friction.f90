@@ -196,9 +196,7 @@ module friction
             class(ode_integrator), intent(inout), target, optional :: integrator
                 !! An optional input, used in the event the model has internal 
                 !! state variables, that provides integration of the state 
-                !! equations.  The defaults is a singly diagonally implicit
-                !! Runge-Kutta method (4th order) that is suitable for 
-                !! stiff ODE's.
+                !! equations.  The defaults is a 4th order Rosenbrock method.
             type(iteration_controls), intent(in), optional :: controls
                 !! An optional input providing custom iteration controls.
             type(lm_solver_options), intent(in), optional :: settings
