@@ -5,6 +5,9 @@ A library containing routines for calculating the frictional response of contact
 [![CMake](https://github.com/jchristopherson/friction/actions/workflows/cmake.yml/badge.svg)](https://github.com/jchristopherson/friction/actions/workflows/cmake.yml)
 [![Actions Status](https://github.com/jchristopherson/friction/workflows/fpm/badge.svg)](https://github.com/jchristopherson/friction/actions)
 
+## Documentation
+The documentation can be found [here](https://jchristopherson.github.io/friction/).
+
 ## Available Models
 - Coulomb Model
 ```math
