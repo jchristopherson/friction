@@ -35,8 +35,6 @@
 bin/
 lib/
 build/
-latex/
-doc/
 
 # CMake Stuff
 .cmaketools.json

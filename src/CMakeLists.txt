@@ -4,9 +4,10 @@ set(dir ${CMAKE_CURRENT_SOURCE_DIR})
 # Define the source files
 set(FRICTION_SOURCES
     ${dir}/friction.f90
+    ${dir}/friction_core.f90
+    ${dir}/friction_errors.f90
     ${dir}/friction_coulomb.f90
     ${dir}/friction_lugre.f90
-    ${dir}/friction_fitting.f90
     ${dir}/friction_maxwell.f90
     ${dir}/friction_gmsm.f90
     ${dir}/friction_stribeck.f90

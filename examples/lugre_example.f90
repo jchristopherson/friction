@@ -43,7 +43,7 @@ program example
     implicit none
     
     ! Local Variables
-    type(bsrk32_integrator) :: integrator
+    type(runge_kutta_23) :: integrator
     type(ode_container) :: sys
     real(real64), allocatable :: sol(:,:)
 
@@ -64,7 +64,8 @@ program example
 
     ! Set up the integrator and solve the differential equations
     sys%fcn => equations
-    sol = integrator%solve(sys, [0.0d0, 1.0d0], [0.0d0, 0.0d0, 0.0d0])
+    call integrator%solve(sys, [0.0d0, 1.0d0], [0.0d0, 0.0d0, 0.0d0])
+    sol = integrator%get_solution()
 
     ! Plot the solution
     call plt%initialize()

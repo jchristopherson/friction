@@ -3,7 +3,6 @@ program example
     use fplot_core
     use csv_module
     use friction
-    use fstats
     implicit none
 
     ! Local Variables
