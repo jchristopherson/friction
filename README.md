@@ -1,8 +1,9 @@
 # friction
 A library containing routines for calculating the frictional response of contacting bodies.
 
-## Work-In-Progress
-This is a work in progress.  This library will eventually be a compilation of the friction modeling efforts I have undertaken as part of my everyday work.
+## Status
+[![CMake](https://github.com/jchristopherson/friction/actions/workflows/cmake.yml/badge.svg)](https://github.com/jchristopherson/friction/actions/workflows/cmake.yml)
+[![Actions Status](https://github.com/jchristopherson/friction/workflows/fpm/badge.svg)](https://github.com/jchristopherson/friction/actions)
 
 ## Available Models
 - Coulomb Model
