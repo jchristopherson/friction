@@ -1,6 +1,147 @@
-submodule (friction) friction_fitting
+module friction_core
+    use iso_fortran_env
+    use ferror
     use fstats
     use fitpack
+    use diffeq
+    use friction_errors
+    implicit none
+    private
+    public :: friction_model
+    public :: friction_evaluation
+    public :: friction_logical_query
+    public :: friction_state_model
+    public :: friction_model_to_array
+    public :: friction_model_from_array
+    public :: friction_integer_query
+    public :: regression_statistics
+    
+    type, abstract :: friction_model
+        !! Defines a generic friction model.
+    contains
+        procedure(friction_evaluation), deferred, public :: evaluate
+        procedure(friction_logical_query), deferred, public :: &
+            has_internal_state
+        procedure(friction_state_model), deferred, public :: state
+        procedure(friction_model_to_array), deferred, public :: to_array
+        procedure(friction_model_from_array), deferred, public :: from_array
+        procedure(friction_integer_query), deferred, public :: parameter_count
+        procedure(friction_integer_query), deferred, public :: &
+            get_state_variable_count
+        procedure, public :: fit => fmdl_fit
+        procedure, public :: constraint_equations => fmdl_constraints
+        procedure, public :: get_constraint_equation_count => &
+            fmdl_get_constraint_count
+        procedure, public :: reset => fmdl_reset
+    end type
+
+    interface
+        function friction_evaluation(this, t, x, dxdt, nrm, svars) result(rst)
+            use iso_fortran_env, only : real64
+            import friction_model
+            class(friction_model), intent(inout) :: this
+                !! The friction_model object.
+            real(real64), intent(in) :: t
+                !! The current simulation time value.
+            real(real64), intent(in) :: x
+                !! The current value of the relative position between
+                !! the contacting bodies.
+            real(real64), intent(in) :: dxdt
+                !! The current value of the relative velocity between
+                !! the contacting bodies.
+            real(real64), intent(in) :: nrm
+                !! The current normal force between the contacting 
+                !! bodies.
+            real(real64), intent(in), optional, dimension(:) :: svars
+                !! An optional array containing any internal state
+                !! variables the model may rely upon.
+            real(real64) :: rst
+                !! The friction force.
+        end function
+
+        pure function friction_logical_query(this) result(rst)
+            !! Returns a value stating if the model relies upon internal
+            !! state variables.
+            import friction_model
+            class(friction_model), intent(in) :: this
+                !! The friction_model object.
+            logical :: rst
+                !! Returns true if the model utilizes internal state variables;
+                !! else, returns false.
+        end function
+
+        subroutine friction_state_model(this, t, x, dxdt, nrm, svars, dsdt)
+            !! Evaluates the time derivatives of the internal friction state
+            !! model.
+            use iso_fortran_env, only : real64
+            import friction_model
+            class(friction_model), intent(inout) :: this
+                !! The friction_model object.
+            real(real64), intent(in) :: t
+                !! The current simulation time value.
+            real(real64), intent(in) :: x
+                !! The current value of the relative position between
+                !! the contacting bodies.
+            real(real64), intent(in) :: dxdt
+                !! The current value of the relative velocity between
+                !! the contacting bodies.
+            real(real64), intent(in) :: nrm
+                !! The current normal force between the contacting 
+                !! bodies.
+            real(real64), intent(in), dimension(:) :: svars
+                !! An N-element array containing any internal state
+                !! variables the model may rely upon.
+            real(real64), intent(out), dimension(:) :: dsdt
+                !! An N-element array where the state variable 
+                !! derivatives are to be written.
+        end subroutine
+
+        subroutine friction_model_to_array(this, x, err)
+            !! Converts the parameters of the friction model into an array.
+            use iso_fortran_env, only : real64
+            use ferror
+            import friction_model
+            class(friction_model), intent(in) :: this
+                !! The friction_model object.
+            real(real64), intent(out), dimension(:) :: x
+                !! The array used to store the parameters.  See @ref
+                !! parameter_count to determine the size of this array.
+            class(errors), intent(inout), optional, target :: err
+                !! An optional errors-based object that if provided 
+                !! can be used to retrieve information relating to any errors 
+                !! encountered during execution. If not provided, a default 
+                !! implementation of the errors class is used internally to
+                !! provide error handling.
+        end subroutine
+
+        subroutine friction_model_from_array(this, x, err)
+            !!  Converts an array into the parameters for the friction model.
+            use iso_fortran_env, only : real64
+            use ferror
+            import friction_model
+            class(friction_model), intent(inout) :: this
+                !! The friction_model object.
+            real(real64), intent(in), dimension(:) :: x
+                !! The array of parameters.  See parameter_count to 
+                !! determine the size of this array.
+            class(errors), intent(inout), optional, target :: err
+                !! An optional errors-based object that if provided 
+                !! can be used to retrieve information relating to any errors 
+                !! encountered during execution. If not provided, a default 
+                !! implementation of the errors class is used internally to
+                !! provide error handling.
+        end subroutine
+
+        pure function friction_integer_query(this) result(rst)
+            !! Gets an integer-valued parameter from the model
+            use iso_fortran_env, only : int32
+            import friction_model
+            class(friction_model), intent(in) :: this
+                !! The friction_model object.
+            integer(int32) :: rst
+                !! The model parameter.
+        end function
+    end interface
 
 ! ------------------------------------------------------------------------------
     ! Variables specific to the fitting process
@@ -16,6 +157,7 @@ submodule (friction) friction_fitting
     type(ode_container), pointer :: mdl_
     class(friction_model), pointer :: fmdl_
     class(ode_integrator), pointer :: integrate_
+
 contains
 ! ------------------------------------------------------------------------------
 ! Routine for fitting the friction model - uses module-level variables
@@ -70,7 +212,8 @@ subroutine internal_var_fit_fcn(x, p, f, stop_)
     call fmdl_%from_array(p)
 
     ! Integrate to determine the state variables
-    dzdt = integrate_%solve(mdl_, t_, initstate_)
+    call integrate_%solve(mdl_, t_, initstate_)
+    dzdt = integrate_%get_solution()
 
     ! Evaluate the friction model and compare the results
     call fmdl_%reset()
@@ -109,25 +252,76 @@ subroutine internal_state_odes(t, z, dzdt)
 end subroutine
 
 ! ------------------------------------------------------------------------------
-module subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
+subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
     alpha, integrator, controls, settings, info, stats, fmod, resid, err)
-    ! Arguments
+    !! Attempts to fit a friction model to the supplied data using a 
+    !! Levenberg-Marquardt solver.
     class(friction_model), intent(inout), target :: this
-    real(real64), intent(in), target, dimension(:) :: t, x, v, f, n
-    real(real64), intent(in), optional, dimension(:) :: weights, maxp, minp
+        !! The friction model.  On output, the model is updated with the
+        !! final, fitted parameters.
+    real(real64), intent(in), target, dimension(:) :: t
+        !! An N-element array containing the time points at which
+        !! the friction data was sampled.  This array must contain 
+        !! monotonically increasing data.
+    real(real64), intent(in), target, dimension(:) :: x
+        !! An N-element array containing the relative position
+        !! data.
+    real(real64), intent(in), target, dimension(:) :: v
+        !! An N-element array containing the relative velocity
+        !! data.
+    real(real64), intent(in), target, dimension(:) :: f
+        !! An N-element array containing the friction force data.
+    real(real64), intent(in), target, dimension(:) :: n
+        !! An N-element array containing the normal force data.
+    real(real64), intent(in), optional, dimension(:) :: weights
+        !! An optional N-element array that can be used to
+        !!  weight specific data points.  The default is an array of 
+        !! all ones such that all points are weighted equally.
+    real(real64), intent(in), optional, dimension(:) :: maxp
+        !! An M-element array (M = the number of model 
+        !! parameters) containing a maximum limit for each model 
+        !! parameter.
+    real(real64), intent(in), optional, dimension(:) :: minp
+        !! An M-element array containing the minimum limit for
+        !! each model parameter.
     real(real64), intent(in), optional :: alpha
+        !! An optional input that defines the significance 
+        !! level at which to evaluate the confidence intervals. The 
+        !! default value is 0.05 such that a 95% confidence interval 
+        !! is calculated.
     class(ode_integrator), intent(inout), target, optional :: integrator
+        !! An optional input, used in the event the model has internal 
+        !! state variables, that provides integration of the state 
+        !! equations.  The defaults is a 4th order Rosenbrock method.
     type(iteration_controls), intent(in), optional :: controls
+        !! An optional input providing custom iteration controls.
     type(lm_solver_options), intent(in), optional :: settings
+        !! An optional input providing custom settings for 
+        !! the solver.
     type(convergence_info), intent(out), optional :: info
+        !! An optional output that can be used to gain 
+        !! information about the iterative solution and the nature of 
+        !! the convergence.
     type(regression_statistics), intent(out), optional, dimension(:) :: stats
-    real(real64), intent(out), optional, target, dimension(:) :: fmod, resid
+        !! An optional output array of M-elements that can be
+        !! used to retrieve statistical information regarding the fit of
+        !! each of the M model parameters.
+    real(real64), intent(out), optional, target, dimension(:) :: fmod
+        !! An optional N-element array used to provide the fitted model 
+        !! results.
+    real(real64), intent(out), optional, target, dimension(:) :: resid
+        !! An optional N-element array containing the fitted residuals.
     class(errors), intent(inout), optional, target :: err
+        !! An optional errors-based object that if provided 
+        !! can be used to retrieve information relating to any errors 
+        !! encountered during execution. If not provided, a default 
+        !! implementation of the errors class is used internally to
+        !! provide error handling.
 
     ! Local Variables
     class(errors), pointer :: errmgr
     type(errors), target :: deferr
-    integer(int32) :: npts, nparams, flag, np
+    integer(int32) :: i, npts, nparams, flag, np
     real(real64), allocatable, target, dimension(:) :: params, initstate, &
         tc, fc, fmc, rc
     real(real64), allocatable, dimension(:,:) :: dzdt
@@ -135,7 +329,7 @@ module subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
     real(real64), allocatable, target, dimension(:) :: fmoddef, residdef
     procedure(regression_function), pointer :: fcn
     type(fitpack_curve), target :: xinterp, vinterp, ninterp
-    type(sdirk4_integrator), target :: def_integrator
+    type(rosenbrock), target :: def_integrator
     type(ode_container), target :: mdl
     
     ! Initialization
@@ -359,28 +553,46 @@ subroutine write_interpolation_error(fcn, flag, err)
 end subroutine
 
 ! ------------------------------------------------------------------------------
-module subroutine fmdl_constraints(this, t, x, dxdt, nrm, f, rst)
+subroutine fmdl_constraints(this, t, x, dxdt, nrm, f, rst)
+    !! Overload this routine to establish constraings for the model to
+    !! be enforced as part of the fitting operation.
     class(friction_model), intent(in) :: this
+        !! The friction_model object.
     real(real64), intent(in), dimension(:) :: t
+        !! An N-element array containing the time points at which the
+        !! data to be fit was sampled.
     real(real64), intent(in), dimension(:) :: x
+        !! An N-element array containing the relative motion data.
     real(real64), intent(in), dimension(:) :: dxdt
+        !! An N-element array containing the relative velocity data.
     real(real64), intent(in), dimension(:) :: nrm
+        !! An N-element array containing the normal force data.
     real(real64), intent(in), dimension(:) :: f
+        !! An N-element array containing the friction force data.
     real(real64), intent(out), dimension(:) :: rst
+        !! An M-element array where the results of the constraint 
+        !! equations will be written.  M must be equal to the 
+        !! number of constraint equations for the model.
     if (size(rst) > 0) rst = 0.0d0
 end subroutine
 
 ! ------------------------------------------------------------------------------
-pure module function fmdl_get_constraint_count(this) result(rst)
+pure function fmdl_get_constraint_count(this) result(rst)
+    !! Gets the number of constraint equations the model requires to
+    !! be satisfied when fitting to data.
     class(friction_model), intent(in) :: this
+        !! The friction_model object.
     integer(int32) :: rst
+        !! The number of constraint equations.
     rst = 0
 end function
 
 ! ------------------------------------------------------------------------------
-module subroutine fmdl_reset(this)
+subroutine fmdl_reset(this)
+    !! Resets the friction model to it's original state.
     class(friction_model), intent(inout) :: this
+        !! The friction_model object.
 end subroutine
 
 ! ------------------------------------------------------------------------------
-end submodule
+end module

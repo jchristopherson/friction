@@ -10,7 +10,7 @@
     <meta name="author" content="Jason Christopherson" >
     <link rel="icon" href="../favicon.png">
 
-    <title>friction &ndash; FRICTION</title>
+    <title>friction_evaluation &ndash; FRICTION</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -62,8 +62,8 @@
 
     <div class="container">
   <div class="row">
-    <h1>friction
-      <small>Module</small>
+    <h1>friction_evaluation
+      <small>Interface</small>
       
     </h1>
       <div class="container p-2 mb-4 bg-light border rounded-3">
@@ -74,20 +74,21 @@
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip"
                  data-bs-placement="bottom" data-html="true"
-                 title=" 2.4% of total for modules and submodules.">25 statements</a>
+                 title="16.7% of total for procedures.">51 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
               <i class="fa fa-code"></i>
-              <a href="../src/friction.f90"> Source File</a>
+              <a href="../src/friction_core.f90"> Source File</a>
             </li>
         </ul>
       </div>
       <div class="col">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb justify-content-end mb-0">
-                <li class="breadcrumb-item"><a href='..\sourcefile\friction.f90.html'>friction.f90</a></li>
-            <li class="breadcrumb-item active" aria-current="page">friction</li>
+                <li class="breadcrumb-item"><a href='..\sourcefile\friction_core.f90.html'>friction_core.f90</a></li>
+                <li class="breadcrumb-item"><a href='..\module\friction_core.html'>friction_core</a></li>
+            <li class="breadcrumb-item active" aria-current="page">friction_evaluation</li>
           </ol>
         </nav>
       </div>
@@ -100,10 +101,10 @@
   </script>
 
   </div>
-
+  
   <div class="row">
-    <div class="col-md-3">
-        <div id="sidebar">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
       <h3>Contents</h3>
   
   
@@ -131,44 +132,128 @@
   </div>
 
     </div>
-
+    
     <div class="col-md-9" id='text'>
-      <p>Provides a collection of routines for modeling frictional behaviors
-of contacting bodies.</p>
-<br>          <div class="card mb-4">
-      <h3 class="card-header card-title bg-light">Uses</h3>
-      <div class="card-body">
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-              <ul class="list-inline">
-                  <li class="list-inline-item"><a href='friction_core.html'>friction_core</a></li>
-                  <li class="list-inline-item"><a href='friction_stribeck.html'>friction_stribeck</a></li>
-                  <li class="list-inline-item"><a href='friction_modified_stribeck.html'>friction_modified_stribeck</a></li>
-                  <li class="list-inline-item"><a href='friction_maxwell.html'>friction_maxwell</a></li>
-                  <li class="list-inline-item"><a href='friction_lugre.html'>friction_lugre</a></li>
-                  <li class="list-inline-item"><a href='friction_coulomb.html'>friction_coulomb</a></li>
-                  <li class="list-inline-item"><a href='friction_gmsm.html'>friction_gmsm</a></li>
-              </ul>
-            </li>
-        </ul>
-      </div>
-    </div>
+      <h2>interface <br>
+      public  function friction_evaluation(this, t, x, dxdt, nrm, svars) result(rst)  
+</h2>    
 
-      
-      <br>
+    
 
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-this~46"></span>
+              class(<a href='..\type\friction_model.html'>friction_model</a>),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>this</strong></td>
+            <td>
+                <p>The friction_model object.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-t~12"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>t</strong></td>
+            <td>
+                <p>The current simulation time value.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~25"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong></td>
+            <td>
+                <p>The current value of the relative position between
+the contacting bodies.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-dxdt~13"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>dxdt</strong></td>
+            <td>
+                <p>The current value of the relative velocity between
+the contacting bodies.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nrm~13"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nrm</strong></td>
+            <td>
+                <p>The current normal force between the contacting 
+bodies.</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-svars~10"></span>
+              real(kind=real64),
+            </td>
+<td>intent(in),</td>
+              <td>optional,</td>            <td>
+              dimension(:)
+            </td>
+            <td>::</td>
+            <td><strong>svars</strong></td>
+            <td>
+                <p>An optional array containing any internal state
+variables the model may rely upon.</p>
+            </td>
+        </tr>
+    </tbody>
+  </table>
 
+      <h3>Return Value <span class="anchor" id="variable-rst~30"></span><small>real(kind=real64)</small></h3>
+    <p>The friction force.</p>
+    <br>
 
-
-
-
-
-
-
-
-
-    </div>
-  </div>
+ </div>
+</div>
 
       <hr>
     </div> <!-- /container -->
