@@ -18,13 +18,13 @@ jobs:
         os: [ubuntu-latest, macos-latest]
         toolchain:
           - {compiler: gcc, version: 11}
-          - {compiler: intel-classic, version: '2021.9'}
+          # - {compiler: intel-classic, version: '2021.9'}
         include:
           - os: ubuntu-latest
             toolchain: {compiler: intel, version: '2023.2'}
 
     steps:
-      - uses: awvwgk/setup-fortran@v1
+      - uses: awvwgk/setup-fortran@v1.6.1
         id: setup-fortran
         with:
           compiler: ${{ matrix.toolchain.compiler }}

@@ -161,11 +161,12 @@ module friction_core
 contains
 ! ------------------------------------------------------------------------------
 ! Routine for fitting the friction model - uses module-level variables
-subroutine fit_fcn(x, p, f, stop_)
+subroutine fit_fcn(x, p, f, stop_, args)
     ! Arguments
     real(real64), intent(in), dimension(:) :: x, p
     real(real64), intent(out), dimension(:) :: f
     logical, intent(out) :: stop_
+    class(*), intent(inout), optional :: args
 
     ! Local Variables
     integer(int32) :: i, n, npts
@@ -194,11 +195,12 @@ subroutine fit_fcn(x, p, f, stop_)
 end subroutine
 
 ! Routine for fitting if internal variables are used by the model
-subroutine internal_var_fit_fcn(x, p, f, stop_)
+subroutine internal_var_fit_fcn(x, p, f, stop_, args)
     ! Arguments
     real(real64), intent(in), dimension(:) :: x, p
     real(real64), intent(out), dimension(:) :: f
     logical, intent(out) :: stop_
+    class(*), intent(inout), optional :: args
 
     ! Local Variables
     integer(int32) :: i, n, npts
@@ -232,11 +234,12 @@ subroutine internal_var_fit_fcn(x, p, f, stop_)
 end subroutine
 
 ! ODE Routine
-subroutine internal_state_odes(t, z, dzdt)
+subroutine internal_state_odes(t, z, dzdt, args)
     ! Arguments
     real(real64), intent(in) :: t
     real(real64), intent(in), dimension(:) :: z
     real(real64), intent(out), dimension(:) :: dzdt
+    class(*), intent(inout), optional :: args
 
     ! Local Variables
     real(real64) :: x, v, n
