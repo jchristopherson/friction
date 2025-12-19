@@ -104,12 +104,12 @@ target_link_libraries(
     PUBLIC
     ${FERROR_LIBRARIES}
     ${FSTATS_LIBRARIES}
+    ${DIFFEQ_LIBRARIES}
 )
 target_link_libraries(
     ${PROJECT_NAME}
     PRIVATE
     ${LINALG_LIBRARIES}
-    ${DIFFEQ_LIBRARIES}
     ${COLLECTIONS_LIBRARIES}
 )
 
