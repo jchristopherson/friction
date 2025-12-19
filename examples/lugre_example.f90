@@ -13,10 +13,11 @@ module model
     real(real64), parameter :: v = 0.1d0
 
 contains
-    subroutine equations(t, x, dxdt)
+    subroutine equations(t, x, dxdt, args)
         ! Arguments
         real(real64), intent(in) :: t, x(:)
         real(real64), intent(out) :: dxdt(:)
+        class(*), intent(inout), optional :: args
 
         ! Local Variables
         real(real64) :: vr, F, N, s(1), dsdt(1)
