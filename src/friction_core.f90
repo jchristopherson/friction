@@ -145,18 +145,20 @@ module friction_core
 
 ! ------------------------------------------------------------------------------
     ! Variables specific to the fitting process
-    real(real64), pointer, dimension(:) :: t_
-    real(real64), pointer, dimension(:) :: x_
-    real(real64), pointer, dimension(:) :: v_
-    real(real64), pointer, dimension(:) :: f_
-    real(real64), pointer, dimension(:) :: n_
-    real(real64), pointer, dimension(:) :: initstate_
-    type(fitpack_curve), pointer :: xinterp_
-    type(fitpack_curve), pointer :: vinterp_
-    type(fitpack_curve), pointer :: ninterp_
-    type(ode_container), pointer :: mdl_
-    class(friction_model), pointer :: fmdl_
-    class(ode_integrator), pointer :: integrate_
+    type fit_data
+        real(real64), pointer, dimension(:) :: t
+        real(real64), pointer, dimension(:) :: x
+        real(real64), pointer, dimension(:) :: v
+        real(real64), pointer, dimension(:) :: f
+        real(real64), pointer, dimension(:) :: n
+        real(real64), pointer, dimension(:) :: initstate
+        type(fitpack_curve), pointer :: xinterp
+        type(fitpack_curve), pointer :: vinterp
+        type(fitpack_curve), pointer :: ninterp
+        type(ode_container), pointer :: mdl
+        class(friction_model), pointer :: fmdl
+        class(ode_integrator), pointer :: integrate
+    end type
 
 contains
 ! ------------------------------------------------------------------------------
@@ -170,9 +172,24 @@ subroutine fit_fcn(x, p, f, stop_, args)
 
     ! Local Variables
     integer(int32) :: i, n, npts
+    real(real64), pointer, dimension(:) :: t_, x_, v_, n_, f_
+    class(friction_model), pointer :: fmdl_
 
     ! Initialization
-    n = size(x)
+    n = size(x)    
+    if (.not.present(args)) then
+        stop_ = .true.
+        return
+    end if
+    select type (args)
+    class is (fit_data)
+        t_ => args%t
+        x_ => args%x
+        v_ => args%v
+        n_ => args%n
+        f_ => args%f
+        fmdl_ => args%fmdl
+    end select
     npts = n - fmdl_%get_constraint_equation_count()
 
     ! Assign the model parameters
@@ -205,9 +222,29 @@ subroutine internal_var_fit_fcn(x, p, f, stop_, args)
     ! Local Variables
     integer(int32) :: i, n, npts
     real(real64), allocatable, dimension(:,:) :: dzdt
+    real(real64), pointer, dimension(:) :: t_, x_, v_, n_, f_, initstate_
+    class(friction_model), pointer :: fmdl_
+    class(ode_integrator), pointer :: integrate_
+    type(ode_container), pointer :: mdl_
 
     ! Initialization
     n = size(x)
+    if (.not.present(args)) then
+        stop_ = .true.
+        return
+    end if
+    select type (args)
+    class is (fit_data)
+        t_ => args%t
+        x_ => args%x
+        v_ => args%v
+        n_ => args%n
+        f_ => args%f
+        initstate_ => args%initstate
+        fmdl_ => args%fmdl
+        integrate_ => args%integrate
+        mdl_ => args%mdl
+    end select
     npts = n - fmdl_%get_constraint_equation_count()
 
     ! Assign the model parameters
@@ -243,6 +280,20 @@ subroutine internal_state_odes(t, z, dzdt, args)
 
     ! Local Variables
     real(real64) :: x, v, n
+    type(fitpack_curve), pointer :: xinterp_, vinterp_, ninterp_
+    class(friction_model), pointer :: fmdl_
+
+    ! Initialization
+    if (.not.present(args)) then
+        return
+    end if
+    select type (args)
+    class is (fit_data)
+        xinterp_ => args%xinterp
+        vinterp_ => args%vinterp
+        ninterp_ => args%ninterp
+        fmdl_ => args%fmdl
+    end select
 
     ! Interpolate to obtain the position, velocity, and normal force values
     ! corresponding to time t
@@ -334,6 +385,7 @@ subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
     type(fitpack_curve), target :: xinterp, vinterp, ninterp
     type(rosenbrock), target :: def_integrator
     type(ode_container), target :: mdl
+    type(fit_data) :: args
     
     ! Initialization
     if (present(err)) then
@@ -345,9 +397,9 @@ subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
     nparams = this%parameter_count()
     np = npts + this%get_constraint_equation_count()
     if (present(integrator)) then
-        integrate_ => integrator
+        args%integrate => integrator
     else
-        integrate_ => def_integrator
+        args%integrate => def_integrator
     end if
 
     ! Input Checking
@@ -407,12 +459,12 @@ subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
     end if
 
     ! Assign pointers
-    t_(1:npts) => t
-    x_(1:npts) => x
-    v_(1:npts) => v
-    f_(1:npts) => f
-    n_(1:npts) => n
-    fmdl_ => this
+    args%t(1:npts) => t
+    args%x(1:npts) => x
+    args%v(1:npts) => v
+    args%f(1:npts) => f
+    args%n(1:npts) => n
+    args%fmdl => this
 
     ! Compute the fit
     if (this%has_internal_state()) then
@@ -433,11 +485,11 @@ subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
         if (flag /= 0) go to 30
 
         ! Assign pointers
-        mdl_ => mdl
-        initstate_ => initstate
-        xinterp_ => xinterp
-        vinterp_ => vinterp
-        ninterp_ => ninterp
+        args%mdl => mdl
+        args%initstate => initstate
+        args%xinterp => xinterp
+        args%vinterp => vinterp
+        args%ninterp => ninterp
     else
         fcn => fit_fcn
     end if
@@ -445,7 +497,7 @@ subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
     call nonlinear_least_squares(fcn, tptr, fptr, params, fmodptr, residptr, &
         weights = weights, maxp = maxp, minp = minp, alpha = alpha, &
         controls = controls, settings = settings, info = info, stats = stats, &
-        err = errmgr)
+        args = args, err = errmgr)
     if (errmgr%has_error_occurred()) return
     call this%from_array(params)
 

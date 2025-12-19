@@ -161,3 +161,9 @@ if (${BUILD_SHARED_LIBS} AND WIN32)
         COMMAND_EXPAND_LISTS
     )
 endif()
+
+configure_file(
+    ${CMAKE_SOURCE_DIR}/examples/data/friction_data_1.csv
+    ${CMAKE_BINARY_DIR}/examples/friction_data_1.csv
+    COPYONLY
+)

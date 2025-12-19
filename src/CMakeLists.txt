@@ -103,12 +103,12 @@ target_link_libraries(
     ${PROJECT_NAME}
     PUBLIC
     ${FERROR_LIBRARIES}
+    ${FSTATS_LIBRARIES}
 )
 target_link_libraries(
     ${PROJECT_NAME}
     PRIVATE
     ${LINALG_LIBRARIES}
-    ${FSTATS_LIBRARIES}
     ${DIFFEQ_LIBRARIES}
     ${COLLECTIONS_LIBRARIES}
 )
