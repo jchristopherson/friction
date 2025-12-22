@@ -38,25 +38,25 @@ F = k \delta
 ```
 - Generalized Maxwell Slip Model
 ```math
-F = \sum_{i=1}^{n} \left( k_i z_i + b_i \frac{dz_i}{dt} \right) + b_v v
+F = \sum_{i=1}^{n} \left( k_{i} z_{i} + b_{i} \frac{dz_{i}}{dt} \right) + b_{v} v
 ```
 ```math
 \begin{equation}
-\frac{dz_i}{dt} = 
+\frac{dz_{i}}{dt} = 
 \begin{cases}
-v & \text{if $|z_i| \le g(v)$} \\
-\text{sgn} \left( v \right) \nu_i C \left( 1 - \frac{z_i}{\nu_i g(v)} \right) & \text{otherwise}
+v & \text{if} |z_{i}| \le g(v) \\
+\text{sgn} \left( v \right) \nu_{i} C \left( 1 - \frac{z_{i}}{\nu_{i} g(v)} \right) & \text{otherwise}
 \end{cases}
 \end{equation}
 ```
 ```math
-g(v) = a_{1} + \frac{a_2}{1 + s^{\alpha}}
+g(v) = a_{1} + \frac{a_{2}}{1 + s^{\alpha}}
 ```
 ```math
-a_{1} = \frac{\mu_c N}{\sigma_{0}}, a_{2} = \frac{\mu_s N - \mu_c N}{\sigma_{0}}, s = \frac{\left| v \right|}{v_s}
+a_{1} = \frac{\mu_{c} N}{\sigma_{0}}, a_{2} = \frac{\mu_{s} N - \mu_{c} N}{\sigma_{0}}, s = \frac{\left| v \right|}{v_{s}}
 ```
 ```math
-\sum_{i=1}^{n} \nu_i = 1
+\sum_{i=1}^{n} \nu_{i} = 1
 ```
 - Stribeck Model
 ```math
