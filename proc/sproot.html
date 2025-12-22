@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="description" content="A library containing routines for calculating the frictional response of contacting bodies.">
+    <meta name="author" content="Jason Christopherson" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>sproot &ndash; FRICTION</title>
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/local.css" rel="stylesheet">
+    <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="../js/jquery-2.1.3.min.js"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
+
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">FRICTION </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
+              <a href="#" class="dropdown-toggle"
+              data-toggle="dropdown" role="button"
+              aria-haspopup="true"
+     aria-expanded="false">Contents <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li><a href="../lists/files.html">Source Files</a></li>
+            <li><a href="../lists/modules.html">Modules</a></li>
+            <li><a href="../lists/procedures.html">Procedures</a></li>
+                   <li><a href="../lists/types.html">Derived Types</a></li>
+       
+            </ul>
+        
+            </li>
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/files.html">Source Files</a></li>
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/modules.html">Modules</a></li>
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/procedures.html">Procedures</a></li>
+                             <li class="visible-xs hidden-sm visible-lg"><a href="../lists/types.html">Derived Types</a></li>
+          </ul>
+        <form action="../search.html" class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+        </div>
+<!--
+        <button type="submit" class="btn btn-default">Submit</button>
+-->
+        </form>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+  <div class="row">
+    <h1>sproot
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="row" id="info-bar">
+    <div class="col-lg-12">
+      <div class="well well-sm">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+          <li id="statements"><i class="fa fa-list-ol"></i>
+            <a data-toggle="tooltip"
+               data-placement="bottom" data-html="true"
+               title=" 4.9% of total for procedures.">102 statements</a>
+          </li>
+
+            <li id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/fitpack_core.f90"> Source File</a>
+            </li>
+        </ul>
+        <ol class="breadcrumb in-well text-right">
+              <li><a href='../sourcefile/fitpack_core.f90.html'>fitpack_core.f90</a></li>
+              <li><a href='../module/fitpack_core.html'>fitpack_core</a></li>
+          <li class="active">sproot</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/sproot.html#src">sproot</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public pure subroutine sproot(t, n, c, zeros, mest, m, ier)  
+</h2>
+    
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-t~36"></span>
+              real(kind=RKIND),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>t</strong>(n)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-n~19"></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>n</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-c~33"></span>
+              real(kind=RKIND),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>c</strong>(n)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-zeros"></span>
+              real(kind=RKIND),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>zeros</strong>(mest)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mest"></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mest</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-m~18"></span>
+              integer,
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>m</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ier~28"></span>
+              integer,
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ier</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+
+    <section class="visible-xs visible-sm hidden-md">
+        <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/sproot.html#src">sproot</a>
+      </div>
+    </div>
+
+
+    </section>
+    <br class="visible-xs visible-sm hidden-md">
+
+
+    
+    
+
+    
+    
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="highlight"><pre><span></span><span class="w">      </span><span class="k">pure subroutine </span><span class="n">sproot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">zeros</span><span class="p">,</span><span class="n">mest</span><span class="p">,</span><span class="n">m</span><span class="p">,</span><span class="n">ier</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">      </span><span class="c">!</span>
+<span class="w">      </span><span class="c">!  input parameters:</span>
+<span class="w">      </span><span class="c">!    t    : real array,length n, containing the knots of s(x).</span>
+<span class="w">      </span><span class="c">!    n    : integer, containing the number of knots.  n&gt;=8</span>
+<span class="w">      </span><span class="c">!    c    : real array,length n, containing the b-spline coefficients.</span>
+<span class="w">      </span><span class="c">!    mest : integer, specifying the dimension of array zero.</span>
+<span class="w">      </span><span class="c">!</span>
+<span class="w">      </span><span class="c">!  output parameters:</span>
+<span class="w">      </span><span class="c">!    zeros : real array,length mest, containing the zeros of s(x).</span>
+<span class="w">      </span><span class="c">!    m     : integer,giving the number of zeros.</span>
+<span class="w">      </span><span class="c">!    ier   : error flag:</span>
+<span class="w">      </span><span class="c">!      ier = 0: normal return.</span>
+<span class="w">      </span><span class="c">!      ier = 1: the number of zeros exceeds mest.</span>
+<span class="w">      </span><span class="c">!      ier =10: invalid input data (see restrictions).</span>
+<span class="w">      </span><span class="c">!</span>
+<span class="w">      </span><span class="c">!  other subroutines required: fpcuro</span>
+<span class="w">      </span><span class="c">!</span>
+<span class="w">      </span><span class="c">!  restrictions:</span>
+<span class="w">      </span><span class="c">!    1) n&gt;= 8.</span>
+<span class="w">      </span><span class="c">!    2) t(4) &lt; t(5) &lt; ... &lt; t(n-4) &lt; t(n-3).</span>
+<span class="w">      </span><span class="c">!       t(1) &lt;= t(2) &lt;= t(3) &lt;= t(4)</span>
+<span class="w">      </span><span class="c">!       t(n-3) &lt;= t(n-2) &lt;= t(n-1) &lt;= t(n)</span>
+<span class="w">      </span><span class="c">!</span>
+<span class="w">      </span><span class="c">!  author :</span>
+<span class="w">      </span><span class="c">!    p.dierckx</span>
+<span class="w">      </span><span class="c">!    dept. computer science, k.u.leuven</span>
+<span class="w">      </span><span class="c">!    celestijnenlaan 200a, b-3001 heverlee, belgium.</span>
+<span class="w">      </span><span class="c">!    e-mail : Paul.Dierckx@cs.kuleuven.ac.be</span>
+<span class="w">      </span><span class="c">!</span>
+<span class="w">      </span><span class="c">!  latest update : october 2022</span>
+<span class="w">      </span><span class="c">!</span>
+<span class="w">      </span><span class="c">! ..</span>
+<span class="w">      </span><span class="c">! ..scalar arguments..</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="n">mest</span><span class="w"></span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="n">ier</span><span class="w"></span>
+<span class="w">      </span><span class="c">!  ..array arguments..</span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">RKIND</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">  </span><span class="kd">::</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="n">n</span><span class="p">),</span><span class="n">c</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">RKIND</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">zeros</span><span class="p">(</span><span class="n">mest</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="c">!  ..local scalars..</span>
+<span class="w">      </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">j1</span><span class="p">,</span><span class="n">l</span><span class="p">,</span><span class="n">n4</span><span class="w"></span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">RKIND</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">ah</span><span class="p">,</span><span class="n">a0</span><span class="p">,</span><span class="n">a1</span><span class="p">,</span><span class="n">a2</span><span class="p">,</span><span class="n">a3</span><span class="p">,</span><span class="n">bh</span><span class="p">,</span><span class="n">b0</span><span class="p">,</span><span class="n">b1</span><span class="p">,</span><span class="n">c1</span><span class="p">,</span><span class="n">c2</span><span class="p">,</span><span class="n">c3</span><span class="p">,</span><span class="n">c4</span><span class="p">,</span><span class="n">c5</span><span class="p">,</span><span class="n">d4</span><span class="p">,</span><span class="n">d5</span><span class="p">,</span><span class="n">h1</span><span class="p">,</span><span class="n">h2</span><span class="p">,</span><span class="n">t1</span><span class="p">,</span><span class="n">t2</span><span class="p">,</span><span class="n">t3</span><span class="p">,</span><span class="n">t4</span><span class="p">,</span><span class="n">t5</span><span class="w"></span>
+<span class="w">      </span><span class="kt">logical</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">z0</span><span class="p">,</span><span class="n">z1</span><span class="p">,</span><span class="n">z2</span><span class="p">,</span><span class="n">z3</span><span class="p">,</span><span class="n">z4</span><span class="p">,</span><span class="n">nz0</span><span class="p">,</span><span class="n">nz1</span><span class="p">,</span><span class="n">nz2</span><span class="p">,</span><span class="n">nz3</span><span class="p">,</span><span class="n">nz4</span><span class="w"></span>
+<span class="w">      </span><span class="c">!  ..local array..</span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">RKIND</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">y</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="c">!  ..</span>
+<span class="w">      </span><span class="c">!  before starting computations a data check is made. if the input data</span>
+<span class="w">      </span><span class="c">!  are invalid, control is immediately repassed to the calling program.</span>
+<span class="w">      </span><span class="n">n4</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="o">-</span><span class="mi">4</span><span class="w"></span>
+<span class="w">      </span><span class="n">ier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FITPACK_INPUT_ERROR</span><span class="w"></span>
+<span class="w">      </span><span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">&lt;</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+<span class="k">      </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="w"></span>
+<span class="w">      </span><span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="w"></span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">&gt;</span><span class="n">t</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="k">return</span>
+<span class="k">        if</span><span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="o">&lt;</span><span class="n">t</span><span class="p">(</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="k">return</span>
+<span class="k">        </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="w"></span>
+<span class="w">      </span><span class="k">end do</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="nb">any</span><span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="mi">4</span><span class="p">:</span><span class="n">n4</span><span class="p">)</span><span class="o">&gt;=</span><span class="n">t</span><span class="p">(</span><span class="mi">5</span><span class="p">:</span><span class="n">n4</span><span class="o">+</span><span class="mi">1</span><span class="p">)))</span><span class="w"> </span><span class="k">return</span><span class="w"></span>
+
+<span class="w">      </span><span class="c">!  the problem considered reduces to finding the zeros of the cubic polynomials pl(x) which define</span>
+<span class="w">      </span><span class="c">!  the cubic spline in each knot interval t(l)&lt;=x&lt;=t(l+1). a zero of pl(x) is also a zero of s(x) on</span>
+<span class="w">      </span><span class="c">!  the condition that it belongs to the knot interval. the cubic polynomial pl(x) is determined by</span>
+<span class="w">      </span><span class="c">!  computing s(t(l)), s&#39;(t(l)),s(t(l+1)) and s&#39;(t(l+1)). in fact we only have to compute s(t(l+1))</span>
+<span class="w">      </span><span class="c">!  and s&#39;(t(l+1)); because of the continuity conditions of splines and their derivatives, the value</span>
+<span class="w">      </span><span class="c">!  of s(t(l)) and s&#39;(t(l)) is already known from the foregoing knot interval.</span>
+<span class="w">      </span><span class="n">ier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FITPACK_OK</span><span class="w"></span>
+
+<span class="w">      </span><span class="c">!  evaluate some constants for the first knot interval</span>
+<span class="w">      </span><span class="n">h1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">-</span><span class="n">t</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="n">h2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">-</span><span class="n">t</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="n">t1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">-</span><span class="n">t</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="n">t2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">-</span><span class="n">t</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="n">t3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">-</span><span class="n">t</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="n">t4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="o">-</span><span class="n">t</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="n">t5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">-</span><span class="n">t</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="c">!  calculate a0 = s(t(4)) and ah = s&#39;(t(4)).</span>
+<span class="w">      </span><span class="n">c1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="n">c2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="n">c3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="n">c4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">c2</span><span class="o">-</span><span class="n">c1</span><span class="p">)</span><span class="o">/</span><span class="n">t4</span><span class="w"></span>
+<span class="w">      </span><span class="n">c5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">c3</span><span class="o">-</span><span class="n">c2</span><span class="p">)</span><span class="o">/</span><span class="n">t5</span><span class="w"></span>
+<span class="w">      </span><span class="n">d4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">h2</span><span class="o">*</span><span class="n">c1</span><span class="o">+</span><span class="n">t1</span><span class="o">*</span><span class="n">c2</span><span class="p">)</span><span class="o">/</span><span class="n">t4</span><span class="w"></span>
+<span class="w">      </span><span class="n">d5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">t3</span><span class="o">*</span><span class="n">c2</span><span class="o">+</span><span class="n">h1</span><span class="o">*</span><span class="n">c3</span><span class="p">)</span><span class="o">/</span><span class="n">t5</span><span class="w"></span>
+<span class="w">      </span><span class="n">a0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">h2</span><span class="o">*</span><span class="n">d4</span><span class="o">+</span><span class="n">h1</span><span class="o">*</span><span class="n">d5</span><span class="p">)</span><span class="o">/</span><span class="n">t2</span><span class="w"></span>
+<span class="w">      </span><span class="n">ah</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">three</span><span class="o">*</span><span class="p">(</span><span class="n">h2</span><span class="o">*</span><span class="n">c4</span><span class="o">+</span><span class="n">h1</span><span class="o">*</span><span class="n">c5</span><span class="p">)</span><span class="o">/</span><span class="n">t2</span><span class="w"></span>
+
+<span class="w">      </span><span class="n">z1</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="nb">not</span><span class="p">.</span><span class="n">ah</span><span class="o">&lt;</span><span class="n">zero</span><span class="w"></span>
+<span class="w">      </span><span class="n">nz1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="nb">not</span><span class="p">.</span><span class="n">z1</span><span class="w"></span>
+
+<span class="w">      </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"></span>
+<span class="w">      </span><span class="c">!  main loop for the different knot intervals.</span>
+<span class="w">      </span><span class="n">knot_intervals</span><span class="p">:</span><span class="w"> </span><span class="k">do </span><span class="n">l</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">n4</span><span class="w"></span>
+
+<span class="w">      </span><span class="c">!  evaluate some constants for the knot interval t(l) &lt;= x &lt;= t(l+1).</span>
+<span class="w">        </span><span class="n">h1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">h2</span><span class="w"></span>
+<span class="w">        </span><span class="n">h2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="n">l</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="n">t</span><span class="p">(</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="n">t1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t2</span><span class="w"></span>
+<span class="w">        </span><span class="n">t2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t3</span><span class="w"></span>
+<span class="w">        </span><span class="n">t3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="n">l</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="o">-</span><span class="n">t</span><span class="p">(</span><span class="n">l</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="n">t4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t5</span><span class="w"></span>
+<span class="w">        </span><span class="n">t5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="n">l</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="o">-</span><span class="n">t</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">        </span><span class="c">!  find a0 = s(t(l)), ah = s&#39;(t(l)), b0 = s(t(l+1)) and bh = s&#39;(t(l+1)).</span>
+<span class="w">        </span><span class="n">c1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c2</span><span class="w"></span>
+<span class="w">        </span><span class="n">c2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c3</span><span class="w"></span>
+<span class="w">        </span><span class="n">c3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="w"></span>
+<span class="w">        </span><span class="n">c4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c5</span><span class="w"></span>
+<span class="w">        </span><span class="n">c5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">c3</span><span class="o">-</span><span class="n">c2</span><span class="p">)</span><span class="o">/</span><span class="n">t5</span><span class="w"></span>
+<span class="w">        </span><span class="n">d4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">h2</span><span class="o">*</span><span class="n">c1</span><span class="o">+</span><span class="n">t1</span><span class="o">*</span><span class="n">c2</span><span class="p">)</span><span class="o">/</span><span class="n">t4</span><span class="w"></span>
+<span class="w">        </span><span class="n">d5</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">h1</span><span class="o">*</span><span class="n">c3</span><span class="o">+</span><span class="n">t3</span><span class="o">*</span><span class="n">c2</span><span class="p">)</span><span class="o">/</span><span class="n">t5</span><span class="w"></span>
+<span class="w">        </span><span class="n">b0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">h2</span><span class="o">*</span><span class="n">d4</span><span class="o">+</span><span class="n">h1</span><span class="o">*</span><span class="n">d5</span><span class="p">)</span><span class="o">/</span><span class="n">t2</span><span class="w"></span>
+<span class="w">        </span><span class="n">bh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">three</span><span class="o">*</span><span class="p">(</span><span class="n">h2</span><span class="o">*</span><span class="n">c4</span><span class="o">+</span><span class="n">h1</span><span class="o">*</span><span class="n">c5</span><span class="p">)</span><span class="o">/</span><span class="n">t2</span><span class="w"></span>
+
+<span class="w">        </span><span class="c">!  calculate the coefficients a0,a1,a2 and a3 of the cubic polynomial</span>
+<span class="w">        </span><span class="c">!  pl(x) = ql(y) = a0+a1*y+a2*y**2+a3*y**3 ; y = (x-t(l))/(t(l+1)-t(l)).</span>
+<span class="w">        </span><span class="n">a1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ah</span><span class="o">*</span><span class="n">h1</span><span class="w"></span>
+<span class="w">        </span><span class="n">b1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bh</span><span class="o">*</span><span class="n">h1</span><span class="w"></span>
+<span class="w">        </span><span class="n">a2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">three</span><span class="o">*</span><span class="p">(</span><span class="n">b0</span><span class="o">-</span><span class="n">a0</span><span class="p">)</span><span class="o">-</span><span class="n">b1</span><span class="o">-</span><span class="n">two</span><span class="o">*</span><span class="n">a1</span><span class="w"></span>
+<span class="w">        </span><span class="n">a3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">two</span><span class="o">*</span><span class="p">(</span><span class="n">a0</span><span class="o">-</span><span class="n">b0</span><span class="p">)</span><span class="o">+</span><span class="n">b1</span><span class="o">+</span><span class="n">a1</span><span class="w"></span>
+
+<span class="w">        </span><span class="c">! test whether or not pl(x) could have a zero in the range t(l) &lt;= x &lt;= t(l+1).</span>
+<span class="w">        </span><span class="n">z0</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="nb">not</span><span class="p">.</span><span class="n">a0</span><span class="o">&lt;</span><span class="n">zero</span><span class="w"></span>
+<span class="w">        </span><span class="n">nz0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="nb">not</span><span class="p">.</span><span class="n">z0</span><span class="w"></span>
+<span class="w">        </span><span class="n">z2</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="nb">not</span><span class="p">.</span><span class="n">a2</span><span class="o">&lt;</span><span class="n">zero</span><span class="w"></span>
+<span class="w">        </span><span class="n">nz2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="nb">not</span><span class="p">.</span><span class="n">z2</span><span class="w"></span>
+<span class="w">        </span><span class="n">z3</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="nb">not</span><span class="p">.</span><span class="n">b1</span><span class="o">&lt;</span><span class="n">zero</span><span class="w"></span>
+<span class="w">        </span><span class="n">nz3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="nb">not</span><span class="p">.</span><span class="n">z3</span><span class="w"></span>
+<span class="w">        </span><span class="n">z4</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="nb">not</span><span class="p">.</span><span class="n">three</span><span class="o">*</span><span class="n">a3</span><span class="o">+</span><span class="n">a2</span><span class="o">&lt;</span><span class="n">zero</span><span class="w"></span>
+<span class="w">        </span><span class="n">nz4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">.</span><span class="nb">not</span><span class="p">.</span><span class="n">z4</span><span class="w"></span>
+
+<span class="w">        </span><span class="c">! find the zeros of ql(y).</span>
+<span class="w">        </span><span class="n">zeroes</span><span class="p">:</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">a0</span><span class="o">*</span><span class="n">b0</span><span class="o">&lt;=</span><span class="n">zero</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="p">((</span><span class="n">z0</span><span class="p">.</span><span class="nb">and</span><span class="p">.(</span><span class="n">nz1</span><span class="p">.</span><span class="nb">and</span><span class="p">.(</span><span class="n">z3</span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="n">z2</span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="n">nz4</span><span class="p">).</span><span class="nb">or</span><span class="p">.</span><span class="n">nz2</span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="n">z3</span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="n">z4</span><span class="p">)</span><span class="w"> </span><span class="p">&amp;</span><span class="w"></span>
+<span class="w">                                      </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="n">nz0</span><span class="p">.</span><span class="nb">and</span><span class="p">.(</span><span class="n">z1</span><span class="p">.</span><span class="nb">and</span><span class="p">.(</span><span class="n">nz3</span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="n">nz2</span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="n">z4</span><span class="p">).</span><span class="nb">or</span><span class="p">.</span><span class="n">z2</span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="n">nz3</span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="n">nz4</span><span class="p">))))</span><span class="w"> </span><span class="k">then</span>
+
+<span class="k">           call </span><span class="n">fpcuro</span><span class="p">(</span><span class="n">a3</span><span class="p">,</span><span class="n">a2</span><span class="p">,</span><span class="n">a1</span><span class="p">,</span><span class="n">a0</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">j</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="o">/=</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span><span class="w"></span>
+<span class="w">                </span><span class="c">! find which zeros of pl(x) are zeros of s(x).</span>
+<span class="w">                </span><span class="n">which_zeros</span><span class="p">:</span><span class="w"> </span><span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="w"></span>
+<span class="w">                  </span><span class="k">if</span><span class="p">(</span><span class="n">y</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">&lt;</span><span class="n">zero</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">y</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">&gt;</span><span class="n">one</span><span class="p">)</span><span class="w"> </span><span class="k">cycle </span><span class="n">which_zeros</span><span class="w"></span>
+<span class="w">                  </span><span class="c">! test whether the number of zeros of s(x) exceeds mest.</span>
+<span class="w">                  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="o">&gt;=</span><span class="n">mest</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+<span class="k">                     </span><span class="n">ier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FITPACK_INSUFFICIENT_STORAGE</span><span class="w"></span>
+<span class="w">                     </span><span class="k">return</span>
+<span class="k">                  end if</span>
+<span class="k">                  </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="w"></span>
+<span class="w">                  </span><span class="n">zeros</span><span class="p">(</span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">t</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="o">+</span><span class="n">h1</span><span class="o">*</span><span class="n">y</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"></span>
+<span class="w">                </span><span class="k">end do </span><span class="n">which_zeros</span><span class="w"></span>
+<span class="w">            </span><span class="k">endif</span>
+
+<span class="k">        endif </span><span class="n">zeroes</span><span class="w"></span>
+
+<span class="w">        </span><span class="n">a0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b0</span><span class="w"></span>
+<span class="w">        </span><span class="n">ah</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bh</span><span class="w"></span>
+<span class="w">        </span><span class="n">z1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">z3</span><span class="w"></span>
+<span class="w">        </span><span class="n">nz1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nz3</span><span class="w"></span>
+<span class="w">      </span><span class="k">end do </span><span class="n">knot_intervals</span><span class="w"></span>
+
+<span class="w">      </span><span class="c">!  the zeros of s(x) are arranged in increasing order.</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"></span>
+
+<span class="w">      </span><span class="c">! FP this double loop can be made more efficient</span>
+<span class="w">      </span><span class="n">sort_zeros</span><span class="p">:</span><span class="w"> </span><span class="k">do </span><span class="n">j</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">m</span><span class="w"></span>
+<span class="w">        </span><span class="n">inner_loop</span><span class="p">:</span><span class="w"> </span><span class="k">do </span><span class="n">j1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">m</span><span class="w"></span>
+<span class="w">          </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">zeros</span><span class="p">(</span><span class="n">j1</span><span class="p">)</span><span class="o">&lt;</span><span class="n">zeros</span><span class="p">(</span><span class="n">j</span><span class="p">))</span><span class="w"> </span><span class="k">call </span><span class="n">swap_RKIND</span><span class="p">(</span><span class="n">zeros</span><span class="p">(</span><span class="n">j</span><span class="p">),</span><span class="n">zeros</span><span class="p">(</span><span class="n">j1</span><span class="p">))</span><span class="w"></span>
+<span class="w">        </span><span class="k">end do </span><span class="n">inner_loop</span><span class="w"></span>
+<span class="w">      </span><span class="k">end do </span><span class="n">sort_zeros</span><span class="w"></span>
+
+<span class="w">      </span><span class="c">! Filter duplicates</span>
+<span class="w">      </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="w"></span>
+<span class="w">      </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"></span>
+<span class="w">      </span><span class="n">filter_duplicates</span><span class="p">:</span><span class="w"> </span><span class="k">do </span><span class="n">i</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">j</span><span class="w"></span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">equal</span><span class="p">(</span><span class="n">zeros</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="n">zeros</span><span class="p">(</span><span class="n">m</span><span class="p">)))</span><span class="w"> </span><span class="k">cycle </span><span class="n">filter_duplicates</span><span class="w"></span>
+<span class="w">        </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="o">+</span><span class="mi">1</span><span class="w"></span>
+<span class="w">        </span><span class="n">zeros</span><span class="p">(</span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zeros</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="k">end do </span><span class="n">filter_duplicates</span><span class="w"></span>
+<span class="w">      </span><span class="k">return</span>
+
+<span class="k">      end subroutine </span><span class="n">sproot</span><span class="w"></span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+    <hr>    
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+      <div class="row">
+        <div class="col-xs-6 col-md-6"><p>FRICTION was developed by Jason Christopherson<br>&copy; 2025 
+</p>
+        </div>
+        <div class="col-xs-6 col-md-6">
+          <p class="text-right">
+            Documentation generated by 
+            <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2025-12-22 20:51            </p>
+        </div>
+      </div>
+      <br>
+      </div> <!-- /container -->    
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+-->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../js/ie10-viewport-bug-workaround.js"></script>
+
+    <!-- MathJax JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+        jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+        extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+      });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script src="../tipuesearch/tipuesearch_content.js"></script>
+    <script src="../tipuesearch/tipuesearch_set.js"></script>
+    <script src="../tipuesearch/tipuesearch.js"></script>
+    
+  </body>
+</html>

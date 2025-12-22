@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+   <meta name="description" content="A library containing routines for calculating the frictional response of contacting bodies.">
+    <meta name="author" content="Jason Christopherson" >
+    <link rel="icon" href="../favicon.png">
+
+    <title>regrid &ndash; FRICTION</title>
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/pygments.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/local.css" rel="stylesheet">
+    <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+    <script src="../js/jquery-2.1.3.min.js"></script>
+    <script src="../js/svg-pan-zoom.min.js"></script>
+
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../index.html">FRICTION </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
+              <a href="#" class="dropdown-toggle"
+              data-toggle="dropdown" role="button"
+              aria-haspopup="true"
+     aria-expanded="false">Contents <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li><a href="../lists/files.html">Source Files</a></li>
+            <li><a href="../lists/modules.html">Modules</a></li>
+            <li><a href="../lists/procedures.html">Procedures</a></li>
+                   <li><a href="../lists/types.html">Derived Types</a></li>
+       
+            </ul>
+        
+            </li>
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/files.html">Source Files</a></li>
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/modules.html">Modules</a></li>
+<li class="visible-xs hidden-sm visible-lg"><a href="../lists/procedures.html">Procedures</a></li>
+                             <li class="visible-xs hidden-sm visible-lg"><a href="../lists/types.html">Derived Types</a></li>
+          </ul>
+        <form action="../search.html" class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+        </div>
+<!--
+        <button type="submit" class="btn btn-default">Submit</button>
+-->
+        </form>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+  <div class="row">
+    <h1>regrid
+      <small>Subroutine</small>
+      
+    </h1>
+      <div class="row" id="info-bar">
+    <div class="col-lg-12">
+      <div class="well well-sm">
+        <ul class="list-inline" style="margin-bottom:0px;display:inline">
+
+          <li id="statements"><i class="fa fa-list-ol"></i>
+            <a data-toggle="tooltip"
+               data-placement="bottom" data-html="true"
+               title=" 2.9% of total for procedures.">60 statements</a>
+          </li>
+
+            <li id="source-file">
+              <i class="fa fa-code"></i>
+              <a href="../src/fitpack_core.f90"> Source File</a>
+            </li>
+        </ul>
+        <ol class="breadcrumb in-well text-right">
+              <li><a href='../sourcefile/fitpack_core.f90.html'>fitpack_core.f90</a></li>
+              <li><a href='../module/fitpack_core.html'>fitpack_core</a></li>
+          <li class="active">regrid</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
+
+  </div>
+  
+  <div class="row">
+    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
+      <div id="sidebar">
+      <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/regrid.html#src">regrid</a>
+      </div>
+    </div>
+
+
+  </div>
+
+    </div>
+    
+    <div class="col-md-9" id='text'>
+    <h2>public pure subroutine regrid(iopt, mx, x, my, y, z, xb, xe, yb, ye, kx, ky, s, nxest, nyest, nx, tx, ny, ty, c, fp, wrk, lwrk, iwrk, kwrk, ier)  
+</h2>
+    
+
+
+    <h3>Arguments</h3>
+        <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th>Type</th>
+<th>Intent</th><th>Optional</th>        <th>Attributes</th>
+        <th></th>
+        <th>Name</th>
+        <th></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iopt~15"></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iopt</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-mx~7"></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>mx</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~63"></span>
+              real(kind=RKIND),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>x</strong>(mx)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-my~3"></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>my</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-y~19"></span>
+              real(kind=RKIND),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>y</strong>(my)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-z~12"></span>
+              real(kind=RKIND),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>z</strong>(mx*my)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-xb~3"></span>
+              real(kind=RKIND),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>xb</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-xe~3"></span>
+              real(kind=RKIND),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>xe</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-yb~2"></span>
+              real(kind=RKIND),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>yb</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ye~2"></span>
+              real(kind=RKIND),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ye</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-kx~8"></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>kx</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ky~8"></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ky</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-s~10"></span>
+              real(kind=RKIND),
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>s</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nxest"></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nxest</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nyest"></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nyest</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nx~8"></span>
+              integer,
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nx</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-tx~8"></span>
+              real(kind=RKIND),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>tx</strong>(nxest)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ny~8"></span>
+              integer,
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ny</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ty~8"></span>
+              real(kind=RKIND),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ty</strong>(nyest)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-c~27"></span>
+              real(kind=RKIND),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>c</strong>((nxest-kx-1)*(nyest-ky-1))</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fp~11"></span>
+              real(kind=RKIND),
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fp</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-wrk~17"></span>
+              real(kind=RKIND),
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>wrk</strong>(lwrk)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-lwrk~15"></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>lwrk</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iwrk~16"></span>
+              integer,
+            </td>
+<td>intent(inout)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iwrk</strong>(kwrk)</td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-kwrk~9"></span>
+              integer,
+            </td>
+<td>intent(in)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>kwrk</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-ier~22"></span>
+              integer,
+            </td>
+<td>intent(out)</td>
+              <td></td>            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>ier</strong></td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+    <br>
+
+    <section class="visible-xs visible-sm hidden-md">
+        <h3>Contents</h3>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="panel panel-primary">
+      <div class="panel-heading text-left"><h3 class="panel-title">Source Code</h3></div>
+      <div class="list-group">
+        <a class="list-group-item" href="../proc/regrid.html#src">regrid</a>
+      </div>
+    </div>
+
+
+    </section>
+    <br class="visible-xs visible-sm hidden-md">
+
+
+    
+    
+
+    
+    
+
+
+    
+    <section>
+    <h2><span class="anchor" id="src"></span>Source Code</h2>
+    <div class="highlight"><pre><span></span><span class="w">      </span><span class="k">pure subroutine </span><span class="n">regrid</span><span class="p">(</span><span class="n">iopt</span><span class="p">,</span><span class="n">mx</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">my</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">xb</span><span class="p">,</span><span class="n">xe</span><span class="p">,</span><span class="n">yb</span><span class="p">,</span><span class="n">ye</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span><span class="w"></span>
+<span class="w">                             </span><span class="n">nxest</span><span class="p">,</span><span class="n">nyest</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">tx</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">ty</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">fp</span><span class="p">,</span><span class="n">wrk</span><span class="p">,</span><span class="n">lwrk</span><span class="p">,</span><span class="n">iwrk</span><span class="p">,</span><span class="n">kwrk</span><span class="p">,</span><span class="n">ier</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">      </span><span class="c">!</span>
+<span class="w">      </span><span class="c">! calling sequence:</span>
+<span class="w">      </span><span class="c">!     call regrid(iopt,mx,x,my,y,z,xb,xe,yb,ye,kx,ky,s,nxest,nyest,</span>
+<span class="w">      </span><span class="c">!    *  nx,tx,ny,ty,c,fp,wrk,lwrk,iwrk,kwrk,ier)</span>
+<span class="w">      </span><span class="c">!</span>
+<span class="w">      </span><span class="c">! parameters:</span>
+<span class="w">      </span><span class="c">!  iopt  : integer flag. on entry iopt must specify whether a least-squares spline (iopt=-1) or a</span>
+<span class="w">      </span><span class="c">!          smoothing spline (iopt=0 or 1) must be determined.</span>
+<span class="w">      </span><span class="c">!          if iopt=0 the routine will start with an initial set of knots</span>
+<span class="w">      </span><span class="c">!          tx(i)=xb,tx(i+kx+1)=xe,i=1,...,kx+1;ty(i)=yb,ty(i+ky+1)=ye,i=1,...,ky+1.</span>
+<span class="w">      </span><span class="c">!          if iopt=1 the routine will continue with the set of knots found at the last call of the</span>
+<span class="w">      </span><span class="c">!          routine. attention: a call with iopt=1 must always be immediately preceded by another call</span>
+<span class="w">      </span><span class="c">!          with iopt=1 or iopt=0 and s/=0. unchanged on exit.</span>
+<span class="w">      </span><span class="c">!  mx    : integer. on entry mx must specify the number of grid points along the x-axis. mx &gt; kx .</span>
+<span class="w">      </span><span class="c">!          unchanged on exit.</span>
+<span class="w">      </span><span class="c">!  x     : real array of dimension at least (mx). before entry, x(i) must be set to the x-co-ordinate of</span>
+<span class="w">      </span><span class="c">!          the i-th grid point along the x-axis, for i=1,2,...,mx. these values must be supplied in</span>
+<span class="w">      </span><span class="c">!          strictly ascending order. unchanged on exit.</span>
+<span class="w">      </span><span class="c">!  my    : integer. on entry my must specify the number of grid points along the y-axis. my &gt; ky .</span>
+<span class="w">      </span><span class="c">!          unchanged on exit.</span>
+<span class="w">      </span><span class="c">!  y     : real array of dimension at least (my). before entry, y(j) must be set to the y-co-ordinate of</span>
+<span class="w">      </span><span class="c">!          the j-th grid point along the y-axis, for j=1,2,...,my. these values must be supplied in</span>
+<span class="w">      </span><span class="c">!          strictly ascending order. unchanged on exit.</span>
+<span class="w">      </span><span class="c">!  z     : real array of dimension at least (mx*my). before entry, z(my*(i-1)+j) must be set to the data</span>
+<span class="w">      </span><span class="c">!          value at the grid point (x(i),y(j)) for i=1,...,mx and j=1,...,my. unchanged on exit.</span>
+<span class="w">      </span><span class="c">!  xb,xe : real values. on entry xb,xe,yb and ye must specify the boundaries of the rectangular approxi-</span>
+<span class="w">      </span><span class="c">!  yb,ye   mation domain. xb&lt;=x(i)&lt;=xe,i=1,...,mx; yb&lt;=y(j)&lt;=ye,j=1,...,my. unchanged on exit.</span>
+<span class="w">      </span><span class="c">!  kx,ky : integer values. on entry kx and ky must specify the degrees of the spline. 1&lt;=kx,ky&lt;=5. it is</span>
+<span class="w">      </span><span class="c">!          recommended to use bicubic (kx=ky=3) splines. unchanged on exit.</span>
+<span class="w">      </span><span class="c">!  s     : real. on entry (in case iopt&gt;=0) s must specify the smoothing factor. s&gt;=0. unchanged on exit.</span>
+<span class="w">      </span><span class="c">!          for advice on the choice of s see further comments</span>
+<span class="w">      </span><span class="c">!  nxest : integer. unchanged on exit.</span>
+<span class="w">      </span><span class="c">!  nyest : integer. unchanged on exit.</span>
+<span class="w">      </span><span class="c">!          on entry, nxest and nyest must specify an upper bound for the number of knots required in the</span>
+<span class="w">      </span><span class="c">!          x- and y-directions respect. these numbers will also determine the storage space needed by the</span>
+<span class="w">      </span><span class="c">!          routine. nxest &gt;= 2*(kx+1), nyest &gt;= 2*(ky+1). in most practical situation nxest = mx/2,</span>
+<span class="w">      </span><span class="c">!          nyest=my/2, will be sufficient. always large enough are nxest=mx+kx+1, nyest=my+ky+1, the</span>
+<span class="w">      </span><span class="c">!          number of knots needed for interpolation (s=0). see also further comments.</span>
+<span class="w">      </span><span class="c">!  nx    : integer.</span>
+<span class="w">      </span><span class="c">!          unless ier=10 (in case iopt &gt;=0), nx will contain the total number of knots with respect to</span>
+<span class="w">      </span><span class="c">!          the x-variable, of the spline approximation returned. if the computation mode iopt=1 is used,</span>
+<span class="w">      </span><span class="c">!          the value of nx should be left unchanged between subsequent calls.</span>
+<span class="w">      </span><span class="c">!          in case iopt=-1, the value of nx should be specified on entry</span>
+<span class="w">      </span><span class="c">!  tx    : real array of dimension nmax.  on successful exit, this array will contain the knots of the</span>
+<span class="w">      </span><span class="c">!          spline with respect to the x-variable, i.e. the position of the interior knots tx(kx+2),...,</span>
+<span class="w">      </span><span class="c">!          tx(nx-kx-1) as well as the position of the additional knots tx(1)=...=tx(kx+1)=xb and</span>
+<span class="w">      </span><span class="c">!          tx(nx-kx)=...=tx(nx)=xe needed for the b-spline representat. if the computation mode iopt=1</span>
+<span class="w">      </span><span class="c">!          is used, the values of tx(1),...,tx(nx) should be left unchanged between subsequent calls.</span>
+<span class="w">      </span><span class="c">!          if the computation mode iopt=-1 is used, the values tx(kx+2),...tx(nx-kx-1) must be supplied</span>
+<span class="w">      </span><span class="c">!          by the user, before entry. see also the restrictions (ier=10).</span>
+<span class="w">      </span><span class="c">!  ny    : integer.</span>
+<span class="w">      </span><span class="c">!          unless ier=10 (in case iopt &gt;=0), ny will contain the total number of knots with respect to</span>
+<span class="w">      </span><span class="c">!          the y-variable, of the spline approximation returned. if the computation mode iopt=1 is used,</span>
+<span class="w">      </span><span class="c">!          the value of ny should be left unchanged between subsequent calls.</span>
+<span class="w">      </span><span class="c">!          in case iopt=-1, the value of ny should be specified on entry</span>
+<span class="w">      </span><span class="c">!  ty    : real array of dimension nmax.</span>
+<span class="w">      </span><span class="c">!          on successful exit, this array will contain the knots of the spline with respect to the</span>
+<span class="w">      </span><span class="c">!          y-variable, i.e. the position of the interior knots ty(ky+2),...,ty(ny-ky-1) as well as the</span>
+<span class="w">      </span><span class="c">!          position of the additional knots ty(1)=...=ty(ky+1)=yb and ty(ny-ky)=...=ty(ny)=ye needed for</span>
+<span class="w">      </span><span class="c">!          the b-spline representat. if the computation mode iopt=1 is used, the values of ty(1),...,</span>
+<span class="w">      </span><span class="c">!          ty(ny) should be left unchanged between subsequent calls.</span>
+<span class="w">      </span><span class="c">!          if the computation mode iopt=-1 is used, the values ty(ky+2),...ty(ny-ky-1) must be supplied</span>
+<span class="w">      </span><span class="c">!          by the user, before entry. see also the restrictions (ier=10).</span>
+<span class="w">      </span><span class="c">!  c     : real array of dimension at least (nxest-kx-1)*(nyest-ky-1).</span>
+<span class="w">      </span><span class="c">!          on successful exit, c contains the coefficients of the spline approximation s(x,y)</span>
+<span class="w">      </span><span class="c">!  fp    : real. unless ier=10, fp contains the sum of squared residuals of the spline approximation</span>
+<span class="w">      </span><span class="c">!          returned.</span>
+<span class="w">      </span><span class="c">!  wrk   : real array of dimension (lwrk). used as workspace. if the computation mode iopt=1 is used the</span>
+<span class="w">      </span><span class="c">!          values of wrk(1),...,wrk(4) should be left unchanged between subsequent calls.</span>
+<span class="w">      </span><span class="c">!  lwrk  : integer. on entry lwrk must specify the actual dimension of the array wrk as declared in the</span>
+<span class="w">      </span><span class="c">!          calling (sub)program. lwrk must not be too small.</span>
+<span class="w">      </span><span class="c">!           lwrk &gt;= 4+nxest*(my+2*kx+5)+nyest*(2*ky+5)+mx*(kx+1)+ my*(ky+1) +u</span>
+<span class="w">      </span><span class="c">!           where u is the larger of my and nxest.</span>
+<span class="w">      </span><span class="c">!  iwrk  : integer array of dimension (kwrk). used as workspace. if the computation mode iopt=1 is used</span>
+<span class="w">      </span><span class="c">!          the values of iwrk(1),...,iwrk(3) should be left unchanged between subsequent calls</span>
+<span class="w">      </span><span class="c">!  kwrk  : integer. on entry kwrk must specify the actual dimension of the array iwrk as declared in the</span>
+<span class="w">      </span><span class="c">!          calling (sub)program. kwrk &gt;= 3+mx+my+nxest+nyest.</span>
+<span class="w">      </span><span class="c">!  ier   : integer. unless the routine detects an error, ier contains a non-positive value on exit, i.e.</span>
+<span class="w">      </span><span class="c">!   ier=0  : normal return. the spline returned has a residual sum of squares fp such that abs(fp-s)/s</span>
+<span class="w">      </span><span class="c">!            &lt;= tol with tol a relative tolerance set to 0.001 by the program.</span>
+<span class="w">      </span><span class="c">!   ier=-1 : normal return. the spline returned is an interpolating spline (fp=0).</span>
+<span class="w">      </span><span class="c">!   ier=-2 : normal return. the spline returned is the least-squares polynomial of degrees kx and ky. in</span>
+<span class="w">      </span><span class="c">!            this extreme case fp gives the upper bound for the smoothing factor s.</span>
+<span class="w">      </span><span class="c">!   ier=1  : error. the required storage space exceeds the available storage space, as specified by the</span>
+<span class="w">      </span><span class="c">!            parameters nxest and nyest.</span>
+<span class="w">      </span><span class="c">!            probably causes : nxest or nyest too small. if these parameters are already large, it may</span>
+<span class="w">      </span><span class="c">!            also indicate that s is too small. the approximation returned is the least-squares spline</span>
+<span class="w">      </span><span class="c">!            according to the current set of knots. the parameter fp gives the corresponding sum of</span>
+<span class="w">      </span><span class="c">!            squared residuals (fp&gt;s).</span>
+<span class="w">      </span><span class="c">!   ier=2  : error. a theoretically impossible result was found during the iteration process for finding</span>
+<span class="w">      </span><span class="c">!            a smoothing spline with fp = s. probably causes : s too small. there is an approximation</span>
+<span class="w">      </span><span class="c">!            returned but the corresponding sum of squared residuals does not satisfy the condition</span>
+<span class="w">      </span><span class="c">!            abs(fp-s)/s &lt; tol.</span>
+<span class="w">      </span><span class="c">!   ier=3  : error. the maximal number of iterations maxit (set to 20 by the program) allowed for finding</span>
+<span class="w">      </span><span class="c">!            a smoothing spline with fp=s has been reached. probably causes : s too small. there is an</span>
+<span class="w">      </span><span class="c">!            approximation returned but the corresponding sum of squared residuals does not satisfy the</span>
+<span class="w">      </span><span class="c">!            condition abs(fp-s)/s &lt; tol.</span>
+<span class="w">      </span><span class="c">!   ier=10 : error. on entry, the input data are controlled on validity the following restrictions must</span>
+<span class="w">      </span><span class="c">!            be satisfied.</span>
+<span class="w">      </span><span class="c">!            -1&lt;=iopt&lt;=1, 1&lt;=kx,ky&lt;=5, mx&gt;kx, my&gt;ky, nxest&gt;=2*kx+2,</span>
+<span class="w">      </span><span class="c">!            nyest&gt;=2*ky+2, kwrk&gt;=3+mx+my+nxest+nyest,</span>
+<span class="w">      </span><span class="c">!            lwrk &gt;= 4+nxest*(my+2*kx+5)+nyest*(2*ky+5)+mx*(kx+1)+</span>
+<span class="w">      </span><span class="c">!             my*(ky+1) +max(my,nxest),</span>
+<span class="w">      </span><span class="c">!            xb&lt;=x(i-1)&lt;x(i)&lt;=xe,i=2,..,mx,yb&lt;=y(j-1)&lt;y(j)&lt;=ye,j=2,..,my</span>
+<span class="w">      </span><span class="c">!            if iopt=-1: 2*kx+2&lt;=nx&lt;=min(nxest,mx+kx+1)</span>
+<span class="w">      </span><span class="c">!                        xb&lt;tx(kx+2)&lt;tx(kx+3)&lt;...&lt;tx(nx-kx-1)&lt;xe</span>
+<span class="w">      </span><span class="c">!                        2*ky+2&lt;=ny&lt;=min(nyest,my+ky+1)</span>
+<span class="w">      </span><span class="c">!                        yb&lt;ty(ky+2)&lt;ty(ky+3)&lt;...&lt;ty(ny-ky-1)&lt;ye</span>
+<span class="w">      </span><span class="c">!                    the schoenberg-whitney conditions, i.e. there must</span>
+<span class="w">      </span><span class="c">!                    be subset of grid co-ordinates xx(p) and yy(q) such</span>
+<span class="w">      </span><span class="c">!                    that   tx(p) &lt; xx(p) &lt; tx(p+kx+1) ,p=1,...,nx-kx-1</span>
+<span class="w">      </span><span class="c">!                           ty(q) &lt; yy(q) &lt; ty(q+ky+1) ,q=1,...,ny-ky-1</span>
+<span class="w">      </span><span class="c">!            if iopt&gt;=0: s&gt;=0</span>
+<span class="w">      </span><span class="c">!                        if s=0 : nxest&gt;=mx+kx+1, nyest&gt;=my+ky+1</span>
+<span class="w">      </span><span class="c">!            if one of these conditions is found to be violated,control</span>
+<span class="w">      </span><span class="c">!            is immediately repassed to the calling program. in that</span>
+<span class="w">      </span><span class="c">!            case there is no approximation returned.</span>
+<span class="w">      </span><span class="c">!</span>
+<span class="w">      </span><span class="c">! further comments:</span>
+<span class="w">      </span><span class="c">!   regrid does not allow individual weighting of the data-values. so, if these were determined to widely</span>
+<span class="w">      </span><span class="c">!   different accuracies, then perhaps the general data set routine surfit should rather be used in spite</span>
+<span class="w">      </span><span class="c">!   of efficiency. by means of the parameter s, the user can control the tradeoff between closeness of</span>
+<span class="w">      </span><span class="c">!   fit and smoothness of fit of the approximation. if s is too large, the spline will be too smooth and</span>
+<span class="w">      </span><span class="c">!   signal will be lost ; if s is too small the spline will pick up too much noise. in the extreme cases</span>
+<span class="w">      </span><span class="c">!   the program will return an interpolating spline if s=0 and the least-squares polynomial (degrees</span>
+<span class="w">      </span><span class="c">!   kx,ky) if s is very large. between these extremes, a properly chosen s will result in a good</span>
+<span class="w">      </span><span class="c">!   compromise between closeness of fit and smoothness of fit. to decide whether an approximation, cor-</span>
+<span class="w">      </span><span class="c">!   responding to a certain s is satisfactory the user is highly recommended to inspect the fits</span>
+<span class="w">      </span><span class="c">!   graphically.</span>
+<span class="w">      </span><span class="c">!   recommended values for s depend on the accuracy of the data values. if the user has an idea of the</span>
+<span class="w">      </span><span class="c">!   statistical errors on the data, he can also find a proper estimate for s. for, by assuming that, if</span>
+<span class="w">      </span><span class="c">!   he specifies the right s, regrid will return a spline s(x,y) which exactly reproduces the function</span>
+<span class="w">      </span><span class="c">!   underlying the data he can evaluate the sum((z(i,j)-s(x(i),y(j)))**2) to find a good estimate for</span>
+<span class="w">      </span><span class="c">!   this s. for example, if he knows that the statistical errors on his z(i,j)- values is not greater</span>
+<span class="w">      </span><span class="c">!   than 0.1, he may expect that a good s should have a value not larger than mx*my*(0.1)**2.</span>
+<span class="w">      </span><span class="c">!   if nothing is known about the statistical error in z(i,j), s must be determined by trial and error,</span>
+<span class="w">      </span><span class="c">!   taking account of the comments above. the best is then to start with a very large value of s (to</span>
+<span class="w">      </span><span class="c">!   determine the least-squares polynomial and the corresponding upper bound fp0 for s) and then to</span>
+<span class="w">      </span><span class="c">!   progressively decrease the value of s (say by a factor 10 in the beginning, i.e. s=fp0/10,fp0/100,...</span>
+<span class="w">      </span><span class="c">!   and more carefully as the approximation shows more detail) to obtain closer fits.</span>
+<span class="w">      </span><span class="c">!   to economize the search for a good s-value the program provides with different modes of computation.</span>
+<span class="w">      </span><span class="c">!   at the first call of the routine, or whenever he wants to restart with the initial set of knots the</span>
+<span class="w">      </span><span class="c">!   user must set iopt=0.</span>
+<span class="w">      </span><span class="c">!   if iopt=1 the program will continue with the set of knots found at the last call of the routine. this</span>
+<span class="w">      </span><span class="c">!   will save a lot of computation time if regrid is called repeatedly for different values of s. the</span>
+<span class="w">      </span><span class="c">!   number of knots of the spline returned and their location will depend on the value of s and on the</span>
+<span class="w">      </span><span class="c">!   complexity of the shape of the function underlying the data. if the computation mode iopt=1 is used,</span>
+<span class="w">      </span><span class="c">!   the knots returned may also depend on the s-values at previous calls (if these were smaller).</span>
+<span class="w">      </span><span class="c">!   therefore, if after a number of trials with different s-values and iopt=1, the user can finally</span>
+<span class="w">      </span><span class="c">!   accept a fit as satisfactory, it may be worthwhile for him to call regrid once more with the selected</span>
+<span class="w">      </span><span class="c">!   value for s but now with iopt=0. indeed, regrid may then return an approximation of the same quality</span>
+<span class="w">      </span><span class="c">!   of fit but with fewer knots and therefore better if data reduction is also an important objective for</span>
+<span class="w">      </span><span class="c">!   the user. the number of knots may also depend on the upper bounds nxest and nyest. indeed, if at a</span>
+<span class="w">      </span><span class="c">!   certain stage in regrid the number of knots in one direction (say nx) has reached the value of its</span>
+<span class="w">      </span><span class="c">!   upper bound (nxest), then from that moment on all subsequent knots are added in the other (y)</span>
+<span class="w">      </span><span class="c">!   direction. this may indicate that the value of nxest is too small. on the other hand, it gives the</span>
+<span class="w">      </span><span class="c">!   user the option of limiting the number of knots the routine locates in any direction. for example,</span>
+<span class="w">      </span><span class="c">!   by setting nxest=2*kx+2 (the lowest allowable value for nxest), the user can indicate that he wants</span>
+<span class="w">      </span><span class="c">!   an approximation which is a simple polynomial of degree kx in the variable x.</span>
+<span class="w">      </span><span class="c">!</span>
+<span class="w">      </span><span class="c">!  other subroutines required:</span>
+<span class="w">      </span><span class="c">!    fpback,fpbspl,fpregr,fpdisc,fpgivs,fpgrre,fprati,fprota,fpchec,fpknot</span>
+<span class="w">      </span><span class="c">!</span>
+<span class="w">      </span><span class="c">!  references:</span>
+<span class="w">      </span><span class="c">!   dierckx p. : a fast algorithm for smoothing data on a rectangular</span>
+<span class="w">      </span><span class="c">!                grid while using spline functions, siam j.numer.anal.</span>
+<span class="w">      </span><span class="c">!                19 (1982) 1286-1304.</span>
+<span class="w">      </span><span class="c">!   dierckx p. : a fast algorithm for smoothing data on a rectangular</span>
+<span class="w">      </span><span class="c">!                grid while using spline functions, report tw53, dept.</span>
+<span class="w">      </span><span class="c">!                computer science,k.u.leuven, 1980.</span>
+<span class="w">      </span><span class="c">!   dierckx p. : curve and surface fitting with splines, monographs on</span>
+<span class="w">      </span><span class="c">!                numerical analysis, oxford university press, 1993.</span>
+<span class="w">      </span><span class="c">!</span>
+<span class="w">      </span><span class="c">!  author:</span>
+<span class="w">      </span><span class="c">!    p.dierckx</span>
+<span class="w">      </span><span class="c">!    dept. computer science, k.u. leuven</span>
+<span class="w">      </span><span class="c">!    celestijnenlaan 200a, b-3001 heverlee, belgium.</span>
+<span class="w">      </span><span class="c">!    e-mail : Paul.Dierckx@cs.kuleuven.ac.be</span>
+<span class="w">      </span><span class="c">!</span>
+<span class="w">      </span><span class="c">!  creation date : may 1979</span>
+<span class="w">      </span><span class="c">!</span>
+<span class="w">      </span><span class="c">!  ..</span>
+<span class="w">      </span><span class="c">!  ..scalar arguments..</span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">RKIND</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">    </span><span class="kd">::</span><span class="w"> </span><span class="n">xb</span><span class="p">,</span><span class="n">xe</span><span class="p">,</span><span class="n">yb</span><span class="p">,</span><span class="n">ye</span><span class="p">,</span><span class="n">s</span><span class="w"></span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">RKIND</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">   </span><span class="kd">::</span><span class="w"> </span><span class="n">fp</span><span class="w"></span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">,</span><span class="w">     </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">    </span><span class="kd">::</span><span class="w"> </span><span class="n">iopt</span><span class="p">,</span><span class="n">mx</span><span class="p">,</span><span class="n">my</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">nxest</span><span class="p">,</span><span class="n">nyest</span><span class="p">,</span><span class="n">lwrk</span><span class="p">,</span><span class="n">kwrk</span><span class="w"></span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">,</span><span class="w">     </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">nx</span><span class="p">,</span><span class="n">ny</span><span class="w"></span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">,</span><span class="w">     </span><span class="k">intent</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="w">   </span><span class="kd">::</span><span class="w"> </span><span class="n">ier</span><span class="w"></span>
+
+<span class="w">      </span><span class="c">!  ..array arguments..</span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">RKIND</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w">    </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="n">mx</span><span class="p">),</span><span class="n">y</span><span class="p">(</span><span class="n">my</span><span class="p">),</span><span class="n">z</span><span class="p">(</span><span class="n">mx</span><span class="o">*</span><span class="n">my</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">RKIND</span><span class="p">),</span><span class="w"> </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tx</span><span class="p">(</span><span class="n">nxest</span><span class="p">),</span><span class="n">ty</span><span class="p">(</span><span class="n">nyest</span><span class="p">),</span><span class="n">c</span><span class="p">((</span><span class="n">nxest</span><span class="o">-</span><span class="n">kx</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">nyest</span><span class="o">-</span><span class="n">ky</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span><span class="n">wrk</span><span class="p">(</span><span class="n">lwrk</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">,</span><span class="w">     </span><span class="k">intent</span><span class="p">(</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">iwrk</span><span class="p">(</span><span class="n">kwrk</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">      </span><span class="c">!  ..local scalars..</span>
+<span class="w">      </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">jwrk</span><span class="p">,</span><span class="n">kndx</span><span class="p">,</span><span class="n">kndy</span><span class="p">,</span><span class="n">knrx</span><span class="p">,</span><span class="n">knry</span><span class="p">,</span><span class="n">kwest</span><span class="p">,</span><span class="n">kx1</span><span class="p">,</span><span class="n">kx2</span><span class="p">,</span><span class="n">ky1</span><span class="p">,</span><span class="n">ky2</span><span class="p">,</span><span class="n">lfpx</span><span class="p">,</span><span class="n">lfpy</span><span class="p">,</span><span class="n">lwest</span><span class="p">,</span><span class="n">lww</span><span class="p">,</span><span class="n">nc</span><span class="p">,</span><span class="n">nminx</span><span class="p">,</span><span class="n">nminy</span><span class="p">,</span><span class="n">mz</span><span class="w"></span>
+<span class="w">      </span><span class="c">!  ..subroutine references..</span>
+<span class="w">      </span><span class="c">!    fpregr,fpchec</span>
+<span class="w">      </span><span class="c">!  ..</span>
+<span class="w">      </span><span class="c">!  we set up the parameters tol and maxit.</span>
+<span class="w">      </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">maxit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="w"></span>
+<span class="w">      </span><span class="kt">real</span><span class="p">(</span><span class="n">RKIND</span><span class="p">),</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">tol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">smallnum03</span><span class="w"></span>
+
+<span class="w">      </span><span class="c">!  before starting computations a data check is made. if the input data</span>
+<span class="w">      </span><span class="c">!  are invalid, control is immediately repassed to the calling program.</span>
+<span class="w">      </span><span class="n">ier</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">FITPACK_INPUT_ERROR</span><span class="w"></span>
+
+<span class="w">      </span><span class="n">kx1</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">kx</span><span class="o">+</span><span class="mi">1</span><span class="w"></span>
+<span class="w">      </span><span class="n">kx2</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">kx1</span><span class="o">+</span><span class="mi">1</span><span class="w"></span>
+<span class="w">      </span><span class="n">ky1</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">ky</span><span class="o">+</span><span class="mi">1</span><span class="w"></span>
+<span class="w">      </span><span class="n">ky2</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="n">ky1</span><span class="o">+</span><span class="mi">1</span><span class="w"></span>
+<span class="w">      </span><span class="n">nminx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="o">*</span><span class="n">kx1</span><span class="w"></span>
+<span class="w">      </span><span class="n">nminy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="o">*</span><span class="n">ky1</span><span class="w"></span>
+<span class="w">      </span><span class="n">mz</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">mx</span><span class="o">*</span><span class="n">my</span><span class="w"></span>
+<span class="w">      </span><span class="n">nc</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">nxest</span><span class="o">-</span><span class="n">kx1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">nyest</span><span class="o">-</span><span class="n">ky1</span><span class="p">)</span><span class="w"></span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">kx</span><span class="o">&lt;=</span><span class="mi">0</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">kx</span><span class="o">&gt;</span><span class="mi">5</span><span class="p">)</span><span class="w">            </span><span class="k">return</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">ky</span><span class="o">&lt;=</span><span class="mi">0</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">ky</span><span class="o">&gt;</span><span class="mi">5</span><span class="p">)</span><span class="w">            </span><span class="k">return</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">iopt</span><span class="o">&lt;</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">iopt</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span><span class="w">      </span><span class="k">return</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">mx</span><span class="o">&lt;</span><span class="n">kx1</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">nxest</span><span class="o">&lt;</span><span class="n">nminx</span><span class="p">)</span><span class="w">    </span><span class="k">return</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">my</span><span class="o">&lt;</span><span class="n">ky1</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">nyest</span><span class="o">&lt;</span><span class="n">nminy</span><span class="p">)</span><span class="w">    </span><span class="k">return</span>
+
+<span class="k">      </span><span class="n">lwest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="o">+</span><span class="n">nxest</span><span class="o">*</span><span class="p">(</span><span class="n">my</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">kx2</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="n">nyest</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">ky2</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="n">mx</span><span class="o">*</span><span class="n">kx1</span><span class="o">+</span><span class="n">my</span><span class="o">*</span><span class="n">ky1</span><span class="o">+</span><span class="nb">max</span><span class="p">(</span><span class="n">nxest</span><span class="p">,</span><span class="n">my</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="n">kwest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="o">+</span><span class="n">mx</span><span class="o">+</span><span class="n">my</span><span class="o">+</span><span class="n">nxest</span><span class="o">+</span><span class="n">nyest</span><span class="w"></span>
+
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">lwrk</span><span class="o">&lt;</span><span class="n">lwest</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">kwrk</span><span class="o">&lt;</span><span class="n">kwest</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">xb</span><span class="o">&gt;</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">xe</span><span class="o">&lt;</span><span class="n">x</span><span class="p">(</span><span class="n">mx</span><span class="p">))</span><span class="w">      </span><span class="k">return</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">yb</span><span class="o">&gt;</span><span class="n">y</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">ye</span><span class="o">&lt;</span><span class="n">y</span><span class="p">(</span><span class="n">my</span><span class="p">))</span><span class="w">      </span><span class="k">return</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="nb">any</span><span class="p">(</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">mx</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;=</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">:</span><span class="n">mx</span><span class="p">)))</span><span class="w">    </span><span class="k">return</span>
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="nb">any</span><span class="p">(</span><span class="n">y</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">my</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;=</span><span class="n">y</span><span class="p">(</span><span class="mi">2</span><span class="p">:</span><span class="n">my</span><span class="p">)))</span><span class="w">    </span><span class="k">return</span>
+
+<span class="k">      if</span><span class="w"> </span><span class="p">(</span><span class="n">iopt</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">then</span>
+
+<span class="k">          if</span><span class="w"> </span><span class="p">(</span><span class="n">nx</span><span class="o">&lt;</span><span class="n">nminx</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">nx</span><span class="o">&gt;</span><span class="n">nxest</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+<span class="k">          </span><span class="n">tx</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">kx1</span><span class="p">)</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">xb</span><span class="w"></span>
+<span class="w">          </span><span class="n">tx</span><span class="p">(</span><span class="n">nx</span><span class="o">-</span><span class="n">kx</span><span class="p">:</span><span class="n">nx</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xe</span><span class="w"></span>
+<span class="w">          </span><span class="n">ier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fpchec</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">mx</span><span class="p">,</span><span class="n">tx</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">kx</span><span class="p">);</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ier</span><span class="o">/=</span><span class="n">FITPACK_OK</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+
+<span class="k">          if</span><span class="w"> </span><span class="p">(</span><span class="n">ny</span><span class="o">&lt;</span><span class="n">nminy</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">ny</span><span class="o">&gt;</span><span class="n">nyest</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+<span class="k">          </span><span class="n">ty</span><span class="p">(</span><span class="mi">1</span><span class="p">:</span><span class="n">ky1</span><span class="p">)</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">yb</span><span class="w"></span>
+<span class="w">          </span><span class="n">ty</span><span class="p">(</span><span class="n">ny</span><span class="o">-</span><span class="n">ky</span><span class="p">:</span><span class="n">ny</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ye</span><span class="w"></span>
+<span class="w">          </span><span class="n">ier</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fpchec</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">my</span><span class="p">,</span><span class="n">ty</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">ky</span><span class="p">);</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ier</span><span class="o">/=</span><span class="n">FITPACK_OK</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+
+<span class="k">      else</span>
+
+<span class="k">          if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="o">&lt;</span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+<span class="k">          if</span><span class="w"> </span><span class="p">(</span><span class="n">equal</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">zero</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">and</span><span class="p">.</span><span class="w"> </span><span class="p">(</span><span class="n">nxest</span><span class="o">&lt;</span><span class="p">(</span><span class="n">mx</span><span class="o">+</span><span class="n">kx1</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="nb">or</span><span class="p">.</span><span class="w"> </span><span class="n">nyest</span><span class="o">&lt;</span><span class="p">(</span><span class="n">my</span><span class="o">+</span><span class="n">ky1</span><span class="p">))</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="k">return</span>
+
+<span class="k">      endif</span><span class="w"></span>
+
+<span class="w">      </span><span class="c">! we partition the working space and determine the spline approximation</span>
+
+<span class="w">      </span><span class="n">ier</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">FITPACK_OK</span><span class="w"></span>
+<span class="w">      </span><span class="n">lfpx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="w"></span>
+<span class="w">      </span><span class="n">lfpy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lfpx</span><span class="o">+</span><span class="n">nxest</span><span class="w"></span>
+<span class="w">      </span><span class="n">lww</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">lfpy</span><span class="o">+</span><span class="n">nyest</span><span class="w"></span>
+<span class="w">      </span><span class="n">jwrk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lwrk</span><span class="o">-</span><span class="mi">4</span><span class="o">-</span><span class="n">nxest</span><span class="o">-</span><span class="n">nyest</span><span class="w"></span>
+<span class="w">      </span><span class="n">knrx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="w"></span>
+<span class="w">      </span><span class="n">knry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">knrx</span><span class="o">+</span><span class="n">mx</span><span class="w"></span>
+<span class="w">      </span><span class="n">kndx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">knry</span><span class="o">+</span><span class="n">my</span><span class="w"></span>
+<span class="w">      </span><span class="n">kndy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kndx</span><span class="o">+</span><span class="n">nxest</span><span class="w"></span>
+
+<span class="w">      </span><span class="k">call </span><span class="n">fpregr</span><span class="p">(</span><span class="n">iopt</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">mx</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">my</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">mz</span><span class="p">,</span><span class="n">xb</span><span class="p">,</span><span class="n">xe</span><span class="p">,</span><span class="n">yb</span><span class="p">,</span><span class="n">ye</span><span class="p">,</span><span class="n">kx</span><span class="p">,</span><span class="n">ky</span><span class="p">,</span><span class="n">s</span><span class="p">,</span><span class="n">nxest</span><span class="p">,</span><span class="n">nyest</span><span class="p">,</span><span class="w"> </span><span class="p">&amp;</span><span class="w"></span>
+<span class="w">                  </span><span class="n">tol</span><span class="p">,</span><span class="n">maxit</span><span class="p">,</span><span class="n">nc</span><span class="p">,</span><span class="n">nx</span><span class="p">,</span><span class="n">tx</span><span class="p">,</span><span class="n">ny</span><span class="p">,</span><span class="n">ty</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">fp</span><span class="p">,</span><span class="n">wrk</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">wrk</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">wrk</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">wrk</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="w"> </span><span class="p">&amp;</span><span class="w"></span>
+<span class="w">                  </span><span class="n">wrk</span><span class="p">(</span><span class="n">lfpx</span><span class="p">),</span><span class="n">wrk</span><span class="p">(</span><span class="n">lfpy</span><span class="p">),</span><span class="n">iwrk</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">iwrk</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">iwrk</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">iwrk</span><span class="p">(</span><span class="n">knrx</span><span class="p">),</span><span class="w"> </span><span class="p">&amp;</span><span class="w"></span>
+<span class="w">                  </span><span class="n">iwrk</span><span class="p">(</span><span class="n">knry</span><span class="p">),</span><span class="n">iwrk</span><span class="p">(</span><span class="n">kndx</span><span class="p">),</span><span class="n">iwrk</span><span class="p">(</span><span class="n">kndy</span><span class="p">),</span><span class="n">wrk</span><span class="p">(</span><span class="n">lww</span><span class="p">),</span><span class="n">jwrk</span><span class="p">,</span><span class="n">ier</span><span class="p">)</span><span class="w"></span>
+<span class="w">      </span><span class="k">return</span>
+
+<span class="k">      end subroutine </span><span class="n">regrid</span><span class="w"></span>
+</pre></div>
+
+    </section>
+    <br>
+    
+    </div>
+  </div>
+
+    <hr>    
+    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+      <div class="row">
+        <div class="col-xs-6 col-md-6"><p>FRICTION was developed by Jason Christopherson<br>&copy; 2025 
+</p>
+        </div>
+        <div class="col-xs-6 col-md-6">
+          <p class="text-right">
+            Documentation generated by 
+            <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2025-12-22 20:51            </p>
+        </div>
+      </div>
+      <br>
+      </div> <!-- /container -->    
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<!--
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+-->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../js/ie10-viewport-bug-workaround.js"></script>
+
+    <!-- MathJax JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
+        jax: ['input/TeX','input/MathML','output/HTML-CSS'],
+        extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
+      });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script src="../tipuesearch/tipuesearch_content.js"></script>
+    <script src="../tipuesearch/tipuesearch_set.js"></script>
+    <script src="../tipuesearch/tipuesearch.js"></script>
+    
+  </body>
+</html>
