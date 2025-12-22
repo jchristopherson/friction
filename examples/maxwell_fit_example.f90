@@ -20,7 +20,7 @@ program example
     type(plot_data_2d) :: pd1
 
     ! Read the data file
-    call file%read("data/friction_data_1.csv", header_row = 1, status_ok = ok)
+    call file%read("examples\data\friction_data_1.csv", header_row = 1, status_ok = ok)
     if (.not.ok) then
         print *, "Could not open file."
         stop -1
