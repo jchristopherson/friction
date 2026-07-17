@@ -20,10 +20,10 @@ set(FRICTION_SOURCES
 include(FetchContent)
 find_package(OpenMP REQUIRED COMPONENTS Fortran)
 find_package(ferror QUIET)
-find_package(fstats QUIET)
-find_package(collections QUIET)
-find_package(diffeq QUIET)
-find_package(linalg QUIET)
+find_package(fstats 1.5.6 QUIET)
+find_package(collections 1.0.9 QUIET)
+find_package(diffeq 1.1.5 QUIET)
+find_package(linalg 1.8.10 QUIET)
 
 if (NOT ferror_FOUND)
     message(STATUS "FERROR could not be found.  A reference version will be employed.")
@@ -106,16 +106,23 @@ target_link_libraries(
     ${FERROR_LIBRARIES}
     ${FSTATS_LIBRARIES}
     ${DIFFEQ_LIBRARIES}
-)
-target_link_libraries(
-    ${PROJECT_NAME}
-    PRIVATE
     ${LINALG_LIBRARIES}
     ${COLLECTIONS_LIBRARIES}
 )
 if (OpenMP_Fortran_FOUND)
-    target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_Fortran)
+    target_link_libraries(${PROJECT_NAME} PUBLIC OpenMP::OpenMP_Fortran)
     target_compile_definitions(${PROJECT_NAME} PRIVATE USEOPENMP=1)
+
+    if (CMAKE_Fortran_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
+        target_compile_options(${PROJECT_NAME} PUBLIC $<$<COMPILE_LANGUAGE:Fortran>:-fopenmp>)
+        target_link_options(${PROJECT_NAME} PUBLIC $<$<LINK_LANGUAGE:Fortran>:-fopenmp>)
+    elseif (CMAKE_Fortran_COMPILER_ID MATCHES "Intel|IntelLLVM")
+        target_compile_options(${PROJECT_NAME} PUBLIC $<$<COMPILE_LANGUAGE:Fortran>:-qopenmp>)
+        target_link_options(${PROJECT_NAME} PUBLIC $<$<LINK_LANGUAGE:Fortran>:-qopenmp>)
+    elseif (MSVC)
+        target_compile_options(${PROJECT_NAME} PUBLIC $<$<COMPILE_LANGUAGE:Fortran>:/openmp>)
+        target_link_options(${PROJECT_NAME} PUBLIC $<$<LINK_LANGUAGE:Fortran>:/openmp>)
+    endif()
 endif()
 
 set_target_properties(
@@ -150,22 +157,66 @@ install(
 )
 install(DIRECTORY ${FRICTION_MOD_DIR} DESTINATION ${CMAKE_INSTALL_MODULEDIR})
 
-if (${BUILD_FERROR} AND ${BUILD_SHARED_LIBS})
-    install(IMPORTED_RUNTIME_ARTIFACTS ${FERROR_LIBRARIES})
-endif()
-
-if (${BUILD_LINALG} AND ${BUILD_SHARED_LIBS})
-    install(IMPORTED_RUNTIME_ARTIFACTS ${LINALG_LIBRARIES})
-endif()
-
-if (${BUILD_FSTATS} AND ${BUILD_SHARED_LIBS})
-    install(IMPORTED_RUNTIME_ARTIFACTS ${FSTATS_LIBRARIES})
-endif()
-
-if (${BUILD_DIFFEQ} AND ${BUILD_SHARED_LIBS})
-    install(IMPORTED_RUNTIME_ARTIFACTS ${DIFFEQ_LIBRARIES})
-endif()
-
-if (${BUILD_COLLECTIONS} AND ${BUILD_SHARED_LIBS})
-    install(IMPORTED_RUNTIME_ARTIFACTS ${COLLECTIONS_LIBRARIES})
+if (${BUILD_SHARED_LIBS})
+    if (${BUILD_FERROR})
+        install(TARGETS ${FERROR_LIBRARIES}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        )
+    endif()
+    if (${BUILD_LINALG})
+        install(TARGETS ${LINALG_LIBRARIES}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        )
+    endif()
+    if (${BUILD_COLLECTIONS})
+        install(TARGETS ${COLLECTIONS_LIBRARIES}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        )
+    endif()
+    if (${BUILD_FSTATS})
+        install(TARGETS ${FSTATS_LIBRARIES}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        )
+    endif()
+    if (${BUILD_DIFFEQ})
+        install(TARGETS ${DIFFEQ_LIBRARIES}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        )
+    endif()
+else()
+    if (${BUILD_FERROR})
+        install(TARGETS ${FERROR_LIBRARIES}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        )
+    endif()
+    if (${BUILD_LINALG})
+        install(TARGETS ${LINALG_LIBRARIES}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        )
+    endif()
+    if (${BUILD_COLLECTIONS})
+        install(TARGETS ${COLLECTIONS_LIBRARIES}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        )
+    endif()
+    if (${BUILD_FSTATS})
+        install(TARGETS ${FSTATS_LIBRARIES}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        )
+    endif()
+    if (${BUILD_DIFFEQ})
+        install(TARGETS ${DIFFEQ_LIBRARIES}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        )
+    endif()
 endif()
