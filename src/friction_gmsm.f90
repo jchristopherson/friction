@@ -209,7 +209,7 @@ subroutine gmsm_to_array(this, x)
         !!  10. element scaling ...
 
     ! Process
-    if (size(x) /= this%parameter_count()) return
+    if (size(x) /= this%parameter_count()) error stop FRICTION_ARRAY_SIZE_ERROR
     x(1) = this%static_coefficient
     x(2) = this%coulomb_coefficient
     x(3) = this%attraction_coefficient
@@ -252,7 +252,7 @@ subroutine gmsm_from_array(this, x)
 
     ! Process
     if (.not.allocated(this%m_params)) return
-    if (size(x) /= this%parameter_count()) return
+    if (size(x) /= this%parameter_count()) error stop FRICTION_ARRAY_SIZE_ERROR
     this%static_coefficient = x(1)
     this%coulomb_coefficient = x(2)
     this%attraction_coefficient = x(3)

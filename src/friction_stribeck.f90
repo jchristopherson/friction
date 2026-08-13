@@ -130,6 +130,7 @@ subroutine sf_to_array(this, x)
         !! 3. stribeck_velocity
         !!
         !! 4. viscous_damping
+    if (size(x) /= this%parameter_count()) error stop FRICTION_ARRAY_SIZE_ERROR
     x(1) = this%static_friction_coefficient
     x(2) = this%coulomb_friction_coefficient
     x(3) = this%stribeck_velocity
@@ -153,6 +154,7 @@ subroutine sf_from_array(this, x)
         !! 3. stribeck_velocity
         !!
         !! 4. viscous_damping
+    if (size(x) /= this%parameter_count()) error stop FRICTION_ARRAY_SIZE_ERROR
     this%static_friction_coefficient = x(1)
     this%coulomb_friction_coefficient = x(2)
     this%stribeck_velocity = x(3)

@@ -1,6 +1,7 @@
 module friction_coulomb
     use iso_fortran_env
     use friction_core
+    use friction_errors
     implicit none
     private
     public :: coulomb_model
@@ -108,6 +109,7 @@ subroutine cf_to_array(this, x)
     real(real64), intent(out), dimension(:) :: x
         !! The array used to store the parameters.  See @ref
         !! parameter_count to determine the size of this array.
+    if (size(x) /= this%parameter_count()) error stop FRICTION_ARRAY_SIZE_ERROR
     x(1) = this%friction_coefficient
 end subroutine
 
@@ -119,6 +121,7 @@ subroutine cf_from_array(this, x)
     real(real64), intent(in), dimension(:) :: x
         !! The array used to store the parameters.  See
         !! parameter_count to determine the size of this array.
+    if (size(x) /= this%parameter_count()) error stop FRICTION_ARRAY_SIZE_ERROR
     this%friction_coefficient = x(1)
 end subroutine
 

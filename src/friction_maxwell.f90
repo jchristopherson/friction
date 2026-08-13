@@ -130,6 +130,7 @@ subroutine mx_to_array(this, x)
         !! 1. stiffness
         !!
         !! 2. friction_coefficient
+    if (size(x) /= this%parameter_count()) error stop FRICTION_ARRAY_SIZE_ERROR
     x(1) = this%stiffness
     x(2) = this%friction_coefficient
 end subroutine
@@ -147,6 +148,7 @@ subroutine mx_from_array(this, x)
         !! 1. stiffness
         !!
         !! 2. friction_coefficient
+    if (size(x) /= this%parameter_count()) error stop FRICTION_ARRAY_SIZE_ERROR
     this%stiffness = x(1)
     this%friction_coefficient = x(2)
 end subroutine

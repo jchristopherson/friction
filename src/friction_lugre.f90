@@ -180,6 +180,7 @@ subroutine lg_to_array(this, x)
         !!  6. viscous_damping
         !!
         !!  7. shape_parameter
+    if (size(x) /= this%parameter_count()) error stop FRICTION_ARRAY_SIZE_ERROR
     x(1) = this%static_coefficient
     x(2) = this%coulomb_coefficient
     x(3) = this%stribeck_velocity
@@ -212,6 +213,7 @@ subroutine lg_from_array(this, x)
         !!  6. viscous_damping
         !!
         !!  7. shape_parameter
+    if (size(x) /= this%parameter_count()) error stop FRICTION_ARRAY_SIZE_ERROR
     this%static_coefficient = x(1)
     this%coulomb_coefficient = x(2)
     this%stribeck_velocity = x(3)
