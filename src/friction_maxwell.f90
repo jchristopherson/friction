@@ -1,7 +1,6 @@
 module friction_maxwell
     use iso_fortran_env
     use friction_core
-    use ferror
     use friction_errors
     implicit none
     private
@@ -119,7 +118,7 @@ subroutine mx_state_model(this, t, x, dxdt, nrm, svars, dsdt)
 end subroutine
 
 ! ------------------------------------------------------------------------------
-subroutine mx_to_array(this, x, err)
+subroutine mx_to_array(this, x)
     !! Converts the parameters of the friction model into an array.
     class(maxwell_model), intent(in) :: this
         !! The maxwell_model object.
@@ -131,18 +130,12 @@ subroutine mx_to_array(this, x, err)
         !! 1. stiffness
         !!
         !! 2. friction_coefficient
-    class(errors), intent(inout), optional, target :: err
-        !! An optional errors-based object that if provided 
-        !! can be used to retrieve information relating to any errors 
-        !! encountered during execution. If not provided, a default 
-        !! implementation of the errors class is used internally to
-        !! provide error handling.
     x(1) = this%stiffness
     x(2) = this%friction_coefficient
 end subroutine
 
 ! ------------------------------------------------------------------------------
-subroutine mx_from_array(this, x, err)
+subroutine mx_from_array(this, x)
     !! Converts an array into the parameters for the friction model.
     class(maxwell_model), intent(inout) :: this
         !! The maxwell_model object.
@@ -154,12 +147,6 @@ subroutine mx_from_array(this, x, err)
         !! 1. stiffness
         !!
         !! 2. friction_coefficient
-    class(errors), intent(inout), optional, target :: err
-        !! An optional errors-based object that if provided 
-        !! can be used to retrieve information relating to any errors 
-        !! encountered during execution. If not provided, a default 
-        !! implementation of the errors class is used internally to
-        !! provide error handling.
     this%stiffness = x(1)
     this%friction_coefficient = x(2)
 end subroutine

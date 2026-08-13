@@ -1,7 +1,6 @@
 module friction_coulomb
     use iso_fortran_env
     use friction_core
-    use ferror
     implicit none
     private
     public :: coulomb_model
@@ -102,36 +101,24 @@ subroutine cf_state_model(this, t, x, dxdt, nrm, svars, dsdt)
 end subroutine
 
 ! ------------------------------------------------------------------------------
-subroutine cf_to_array(this, x, err)
+subroutine cf_to_array(this, x)
     !! Converts the parameters of the friction model into an array.
     class(coulomb_model), intent(in) :: this
         !! The coulomb_model object.
     real(real64), intent(out), dimension(:) :: x
         !! The array used to store the parameters.  See @ref
         !! parameter_count to determine the size of this array.
-    class(errors), intent(inout), optional, target :: err
-        !! An optional errors-based object that if provided 
-        !! can be used to retrieve information relating to any errors 
-        !! encountered during execution. If not provided, a default 
-        !! implementation of the errors class is used internally to
-        !! provide error handling.
     x(1) = this%friction_coefficient
 end subroutine
 
 ! ------------------------------------------------------------------------------
-subroutine cf_from_array(this, x, err)
+subroutine cf_from_array(this, x)
     !! Converts the parameters of the friction model into an array.
     class(coulomb_model), intent(inout) :: this
         !! The coulomb_model object.
     real(real64), intent(in), dimension(:) :: x
         !! The array used to store the parameters.  See
         !! parameter_count to determine the size of this array.
-    class(errors), intent(inout), optional, target :: err
-        !! An optional errors-based object that if provided 
-        !! can be used to retrieve information relating to any errors 
-        !! encountered during execution. If not provided, a default 
-        !! implementation of the errors class is used internally to
-        !! provide error handling.
     this%friction_coefficient = x(1)
 end subroutine
 

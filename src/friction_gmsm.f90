@@ -1,7 +1,6 @@
 module friction_gmsm
     use iso_fortran_env
     use friction_core
-    use ferror
     use friction_errors
     use :: ieee_arithmetic, only : ieee_value, IEEE_QUIET_NAN
     implicit none
@@ -180,7 +179,7 @@ subroutine gmsm_state_model(this, t, x, dxdt, nrm, svars, dsdt)
 end subroutine
 
 ! ------------------------------------------------------------------------------
-subroutine gmsm_to_array(this, x, err)
+subroutine gmsm_to_array(this, x)
     !! Converts the parameters of the friction model into an array.
     class(generalized_maxwell_slip_model), intent(in) :: this
         !! The generalized_maxwell_slip_model object.
@@ -208,12 +207,6 @@ subroutine gmsm_to_array(this, x, err)
         !!  9. element damping
         !!
         !!  10. element scaling ...
-    class(errors), intent(inout), optional, target :: err
-        !! An optional errors-based object that if provided 
-        !! can be used to retrieve information relating to any errors 
-        !! encountered during execution. If not provided, a default 
-        !! implementation of the errors class is used internally to
-        !! provide error handling.
 
     ! Process
     if (size(x) /= this%parameter_count()) return
@@ -228,7 +221,7 @@ subroutine gmsm_to_array(this, x, err)
 end subroutine
 
 ! ------------------------------------------------------------------------------
-subroutine gmsm_from_array(this, x, err)
+subroutine gmsm_from_array(this, x)
     !! Converts an array into the parameters for the friction model.
     class(generalized_maxwell_slip_model), intent(inout) :: this
         !! The generalized_maxwell_slip_model object.
@@ -256,12 +249,6 @@ subroutine gmsm_from_array(this, x, err)
         !!  9. element damping
         !!
         !!  10. element scaling ...
-    class(errors), intent(inout), optional, target :: err
-        !! An optional errors-based object that if provided 
-        !! can be used to retrieve information relating to any errors 
-        !! encountered during execution. If not provided, a default 
-        !! implementation of the errors class is used internally to
-        !! provide error handling.
 
     ! Process
     if (.not.allocated(this%m_params)) return
@@ -311,31 +298,18 @@ pure function gmsm_get_element_count(this) result(rst)
 end function
 
 ! ------------------------------------------------------------------------------
-subroutine gmsm_initialize(this, n, err)
+subroutine gmsm_initialize(this, n)
     !! Initializes the model.
     class(generalized_maxwell_slip_model), intent(inout) :: this
         !! The generalized_maxwell_slip_model object.
     integer(int32), intent(in) :: n
         !! The number of friction elements.  This value must be at
         !! least 1.
-    class(errors), intent(inout), optional, target :: err
-        !! An optional errors-based object that if provided 
-        !! can be used to retrieve information relating to any errors 
-        !! encountered during execution. If not provided, a default 
-        !! implementation of the errors class is used internally to
-        !! provide error handling.
 
     ! Local Variables
-    integer(int32) :: m, flag
-    class(errors), pointer :: errmgr
-    type(errors), target :: deferr
+    integer(int32) :: m
     
     ! Initialization
-    if (present(err)) then
-        errmgr => err
-    else
-        errmgr => deferr
-    end if
     m = n * PER_ELEMENT_COUNT
 
     ! Input Checking
@@ -345,24 +319,15 @@ subroutine gmsm_initialize(this, n, err)
 
     ! Process
     if (.not.allocated(this%m_params)) then
-        allocate(this%m_params(m), stat = flag, source = 0.0d0)
-        if (flag /= 0) go to 10
+        allocate(this%m_params(m), source = 0.0d0)
     end if
 
     if (size(this%m_params) /= m) then
         deallocate(this%m_params)
-        allocate(this%m_params(m), stat = flag, source = 0.0d0)
-        if (flag /= 0) go to 10
+        allocate(this%m_params(m), source = 0.0d0)
     end if
 
     this%m_nModels = n
-
-    ! End
-    return
-
-    ! Memory Error Handling
-10  continue
-    return
 end subroutine
 
 ! ------------------------------------------------------------------------------
