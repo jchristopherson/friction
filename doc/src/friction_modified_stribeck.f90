@@ -3,7 +3,6 @@ module friction_modified_stribeck
     use friction_core
     use friction_stribeck
     use friction_errors
-    use ferror
     implicit none
     private
     public :: modified_stribeck_model
@@ -91,7 +90,7 @@ function msf_eval(this, t, x, dxdt, nrm, svars) result(rst)
 end function
 
 ! ------------------------------------------------------------------------------
-subroutine msf_to_array(this, x, err)
+subroutine msf_to_array(this, x)
     !! Converts the parameters of the friction model into an array.
     class(modified_stribeck_model), intent(in) :: this
         !! The modified_stribeck_model object.
@@ -109,12 +108,7 @@ subroutine msf_to_array(this, x, err)
         !! 4. viscous_damping
         !!
         !! 5. stiffness
-    class(errors), intent(inout), optional, target :: err
-        !! An optional errors-based object that if provided 
-        !! can be used to retrieve information relating to any errors 
-        !! encountered during execution. If not provided, a default 
-        !! implementation of the errors class is used internally to
-        !! provide error handling.
+    if (size(x) /= this%parameter_count()) error stop FRICTION_ARRAY_SIZE_ERROR
     x(1) = this%static_friction_coefficient
     x(2) = this%coulomb_friction_coefficient
     x(3) = this%stribeck_velocity
@@ -123,7 +117,7 @@ subroutine msf_to_array(this, x, err)
 end subroutine
 
 ! ------------------------------------------------------------------------------
-subroutine msf_from_array(this, x, err)
+subroutine msf_from_array(this, x)
     !! Converts an array into the parameters for the friction model.
     class(modified_stribeck_model), intent(inout) :: this
         !! The modified_stribeck_model object.
@@ -141,12 +135,7 @@ subroutine msf_from_array(this, x, err)
         !! 4. viscous_damping
         !!
         !! 5. stiffness
-    class(errors), intent(inout), optional, target :: err
-        !! An optional errors-based object that if provided 
-        !! can be used to retrieve information relating to any errors 
-        !! encountered during execution. If not provided, a default 
-        !! implementation of the errors class is used internally to
-        !! provide error handling.
+    if (size(x) /= this%parameter_count()) error stop FRICTION_ARRAY_SIZE_ERROR
     this%static_friction_coefficient = x(1)
     this%coulomb_friction_coefficient = x(2)
     this%stribeck_velocity = x(3)
