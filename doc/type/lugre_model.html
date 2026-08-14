@@ -12,14 +12,29 @@
 
     <title>lugre_model &ndash; FRICTION </title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link href="../css/pygments.css" rel="stylesheet">
-    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
     <link href="../css/local.css" rel="stylesheet">
-      <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="../css/pygments.css" rel="stylesheet">
     <script src="../js/svg-pan-zoom.min.js"></script>
   </head>
 
@@ -72,9 +87,8 @@
         <ul class="list-inline" style="margin-bottom:0px;display:inline">
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
-              <a data-bs-toggle="tooltip"
-                 data-bs-placement="bottom" data-html="true"
-                 title="<p>15.2% of total for derived types.</p>Including implementation: 249 statements, 13.9% of total for derived types.">17 statements</a>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title="<p> 9.8% of total for derived types.</p>Including implementation: 209 statements, 11.7% of total for derived types.">17 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -95,9 +109,11 @@
     </div>
   </div>
   <script>
-    $(function () {
-    $('[data-bs-toggle="tooltip"]').tooltip()
-    })
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
   </script>
 
   </div>
@@ -114,13 +130,13 @@
       </a>
       <div id="vars-0" class="collapse">
         <div class="list-group list-group-flush">
-            <a class="list-group-item" href="../type/lugre_model.html#variable-coulomb_coefficient~2">coulomb_coefficient</a>
+            <a class="list-group-item" href="../type/lugre_model.html#variable-coulomb_coefficient">coulomb_coefficient</a>
             <a class="list-group-item" href="../type/lugre_model.html#variable-damping">damping</a>
-            <a class="list-group-item" href="../type/lugre_model.html#variable-shape_parameter~2">shape_parameter</a>
-            <a class="list-group-item" href="../type/lugre_model.html#variable-static_coefficient~2">static_coefficient</a>
-            <a class="list-group-item" href="../type/lugre_model.html#variable-stiffness~3">stiffness</a>
-            <a class="list-group-item" href="../type/lugre_model.html#variable-stribeck_velocity~3">stribeck_velocity</a>
-            <a class="list-group-item" href="../type/lugre_model.html#variable-viscous_damping~3">viscous_damping</a>
+            <a class="list-group-item" href="../type/lugre_model.html#variable-shape_parameter">shape_parameter</a>
+            <a class="list-group-item" href="../type/lugre_model.html#variable-static_coefficient">static_coefficient</a>
+            <a class="list-group-item" href="../type/lugre_model.html#variable-stiffness">stiffness</a>
+            <a class="list-group-item" href="../type/lugre_model.html#variable-stribeck_velocity">stribeck_velocity</a>
+            <a class="list-group-item" href="../type/lugre_model.html#variable-viscous_damping">viscous_damping</a>
         </div>
       </div>
     </div>
@@ -148,16 +164,16 @@
       <div id="boundprocs-0" class="collapse">
         <div class="list-group list-group-flush">
             <a class="list-group-item" href="../type/lugre_model.html#boundprocedure-constraint_equations">constraint_equations</a>
-            <a class="list-group-item" href="../type/lugre_model.html#boundprocedure-evaluate~5">evaluate</a>
-            <a class="list-group-item" href="../type/lugre_model.html#boundprocedure-fit">fit</a>
-            <a class="list-group-item" href="../type/lugre_model.html#boundprocedure-from_array~5">from_array</a>
+            <a class="list-group-item" href="../type/lugre_model.html#boundprocedure-evaluate">evaluate</a>
+            <a class="list-group-item" href="../type/lugre_model.html#boundprocedure-fit~3">fit</a>
+            <a class="list-group-item" href="../type/lugre_model.html#boundprocedure-from_array">from_array</a>
             <a class="list-group-item" href="../type/lugre_model.html#boundprocedure-get_constraint_equation_count~2">get_constraint_equation_count</a>
-            <a class="list-group-item" href="../type/lugre_model.html#boundprocedure-get_state_variable_count~4">get_state_variable_count</a>
-            <a class="list-group-item" href="../type/lugre_model.html#boundprocedure-has_internal_state~4">has_internal_state</a>
-            <a class="list-group-item" href="../type/lugre_model.html#boundprocedure-parameter_count~5">parameter_count</a>
+            <a class="list-group-item" href="../type/lugre_model.html#boundprocedure-get_state_variable_count">get_state_variable_count</a>
+            <a class="list-group-item" href="../type/lugre_model.html#boundprocedure-has_internal_state">has_internal_state</a>
+            <a class="list-group-item" href="../type/lugre_model.html#boundprocedure-parameter_count">parameter_count</a>
             <a class="list-group-item" href="../type/lugre_model.html#boundprocedure-reset~2">reset</a>
-            <a class="list-group-item" href="../type/lugre_model.html#boundprocedure-state~4">state</a>
-            <a class="list-group-item" href="../type/lugre_model.html#boundprocedure-to_array~5">to_array</a>
+            <a class="list-group-item" href="../type/lugre_model.html#boundprocedure-state">state</a>
+            <a class="list-group-item" href="../type/lugre_model.html#boundprocedure-to_array">to_array</a>
         </div>
       </div>
     </div>
@@ -171,7 +187,7 @@
     </div>
     
     <div class="col-md-9" id='text'>
-      <h2>
+      <h2 id="type-def-statement">
         type, public, extends(<a href='friction_model.html'>friction_model</a>) :: lugre_model</h2>
     <p>Defines the Lu-Gre friction model.</p>
 <p>The Lu-Gre model is a bristle-type model that attempts to describe 
@@ -228,7 +244,7 @@ Coulomb-like sliding behavior.</p>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" id="variable-coulomb_coefficient~2"></span>
+              <span class="anchor" id="variable-coulomb_coefficient"></span>
               real(kind=real64),
             </td>
               <td>public</td>
@@ -262,7 +278,7 @@ Coulomb-like sliding behavior.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-shape_parameter~2"></span>
+              <span class="anchor" id="variable-shape_parameter"></span>
               real(kind=real64),
             </td>
               <td>public</td>
@@ -279,7 +295,7 @@ Coulomb-like sliding behavior.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-static_coefficient~2"></span>
+              <span class="anchor" id="variable-static_coefficient"></span>
               real(kind=real64),
             </td>
               <td>public</td>
@@ -296,7 +312,7 @@ Coulomb-like sliding behavior.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-stiffness~3"></span>
+              <span class="anchor" id="variable-stiffness"></span>
               real(kind=real64),
             </td>
               <td>public</td>
@@ -313,7 +329,7 @@ Coulomb-like sliding behavior.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-stribeck_velocity~3"></span>
+              <span class="anchor" id="variable-stribeck_velocity"></span>
               real(kind=real64),
             </td>
               <td>public</td>
@@ -330,7 +346,7 @@ Coulomb-like sliding behavior.</p>
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-viscous_damping~3"></span>
+              <span class="anchor" id="variable-viscous_damping"></span>
               real(kind=real64),
             </td>
               <td>public</td>
@@ -365,9 +381,9 @@ Coulomb-like sliding behavior.</p>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
     private  subroutine fmdl_constraints(this, t, x, dxdt, nrm, f, rst)  
 </h3>
 
@@ -497,24 +513,24 @@ number of constraint equations for the model.</p>
   </table>
 
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-evaluate~5"></span>
+      <span class="anchor" id="boundprocedure-evaluate"></span>
       <h3>
           procedure, public ::
   <strong>evaluate</strong> => lg_eval
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
     private  function lg_eval(this, t, x, dxdt, nrm, svars) result(rst)  
 </h3>
 
@@ -634,25 +650,25 @@ variables the model may rely upon.</p>
     </h4>
     <p>The friction force.</p>
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-fit"></span>
+      <span class="anchor" id="boundprocedure-fit~3"></span>
       <h3>
           procedure, public ::
   <strong>fit</strong> => fmdl_fit
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-                  <h3>
-    private  subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, alpha, integrator, controls, settings, info, stats, fmod, resid, err)  
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    private  subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, alpha, integrator, controls, settings, info, stats, fmod, resid)  
 </h3>
 
   <p>Attempts to fit a friction model to the supplied data using a 
@@ -945,48 +961,29 @@ results.</p>
                 <p>An optional N-element array containing the fitted residuals.</p>
             </td>
         </tr>
-        <tr>
-            <td>
-              <span class="anchor" ></span>
-              class(errors),
-            </td>
-<td>intent(inout),</td>
-              <td>optional,</td>            <td>
-              target
-            </td>
-            <td>::</td>
-            <td><strong>err</strong></td>
-            <td>
-                <p>An optional errors-based object that if provided 
-can be used to retrieve information relating to any errors 
-encountered during execution. If not provided, a default 
-implementation of the errors class is used internally to
-provide error handling.</p>
-            </td>
-        </tr>
     </tbody>
   </table>
 
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-from_array~5"></span>
+      <span class="anchor" id="boundprocedure-from_array"></span>
       <h3>
           procedure, public ::
   <strong>from_array</strong> => lg_from_array
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-                  <h3>
-    private  subroutine lg_from_array(this, x, err)  
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    private  subroutine lg_from_array(this, x)  
 </h3>
 
   <p>Converts an array into the parameters for the friction model.</p>
@@ -1057,31 +1054,12 @@ determine the size of this array.  The parameter order is as
 </ol>
             </td>
         </tr>
-        <tr>
-            <td>
-              <span class="anchor" ></span>
-              class(errors),
-            </td>
-<td>intent(inout),</td>
-              <td>optional,</td>            <td>
-              target
-            </td>
-            <td>::</td>
-            <td><strong>err</strong></td>
-            <td>
-                <p>An optional errors-based object that if provided 
-can be used to retrieve information relating to any errors 
-encountered during execution. If not provided, a default 
-implementation of the errors class is used internally to
-provide error handling.</p>
-            </td>
-        </tr>
     </tbody>
   </table>
 
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -1095,9 +1073,9 @@ provide error handling.</p>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
     private pure function fmdl_get_constraint_count(this) result(rst)  
 </h3>
 
@@ -1139,24 +1117,24 @@ be satisfied when fitting to data.</p>
     </h4>
     <p>The number of constraint equations.</p>
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-get_state_variable_count~4"></span>
+      <span class="anchor" id="boundprocedure-get_state_variable_count"></span>
       <h3>
           procedure, public ::
   <strong>get_state_variable_count</strong> => lg_get_state_var_count
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
     private pure function lg_get_state_var_count(this) result(rst)  
 </h3>
 
@@ -1197,24 +1175,24 @@ be satisfied when fitting to data.</p>
     </h4>
     <p>The internal state variable count.</p>
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-has_internal_state~4"></span>
+      <span class="anchor" id="boundprocedure-has_internal_state"></span>
       <h3>
           procedure, public ::
   <strong>has_internal_state</strong> => lg_has_state_vars
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
     private pure function lg_has_state_vars(this) result(rst)  
 </h3>
 
@@ -1257,24 +1235,24 @@ state variables.</p>
     <p>Returns true if the model utilizes internal state variables;
 else, returns false.</p>
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-parameter_count~5"></span>
+      <span class="anchor" id="boundprocedure-parameter_count"></span>
       <h3>
           procedure, public ::
   <strong>parameter_count</strong> => lg_parameter_count
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
     private pure function lg_parameter_count(this) result(rst)  
 </h3>
 
@@ -1315,8 +1293,8 @@ else, returns false.</p>
     </h4>
     <p>The number of model parameters.</p>
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -1330,9 +1308,9 @@ else, returns false.</p>
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
     private  subroutine fmdl_reset(this)  
 </h3>
 
@@ -1368,24 +1346,24 @@ else, returns false.</p>
   </table>
 
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-state~4"></span>
+      <span class="anchor" id="boundprocedure-state"></span>
       <h3>
           procedure, public ::
   <strong>state</strong> => lg_state_model
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-                  <h3>
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
     private  subroutine lg_state_model(this, t, x, dxdt, nrm, svars, dsdt)  
 </h3>
 
@@ -1516,25 +1494,25 @@ derivatives are to be written.</p>
   </table>
 
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
           <div class="row">
               <div class="card mt-3">
     <div class="card-header codesum">
-      <span class="anchor" id="boundprocedure-to_array~5"></span>
+      <span class="anchor" id="boundprocedure-to_array"></span>
       <h3>
           procedure, public ::
   <strong>to_array</strong> => lg_to_array
         
       </h3>
     </div>
-    <ul class="list-group">
-        <li class="list-group-item">
-                  <h3>
-    private  subroutine lg_to_array(this, x, err)  
+      <ul class="list-group">
+          <li class="list-group-item">
+                    <h3>
+    private  subroutine lg_to_array(this, x)  
 </h3>
 
   <p>Converts the parameters of the friction model into an array.</p>
@@ -1605,31 +1583,12 @@ parameter order is as follows:</p>
 </ol>
             </td>
         </tr>
-        <tr>
-            <td>
-              <span class="anchor" ></span>
-              class(errors),
-            </td>
-<td>intent(inout),</td>
-              <td>optional,</td>            <td>
-              target
-            </td>
-            <td>::</td>
-            <td><strong>err</strong></td>
-            <td>
-                <p>An optional errors-based object that if provided 
-can be used to retrieve information relating to any errors 
-encountered during execution. If not provided, a default 
-implementation of the errors class is used internally to
-provide error handling.</p>
-            </td>
-        </tr>
     </tbody>
   </table>
 
 
-        </li>
-    </ul>
+          </li>
+      </ul>
   </div>
 
           </div>
@@ -1644,40 +1603,21 @@ provide error handling.</p>
     <footer>
       <div class="container">
         <div class="row justify-content-between">
-          <div class="col"><p>FRICTION was developed by Jason Christopherson<br>&copy; 2024 
+          <div class="col">
+            <p>
+              FRICTION
+ was developed by Jason Christopherson<br>              &copy; 2026 
 </p>
           </div>
           <div class="col">
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2024-09-18 15:33              </p>
+ on 2026-08-13 15:24 -0500             </p>
           </div>
         </div>
         <br>
       </div> <!-- /container -->
     </footer>
-
-    <!-- Bootstrap core JavaScript -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
-
-    <!-- MathJax JavaScript
-             ================================================== -->
-             <!-- Placed at the end of the document so the pages load faster -->
-        <script type="text/x-mathjax-config">
-          MathJax.Hub.Config({
-          TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
-          jax: ['input/TeX','input/MathML','output/HTML-CSS'],
-          extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
-          });
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-          <script src="../tipuesearch/tipuesearch_content.js"></script>
-          <script src="../tipuesearch/tipuesearch_set.js"></script>
-          <script src="../tipuesearch/tipuesearch.js"></script>
-
   </body>
 </html>

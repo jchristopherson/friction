@@ -3,7 +3,6 @@ project: FRICTION
 summary: A library containing routines for calculating the frictional response of contacting bodies.
 project_github: https://github.com/jchristopherson/friction
 author: Jason Christopherson
-author_email: jchristopherson@hotmail.com
 src_dir: ./src
 output_dir: ./doc
 display: public

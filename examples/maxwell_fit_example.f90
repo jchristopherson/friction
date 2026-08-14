@@ -17,7 +17,7 @@ program example
     type(plot_2d) :: plt
     class(plot_axis), pointer :: xAxis, yAxis
     class(legend), pointer :: lgnd
-    type(plot_data_2d) :: pd1
+    type(plot_data_2d) :: pd1, pd2
 
     ! Read the data file
     call file%read("examples\data\friction_data_1.csv", header_row = 1, status_ok = ok)
@@ -73,9 +73,9 @@ program example
     call pd1%set_name("Raw Data")
     call plt%push(pd1)
 
-    call pd1%define_data(t, fmod)
-    call pd1%set_name("Model")
-    call plt%push(pd1)
+    call pd2%define_data(t, fmod)
+    call pd2%set_name("Model")
+    call plt%push(pd2)
 
     call plt%draw()
 

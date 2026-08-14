@@ -1,5 +1,5 @@
 name = "friction"
-version = "1.1.3"
+version = "1.2.0"
 license = "GPL-3.0"
 author = "Jason Christopherson"
 maintainer = "Jason Christopherson"
@@ -11,9 +11,10 @@ homepage = "https://github.com/jchristopherson/friction"
 source-dir = "src"
 
 [dependencies]
-ferror = { git = "https://github.com/jchristopherson/ferror" }
 diffeq = { git = "https://github.com/jchristopherson/diffeq" }
 fstats = { git = "https://github.com/jchristopherson/fstats" }
+collections = { git = "https://github.com/jchristopherson/collections" }
+linalg = { git = "https://github.com/jchristopherson/linalg" }
 
 [dev-dependencies]
 fortran_test_helper = { git = "https://github.com/jchristopherson/fortran_test_helper" }

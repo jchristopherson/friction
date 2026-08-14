@@ -1,6 +1,5 @@
 module friction_core
     use iso_fortran_env
-    use ferror
     use fstats
     use fitpack
     use diffeq
@@ -96,40 +95,26 @@ module friction_core
                 !! derivatives are to be written.
         end subroutine
 
-        subroutine friction_model_to_array(this, x, err)
+        subroutine friction_model_to_array(this, x)
             !! Converts the parameters of the friction model into an array.
             use iso_fortran_env, only : real64
-            use ferror
             import friction_model
             class(friction_model), intent(in) :: this
                 !! The friction_model object.
             real(real64), intent(out), dimension(:) :: x
                 !! The array used to store the parameters.  See @ref
                 !! parameter_count to determine the size of this array.
-            class(errors), intent(inout), optional, target :: err
-                !! An optional errors-based object that if provided 
-                !! can be used to retrieve information relating to any errors 
-                !! encountered during execution. If not provided, a default 
-                !! implementation of the errors class is used internally to
-                !! provide error handling.
         end subroutine
 
-        subroutine friction_model_from_array(this, x, err)
+        subroutine friction_model_from_array(this, x)
             !!  Converts an array into the parameters for the friction model.
             use iso_fortran_env, only : real64
-            use ferror
             import friction_model
             class(friction_model), intent(inout) :: this
                 !! The friction_model object.
             real(real64), intent(in), dimension(:) :: x
                 !! The array of parameters.  See parameter_count to 
                 !! determine the size of this array.
-            class(errors), intent(inout), optional, target :: err
-                !! An optional errors-based object that if provided 
-                !! can be used to retrieve information relating to any errors 
-                !! encountered during execution. If not provided, a default 
-                !! implementation of the errors class is used internally to
-                !! provide error handling.
         end subroutine
 
         pure function friction_integer_query(this) result(rst)
@@ -307,7 +292,7 @@ end subroutine
 
 ! ------------------------------------------------------------------------------
 subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
-    alpha, integrator, controls, settings, info, stats, fmod, resid, err)
+    alpha, integrator, controls, settings, info, stats, fmod, resid)
     !! Attempts to fit a friction model to the supplied data using a 
     !! Levenberg-Marquardt solver.
     class(friction_model), intent(inout), target :: this
@@ -365,17 +350,9 @@ subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
         !! results.
     real(real64), intent(out), optional, target, dimension(:) :: resid
         !! An optional N-element array containing the fitted residuals.
-    class(errors), intent(inout), optional, target :: err
-        !! An optional errors-based object that if provided 
-        !! can be used to retrieve information relating to any errors 
-        !! encountered during execution. If not provided, a default 
-        !! implementation of the errors class is used internally to
-        !! provide error handling.
 
     ! Local Variables
-    class(errors), pointer :: errmgr
-    type(errors), target :: deferr
-    integer(int32) :: i, npts, nparams, flag, np
+    integer(int32) :: i, npts, nparams, np, flag
     real(real64), allocatable, target, dimension(:) :: params, initstate, &
         tc, fc, fmc, rc
     real(real64), allocatable, dimension(:,:) :: dzdt
@@ -388,11 +365,6 @@ subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
     type(fit_data) :: args
     
     ! Initialization
-    if (present(err)) then
-        errmgr => err
-    else
-        errmgr => deferr
-    end if
     npts = size(t)
     nparams = this%parameter_count()
     np = npts + this%get_constraint_equation_count()
@@ -403,38 +375,34 @@ subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
     end if
 
     ! Input Checking
-    if (size(x) /= npts) go to 10
-    if (size(v) /= npts) go to 11
-    if (size(f) /= npts) go to 12
-    if (size(n) /= npts) go to 13
+    if (size(x) /= npts) error stop FRICTION_ARRAY_SIZE_ERROR
+    if (size(v) /= npts) error stop FRICTION_ARRAY_SIZE_ERROR
+    if (size(f) /= npts) error stop FRICTION_ARRAY_SIZE_ERROR
+    if (size(n) /= npts) error stop FRICTION_ARRAY_SIZE_ERROR
 
     ! Memory Allocations
-    allocate(params(nparams), stat = flag)
-    if (flag /= 0) go to 30
+    allocate(params(nparams))
     call this%to_array(params)
 
     if (present(fmod)) then
-        if (size(fmod) /= npts) go to 14
+        if (size(fmod) /= npts) error stop FRICTION_ARRAY_SIZE_ERROR
         fmodptr(1:npts) => fmod(1:npts)
     else
-        allocate(fmoddef(np), stat = flag, source = 0.0d0)
-        if (flag /= 0) go to 30
+        allocate(fmoddef(np), source = 0.0d0)
         fmodptr(1:np) => fmoddef(1:np)
     end if
 
     if (present(resid)) then
-        if (size(resid) /= npts) go to 15
+        if (size(resid) /= npts) error stop FRICTION_ARRAY_SIZE_ERROR
         residptr(1:npts) => resid(1:npts)
     else
-        allocate(residdef(np), stat = flag, source = 0.0d0)
-        if (flag /= 0) go to 30
+        allocate(residdef(np), source = 0.0d0)
         residptr(1:np) => residdef(1:np)
     end if
 
     ! Are we using any additional constraints?
     if (this%get_constraint_equation_count() > 0) then
-        allocate(tc(np), fc(np), stat = flag, source = 0.0d0)
-        if (flag /= 0) go to 30
+        allocate(tc(np), fc(np), source = 0.0d0)
         tptr(1:np) => tc(1:np)
         fptr(1:np) => fc(1:np)
         do i = 1, npts
@@ -443,14 +411,12 @@ subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
         end do
 
         if (present(fmod)) then
-            allocate(fmc(np), stat = flag, source = 0.0d0)
-            if (flag /= 0) go to 30
+            allocate(fmc(np), source = 0.0d0)
             fmodptr(1:np) => fmc(1:np)
         end if
 
         if (present(resid)) then
-            allocate(rc(np), stat = flag, source = 0.0d0)
-            if (flag /= 0) go to 30
+            allocate(rc(np), source = 0.0d0)
             residptr(1:np) => rc(1:np)
         end if
     else
@@ -472,17 +438,15 @@ subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
 
         ! Define the interpolation objects & generate the fit
         flag = xinterp%new_fit(t, x)
-        if (flag > 0) go to 40
+        if (flag > 0) error stop FRICTION_INVALID_OPERATION_ERROR
         flag = vinterp%new_fit(t, v)
-        if (flag > 0) go to 40
+        if (flag > 0) error stop FRICTION_INVALID_OPERATION_ERROR
         flag = ninterp%new_fit(t, n)
-        if (flag > 0) go to 40
+        if (flag > 0) error stop FRICTION_INVALID_OPERATION_ERROR
 
         ! Set up the integrator
         mdl%fcn => internal_state_odes
-        allocate(initstate(this%get_state_variable_count()), source = 0.0d0, &
-            stat = flag)
-        if (flag /= 0) go to 30
+        allocate(initstate(this%get_state_variable_count()), source = 0.0d0)
 
         ! Assign pointers
         args%mdl => mdl
@@ -497,8 +461,7 @@ subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
     call nonlinear_least_squares(fcn, tptr, fptr, params, fmodptr, residptr, &
         weights = weights, maxp = maxp, minp = minp, alpha = alpha, &
         controls = controls, settings = settings, info = info, stats = stats, &
-        args = args, err = errmgr)
-    if (errmgr%has_error_occurred()) return
+        args = args)
     call this%from_array(params)
 
     ! Handle outputs, if constraints are employed
@@ -506,105 +469,6 @@ subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
         if (present(fmod)) fmod = fmodptr(1:npts)
         if (present(resid)) resid = residptr(1:npts)
     end if
-
-    ! End
-    return
-
-    ! X Array Size Error
-10  continue
-    call write_array_size_error("fmdl_fit", "x", npts, size(x), errmgr)
-    return
-
-    ! V Array Size Error
-11  continue
-    call write_array_size_error("fmdl_fit", "v", npts, size(x), errmgr)
-    return
-
-    ! F Array Size Error
-12  continue
-    call write_array_size_error("fmdl_fit", "f", npts, size(x), errmgr)
-    return
-
-    ! N Array Size Error
-13  continue
-    call write_array_size_error("fmdl_fit", "n", npts, size(x), errmgr)
-    return
-
-    ! FMod Array Size Error
-14  continue
-    call write_array_size_error("fmdl_fit", "fmod", npts, size(x), errmgr)
-    return
-
-    ! Resid Array Size Error
-15  continue
-    call write_array_size_error("fmdl_fit", "resid", npts, size(x), errmgr)
-    return
-
-    ! Memory Error
-30  continue
-    call write_memory_error("fmdl_fit", flag, errmgr)
-    return
-
-    ! Interpolation Error
-40  continue
-    call write_interpolation_error("fmdl_fit", flag, errmgr)
-    return
-
-end subroutine
-
-! ------------------------------------------------------------------------------
-subroutine write_array_size_error(fcn, arrayname, nexpect, nactual, err)
-    ! Arguments
-    character(len = *), intent(in) :: fcn, arrayname
-    integer(int32), intent(in) :: nexpect, nactual
-    class(errors), intent(inout) :: err
-
-    ! Local Variables
-    character(len = 256) :: errmsg
-
-    ! Process
-    write(errmsg, 100) "Expected " // arrayname // " to be ", nexpect, &
-        " in size, but found it to be ", nactual, " in size."
-    call err%report_error(fcn, trim(errmsg), FRICTION_ARRAY_SIZE_ERROR)
-
-    ! Formatting
-100 format(A, I0, A, I0, A)
-end subroutine
-
-! ------------------------------------------------------------------------------
-subroutine write_memory_error(fcn, flag, err)
-    ! Arguments
-    character(len = *), intent(in) :: fcn
-    integer(int32), intent(in) :: flag
-    class(errors), intent(inout) :: err
-
-    ! Local Variables
-    character(len = 256) :: errmsg
-
-    ! Process
-    write(errmsg, 100) "Memory allocation error flag ", flag, " encountered."
-    call err%report_error(fcn, trim(errmsg), FRICTION_MEMORY_ERROR)
-
-    ! Formatting
-100 format(A, I0, A)
-end subroutine
-
-! ------------------------------------------------------------------------------
-subroutine write_interpolation_error(fcn, flag, err)
-    ! Arguments
-    character(len = *), intent(in) :: fcn
-    integer(int32), intent(in) :: flag
-    class(errors), intent(inout) :: err
-
-    ! Local Variables
-    character(len = 256) :: errmsg
-
-    ! Process
-    write(errmsg, 100) "Interpolation error flag ", flag, " encountered."
-    call err%report_error(fcn, trim(errmsg), FRICTION_INVALID_OPERATION_ERROR)
-
-    ! Formatting
-100 format(A, I0, A)
 end subroutine
 
 ! ------------------------------------------------------------------------------
