@@ -1,119 +1,125 @@
+<!-- -*- mode: jinja2 -*- -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-   <meta name="description" content="A library containing routines for calculating the frictional response of contacting bodies.">
+      <meta name="description" content="A library containing routines for calculating the frictional response of contacting bodies.">
     <meta name="author" content="Jason Christopherson" >
     <link rel="icon" href="../favicon.png">
 
     <title>fitpack &ndash; FRICTION</title>
 
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../css/pygments.css" rel="stylesheet">
-    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="../css/fontawesome.min.css" rel="stylesheet">
+    <link href="../css/brands.min.css" rel="stylesheet">
+    <link href="../css/regular.min.css" rel="stylesheet">
+    <link href="../css/solid.min.css" rel="stylesheet">
+    <link href="../css/v4-font-face.min.css" rel="stylesheet">
+    <link href="../css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
     <link href="../css/local.css" rel="stylesheet">
-    <link  href="../tipuesearch/tipuesearch.css" rel="stylesheet">
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    
-    <script src="../js/jquery-2.1.3.min.js"></script>
+    <link href="../css/pygments.css" rel="stylesheet">
     <script src="../js/svg-pan-zoom.min.js"></script>
-
   </head>
 
   <body>
 
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
+    <div class="container-fluid mb-sm-4 mb-xl-2">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
           <a class="navbar-brand" href="../index.html">FRICTION </a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="dropdown hidden-xs visible-sm visible-md hidden-lg">
-              <a href="#" class="dropdown-toggle"
-              data-toggle="dropdown" role="button"
-              aria-haspopup="true"
-     aria-expanded="false">Contents <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-            <li><a href="../lists/files.html">Source Files</a></li>
-            <li><a href="../lists/modules.html">Modules</a></li>
-            <li><a href="../lists/procedures.html">Procedures</a></li>
-                   <li><a href="../lists/types.html">Derived Types</a></li>
-       
+          <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar"
+                  aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon">
+          </button>
+
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="navbar-nav">
+                  <li class="nav-item">
+                    <a class="nav-link" href="../lists/files.html">Source Files</a>
+                  </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/modules.html">Modules</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/procedures.html">Procedures</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="../lists/types.html">Derived Types</a>
+                </li>
             </ul>
-        
-            </li>
-<li class="visible-xs hidden-sm visible-lg"><a href="../lists/files.html">Source Files</a></li>
-<li class="visible-xs hidden-sm visible-lg"><a href="../lists/modules.html">Modules</a></li>
-<li class="visible-xs hidden-sm visible-lg"><a href="../lists/procedures.html">Procedures</a></li>
-                             <li class="visible-xs hidden-sm visible-lg"><a href="../lists/types.html">Derived Types</a></li>
-          </ul>
-        <form action="../search.html" class="navbar-form navbar-right" role="search">
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+              <div class="d-flex align-items-end flex-grow-1">
+                <form action="../search.html" role="search" class="ms-auto">
+                  <input type="text" class="form-control" aria-label="Search" placeholder="Search" name="q" id="tipue_search_input" autocomplete="off" required>
+                </form>
+              </div>
+          </div><!--/.nav-collapse -->
         </div>
-<!--
-        <button type="submit" class="btn btn-default">Submit</button>
--->
-        </form>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+      </nav>
+    </div>
 
     <div class="container">
   <div class="row">
-    <h1>fitpack 
-    <small>Module</small>
-    
+    <h1>fitpack
+      <small>Module</small>
+      
     </h1>
-      <div class="row" id="info-bar">
-    <div class="col-lg-12">
-      <div class="well well-sm">
+      <div class="container p-2 mb-4 bg-light border rounded-3">
+    <div class="row align-items-center justify-content-between" id="info-bar">
+      <div class="col">
         <ul class="list-inline" style="margin-bottom:0px;display:inline">
 
-          <li id="statements"><i class="fa fa-list-ol"></i>
-            <a data-toggle="tooltip"
-               data-placement="bottom" data-html="true"
-               title=" 3.9% of total for modules and submodules.">429 statements</a>
-          </li>
+            <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
+              <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
+                 title=" 4.0% of total for modules and submodules.">429 statements</a>
+            </li>
 
-            <li id="source-file">
+            <li class="list-inline-item" id="source-file">
               <i class="fa fa-code"></i>
               <a href="../src/fitpack.f90"> Source File</a>
             </li>
         </ul>
-        <ol class="breadcrumb in-well text-right">
-              <li><a href='../sourcefile/fitpack.f90.html'>fitpack.f90</a></li>
-          <li class="active">fitpack</li>
-        </ol>
+      </div>
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb justify-content-end mb-0">
+                <li class="breadcrumb-item"><a href='..\sourcefile\fitpack.f90.html'>fitpack.f90</a></li>
+            <li class="breadcrumb-item active" aria-current="page">fitpack</li>
+          </ol>
+        </nav>
       </div>
     </div>
   </div>
   <script>
-    $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-    })
+    // Enable Bootstrap tooltips
+    (function () {
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })();
   </script>
 
   </div>
-  
+
   <div class="row">
-    <div class="col-md-3 hidden-xs hidden-sm visible-md visible-lg">
-      <div id="sidebar">
+    <div class="col-md-3">
+        <div id="sidebar">
       <h3>Contents</h3>
   
   
@@ -123,14 +129,13 @@
   
   
   
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#inters-0">Interfaces</a>
-        </h3>
-      </div>
-      <div id="inters-0" class="panel-collapse collapse">
-        <div class="list-group">
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#inters-0"
+         aria-expanded="false" aria-controls="inters-0">
+         <h4 class="card-header bg-primary text-white">Interfaces</h4>
+      </a>
+      <div id="inters-0" class="collapse">
+        <div class="list-group list-group-flush">
             <a class="list-group-item" href="../module/fitpack.html#interface-fitpack_curve">fitpack_curve</a>
             <a class="list-group-item" href="../module/fitpack.html#interface-fitpack_surface">fitpack_surface</a>
         </div>
@@ -138,20 +143,20 @@
     </div>
 
   
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#types-0">Derived Types</a>
-        </h3>
-      </div>
-      <div id="types-0" class="panel-collapse collapse">
-        <div class="list-group">
+      <div class="card mb-4">
+      <a data-bs-toggle="collapse" href="#types-0"
+         aria-expanded="false" aria-controls="types-0">
+         <h4 class="card-header bg-primary text-white">Derived Types</h4>
+      </a>
+      <div id="types-0" class="collapse">
+        <div class="list-group list-group-flush">
             <a class="list-group-item" href="../module/fitpack.html#type-fitpack_curve">fitpack_curve</a>
             <a class="list-group-item" href="../module/fitpack.html#type-fitpack_surface">fitpack_surface</a>
         </div>
       </div>
     </div>
 
+  
   
   
   
@@ -165,86 +170,34 @@
   </div>
 
     </div>
-    
+
     <div class="col-md-9" id='text'>
-    
-<br>        <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">Uses</h3>
-      </div>
-      <ul class="list-group">
-          <li class="list-group-item">
-            <ul class="list-inline">
-                <li><a href='../module/fitpack_core.html'>fitpack_core</a></li>
-            </ul>
-          </li>
-      </ul>
-    </div>
-
-    
-    <br>
-
-    <section class="visible-xs visible-sm hidden-md">
-        <h3>Contents</h3>
-  
-  
-  
-  
-  
-  
-  
-  
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#inters-1">Interfaces</a>
-        </h3>
-      </div>
-      <div id="inters-1" class="panel-collapse collapse">
-        <div class="list-group">
-            <a class="list-group-item" href="../module/fitpack.html#interface-fitpack_curve">fitpack_curve</a>
-            <a class="list-group-item" href="../module/fitpack.html#interface-fitpack_surface">fitpack_surface</a>
-        </div>
+      
+<br>          <div class="card mb-4">
+      <h3 class="card-header card-title bg-light">Uses</h3>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <ul class="list-inline">
+                  <li class="list-inline-item"><a href='fitpack_core.html'>fitpack_core</a></li>
+              </ul>
+            </li>
+        </ul>
       </div>
     </div>
 
-  
-      <div class="panel panel-primary">
-      <div class="panel-heading text-left">
-        <h3 class="panel-title">
-          <a data-toggle="collapse" href="#types-1">Derived Types</a>
-        </h3>
-      </div>
-      <div id="types-1" class="panel-collapse collapse">
-        <div class="list-group">
-            <a class="list-group-item" href="../module/fitpack.html#type-fitpack_curve">fitpack_curve</a>
-            <a class="list-group-item" href="../module/fitpack.html#type-fitpack_surface">fitpack_surface</a>
-        </div>
-      </div>
-    </div>
-
-  
-  
-  
-  
-  
-  
-  
-  
+      
+      <br>
 
 
-    </section>
-    <br class="visible-xs visible-sm hidden-md">
 
 
-    
-    
-    <section>
-   <h2>Interfaces</h2>
-       <div class="panel panel-default">
-    <div class="panel-heading codesum">
+        <section>
+          <h2>Interfaces</h2>
+              <div class="card">
+    <div class="card-header bg-light codesum">
       <span class="anchor" id="interface-fitpack_curve"></span>
-      <h3>public        interface <a href='../interface/fitpack_curve.html'>fitpack_curve</a> 
+      <h3>public        interface <a href='..\interface\fitpack_curve.html'>fitpack_curve</a> 
       </h3>
     </div>
     <ul class="list-group">
@@ -259,16 +212,16 @@
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-x~11"></span>
               real(kind=RKIND),
             </td>
 <td>intent(in)</td>
@@ -283,7 +236,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-y~3"></span>
               real(kind=RKIND),
             </td>
 <td>intent(in)</td>
@@ -298,7 +251,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-w~3"></span>
               real(kind=RKIND),
             </td>
 <td>intent(in),</td>
@@ -313,7 +266,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ierr"></span>
               integer,
             </td>
 <td>intent(out),</td>
@@ -331,7 +284,7 @@
 
     <h4>
     Return Value
-    <small>type(<a href='../type/fitpack_curve.html'>fitpack_curve</a>)</small>
+    <small>type(<a href='..\type\fitpack_curve.html'>fitpack_curve</a>)</small>
     </h4>
     
 
@@ -339,10 +292,10 @@
     </ul>
   </div>
 
-       <div class="panel panel-default">
-    <div class="panel-heading codesum">
+              <div class="card">
+    <div class="card-header bg-light codesum">
       <span class="anchor" id="interface-fitpack_surface"></span>
-      <h3>public        interface <a href='../interface/fitpack_surface.html'>fitpack_surface</a> 
+      <h3>public        interface <a href='..\interface\fitpack_surface.html'>fitpack_surface</a> 
       </h3>
     </div>
     <ul class="list-group">
@@ -357,16 +310,16 @@
       <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Intent</th><th>Optional</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Intent</th><th scope="col">Optional</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-x~19"></span>
               real(kind=RKIND),
             </td>
 <td>intent(in)</td>
@@ -381,7 +334,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-y~9"></span>
               real(kind=RKIND),
             </td>
 <td>intent(in)</td>
@@ -396,7 +349,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-z~3"></span>
               real(kind=RKIND),
             </td>
 <td>intent(in)</td>
@@ -411,7 +364,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-w~7"></span>
               real(kind=RKIND),
             </td>
 <td>intent(in),</td>
@@ -426,7 +379,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" ></span>
+              <span class="anchor" id="variable-ierr~12"></span>
               integer,
             </td>
 <td>intent(out),</td>
@@ -444,7 +397,7 @@
 
     <h4>
     Return Value
-    <small>type(<a href='../type/fitpack_surface.html'>fitpack_surface</a>)</small>
+    <small>type(<a href='..\type\fitpack_surface.html'>fitpack_surface</a>)</small>
     </h4>
     
 
@@ -452,484 +405,33 @@
     </ul>
   </div>
 
-    </section>
-  <br>
+        </section>
+        <br>
 
-    
-    <section>
-     <h2>Derived Types</h2>
-       <div class="panel panel-default">
-    <div class="panel-heading codesum">
+
+        <section>
+          <h2>Derived Types</h2>
+              <div class="card">
+    <div class="card-header codesum">
       <span class="anchor" id="type-fitpack_curve"></span>
       <h3>
         type, public&nbsp;::&nbsp;
-        <a href='../type/fitpack_curve.html'>fitpack_curve</a>
+        <a href='..\type\fitpack_curve.html'>fitpack_curve</a>
         
       </h3>
     </div>
-    <div class="panel-body">
+    <div class="card-body">
       <p>A public type describing a curve fitter y = c(x)</p>
 
         <h4>Components</h4>
           <table class="table table-striped varlist">
     <thead>
       <tr>
-        <th>Type</th>
-<th>Visibility</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-<th></th><th>Initial</th>        <th></th>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-bc"></span>
-              integer,
-            </td>
-              <td>public</td>
-            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>bc</strong></td>
-<td> =</td>
-                <td>OUTSIDE_NEAREST_BND</td>
-            <td>
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-c"></span>
-              real(kind=RKIND),
-            </td>
-              <td>public,</td>
-            <td>
-              allocatable
-            </td>
-            <td>::</td>
-            <td><strong>c</strong>(:)</td>
-                <td></td>
-                <td></td>
-            <td>
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-fp"></span>
-              real(kind=RKIND),
-            </td>
-              <td>public</td>
-            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>fp</strong></td>
-<td> =</td>
-                <td>zero</td>
-            <td>
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-iopt"></span>
-              integer,
-            </td>
-              <td>public</td>
-            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>iopt</strong></td>
-<td> =</td>
-                <td>0</td>
-            <td>
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-iwrk"></span>
-              integer,
-            </td>
-              <td>public,</td>
-            <td>
-              allocatable
-            </td>
-            <td>::</td>
-            <td><strong>iwrk</strong>(:)</td>
-                <td></td>
-                <td></td>
-            <td>
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-knots"></span>
-              integer,
-            </td>
-              <td>public</td>
-            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>knots</strong></td>
-<td> =</td>
-                <td>0</td>
-            <td>
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-lwrk"></span>
-              integer,
-            </td>
-              <td>public</td>
-            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>lwrk</strong></td>
-<td> =</td>
-                <td>0</td>
-            <td>
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-m~2"></span>
-              integer,
-            </td>
-              <td>public</td>
-            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>m</strong></td>
-<td> =</td>
-                <td>0</td>
-            <td>
-<p>The data points</p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-nest"></span>
-              integer,
-            </td>
-              <td>public</td>
-            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>nest</strong></td>
-<td> =</td>
-                <td>0</td>
-            <td>
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-order~2"></span>
-              integer,
-            </td>
-              <td>public</td>
-            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>order</strong></td>
-<td> =</td>
-                <td>3</td>
-            <td>
-<p>Spline degree</p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-smoothing"></span>
-              real(kind=RKIND),
-            </td>
-              <td>public</td>
-            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>smoothing</strong></td>
-<td> =</td>
-                <td>1000.0_RKIND</td>
-            <td>
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-sp"></span>
-              real(kind=RKIND),
-            </td>
-              <td>public,</td>
-            <td>
-              allocatable
-            </td>
-            <td>::</td>
-            <td><strong>sp</strong>(:)</td>
-                <td></td>
-                <td></td>
-            <td>
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-t~18"></span>
-              real(kind=RKIND),
-            </td>
-              <td>public,</td>
-            <td>
-              allocatable
-            </td>
-            <td>::</td>
-            <td><strong>t</strong>(:)</td>
-                <td></td>
-                <td></td>
-            <td>
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-w"></span>
-              real(kind=RKIND),
-            </td>
-              <td>public,</td>
-            <td>
-              allocatable
-            </td>
-            <td>::</td>
-            <td><strong>w</strong>(:)</td>
-                <td></td>
-                <td></td>
-            <td>
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-wrk"></span>
-              real(kind=RKIND),
-            </td>
-              <td>public,</td>
-            <td>
-              allocatable
-            </td>
-            <td>::</td>
-            <td><strong>wrk</strong>(:)</td>
-                <td></td>
-                <td></td>
-            <td>
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-x~35"></span>
-              real(kind=RKIND),
-            </td>
-              <td>public,</td>
-            <td>
-              allocatable
-            </td>
-            <td>::</td>
-            <td><strong>x</strong>(:)</td>
-                <td></td>
-                <td></td>
-            <td>
-
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-xleft"></span>
-              real(kind=RKIND),
-            </td>
-              <td>public</td>
-            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>xleft</strong></td>
-                <td></td>
-                <td></td>
-            <td>
-<p>Interval boundaries</p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-xright"></span>
-              real(kind=RKIND),
-            </td>
-              <td>public</td>
-            <td>
-              
-            </td>
-            <td>::</td>
-            <td><strong>xright</strong></td>
-                <td></td>
-                <td></td>
-            <td>
-<p>Interval boundaries</p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-              <span class="anchor" id="variable-y"></span>
-              real(kind=RKIND),
-            </td>
-              <td>public,</td>
-            <td>
-              allocatable
-            </td>
-            <td>::</td>
-            <td><strong>y</strong>(:)</td>
-                <td></td>
-                <td></td>
-            <td>
-
-            </td>
-        </tr>
-    </tbody>
-  </table>
-
-
-        <h4>Constructor</h4>
-          
-        <table class="table table-striped varlist">
-          <tbody>
-                <tr>
-                  <td>
-                        private
-
-                    
-                    function
-                    <strong>new_from_points</strong>
-                    (x, y, w, ierr)
-                  </td>
-                  <td></td>
-                </tr>
-          </tbody>
-        </table>
-
-
-        <h4>Type-Bound Procedures</h4>
-        <table class="table table-striped varlist">
-          <tbody>
-              <tr>
-                <td>
-                    procedure
-                    ,                  public
-                  :: <strong><a href='../type/fitpack_curve.html#boundprocedure-destroy~2'>destroy</a></strong>
-<small>Subroutine</small>                </td>
-                <td><p>Clean memory</p></td>
-              </tr>
-              <tr>
-                <td>
-generic,
-                  public
-                  :: <strong><a href='../type/fitpack_curve.html#boundprocedure-dfdx'>dfdx</a></strong>
- =>
-                    curve_derivative, curve_derivatives
-                </td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>
-generic,
-                  public
-                  :: <strong><a href='../type/fitpack_curve.html#boundprocedure-eval'>eval</a></strong>
- =>
-                    curve_eval_one, curve_eval_many
-                </td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>
-                    procedure
-                    ,                  public
-                  :: <strong><a href='../type/fitpack_curve.html#boundprocedure-fit~2'>fit</a></strong>
- =>
-                    curve_fit_automatic_knots
-<small>Function</small>                </td>
-                <td><p>Generate/update fitting curve, with optional smoothing</p></td>
-              </tr>
-              <tr>
-                <td>
-                    procedure
-                    ,                  public
-                  :: <strong><a href='../type/fitpack_curve.html#boundprocedure-interpolate'>interpolate</a></strong>
- =>
-                    interpolating_curve
-<small>Function</small>                </td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>
-                    procedure
-                    ,                  public
-, non_overridable                  :: <strong><a href='../type/fitpack_curve.html#boundprocedure-mse'>mse</a></strong>
- =>
-                    curve_error
-<small>Function</small>                </td>
-                <td><p>Properties: MSE</p></td>
-              </tr>
-              <tr>
-                <td>
-                    procedure
-                    ,                  public
-                  :: <strong><a href='../type/fitpack_curve.html#boundprocedure-new_fit~2'>new_fit</a></strong>
-<small>Function</small>                </td>
-                <td><p>Generate new fit</p></td>
-              </tr>
-              <tr>
-                <td>
-                    procedure
-                    ,                  public
-                  :: <strong><a href='../type/fitpack_curve.html#boundprocedure-new_points~2'>new_points</a></strong>
-<small>Subroutine</small>                </td>
-                <td><p>Set new points</p></td>
-              </tr>
-          </tbody>
-        </table>
-    </div>
-  </div>
-
-       <div class="panel panel-default">
-    <div class="panel-heading codesum">
-      <span class="anchor" id="type-fitpack_surface"></span>
-      <h3>
-        type, public&nbsp;::&nbsp;
-        <a href='../type/fitpack_surface.html'>fitpack_surface</a>
-        
-      </h3>
-    </div>
-    <div class="panel-body">
-      <p>A public type describing a surface fitter z = s(x,y)</p>
-
-        <h4>Components</h4>
-          <table class="table table-striped varlist">
-    <thead>
-      <tr>
-        <th>Type</th>
-<th>Visibility</th>        <th>Attributes</th>
-        <th></th>
-        <th>Name</th>
-<th></th><th>Initial</th>        <th></th>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
     </thead>
     <tbody>
         <tr>
@@ -1020,6 +522,423 @@ generic,
         <tr>
             <td>
               <span class="anchor" id="variable-knots~2"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>knots</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-lwrk"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>lwrk</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-m~2"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>m</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+<p>The data points</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-nest~2"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>nest</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-order~2"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>order</strong></td>
+<td> =</td>
+                <td>3</td>
+            <td>
+<p>Spline degree</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-smoothing~2"></span>
+              real(kind=RKIND),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>smoothing</strong></td>
+<td> =</td>
+                <td>1000.0_RKIND</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-sp"></span>
+              real(kind=RKIND),
+            </td>
+              <td>public,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>sp</strong>(:)</td>
+                <td></td>
+                <td></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-t~6"></span>
+              real(kind=RKIND),
+            </td>
+              <td>public,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>t</strong>(:)</td>
+                <td></td>
+                <td></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-w~2"></span>
+              real(kind=RKIND),
+            </td>
+              <td>public,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>w</strong>(:)</td>
+                <td></td>
+                <td></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-wrk"></span>
+              real(kind=RKIND),
+            </td>
+              <td>public,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>wrk</strong>(:)</td>
+                <td></td>
+                <td></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-x~10"></span>
+              real(kind=RKIND),
+            </td>
+              <td>public,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>x</strong>(:)</td>
+                <td></td>
+                <td></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-xleft"></span>
+              real(kind=RKIND),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>xleft</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+<p>Interval boundaries</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-xright"></span>
+              real(kind=RKIND),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>xright</strong></td>
+                <td></td>
+                <td></td>
+            <td>
+<p>Interval boundaries</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-y~2"></span>
+              real(kind=RKIND),
+            </td>
+              <td>public,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>y</strong>(:)</td>
+                <td></td>
+                <td></td>
+            <td>
+
+            </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+        <h4>Constructor</h4>
+          
+        <table class="table table-striped varlist">
+          <tbody>
+                <tr>
+                  <td>
+                        private
+
+                    
+                    function
+                    <strong>new_from_points</strong>
+                    (x, y, w, ierr)
+                  </td>
+                  <td></td>
+                </tr>
+          </tbody>
+        </table>
+
+
+        <h4>Type-Bound Procedures</h4>
+        <table class="table table-striped varlist">
+          <tbody>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='..\type\fitpack_curve.html#boundprocedure-destroy~2'>destroy</a></strong></td>
+                  <td><p>Clean memory</p></td>
+              </tr>
+              <tr>
+                <td>  generic, public ::
+  <strong><a href='..\type\fitpack_curve.html#boundprocedure-dfdx'>dfdx</a></strong> => curve_derivative, curve_derivatives</td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  generic, public ::
+  <strong><a href='..\type\fitpack_curve.html#boundprocedure-eval'>eval</a></strong> => curve_eval_one, curve_eval_many</td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='..\type\fitpack_curve.html#boundprocedure-fit~2'>fit</a></strong> => curve_fit_automatic_knots</td>
+                  <td><p>Generate/update fitting curve, with optional smoothing</p></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='..\type\fitpack_curve.html#boundprocedure-interpolate'>interpolate</a></strong> => interpolating_curve</td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public, non_overridable ::
+  <strong><a href='..\type\fitpack_curve.html#boundprocedure-mse'>mse</a></strong> => curve_error</td>
+                  <td></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='..\type\fitpack_curve.html#boundprocedure-new_fit~2'>new_fit</a></strong></td>
+                  <td><p>Generate new fit</p></td>
+              </tr>
+              <tr>
+                <td>  procedure, public ::
+  <strong><a href='..\type\fitpack_curve.html#boundprocedure-new_points~2'>new_points</a></strong></td>
+                  <td><p>Set new points</p></td>
+              </tr>
+          </tbody>
+        </table>
+    </div>
+  </div>
+
+              <div class="card">
+    <div class="card-header codesum">
+      <span class="anchor" id="type-fitpack_surface"></span>
+      <h3>
+        type, public&nbsp;::&nbsp;
+        <a href='..\type\fitpack_surface.html'>fitpack_surface</a>
+        
+      </h3>
+    </div>
+    <div class="card-body">
+      <p>A public type describing a surface fitter z = s(x,y)</p>
+
+        <h4>Components</h4>
+          <table class="table table-striped varlist">
+    <thead>
+      <tr>
+        <th scope="col">Type</th>
+<th scope="col">Visibility</th>        <th scope="col">Attributes</th>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+<th></th><th scope="col">Initial</th>        <th scope="col"></th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-bc"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>bc</strong></td>
+<td> =</td>
+                <td>OUTSIDE_NEAREST_BND</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-c"></span>
+              real(kind=RKIND),
+            </td>
+              <td>public,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>c</strong>(:)</td>
+                <td></td>
+                <td></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-fp"></span>
+              real(kind=RKIND),
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>fp</strong></td>
+<td> =</td>
+                <td>zero</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iopt"></span>
+              integer,
+            </td>
+              <td>public</td>
+            <td>
+              
+            </td>
+            <td>::</td>
+            <td><strong>iopt</strong></td>
+<td> =</td>
+                <td>0</td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-iwrk"></span>
+              integer,
+            </td>
+              <td>public,</td>
+            <td>
+              allocatable
+            </td>
+            <td>::</td>
+            <td><strong>iwrk</strong>(:)</td>
+                <td></td>
+                <td></td>
+            <td>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+              <span class="anchor" id="variable-knots"></span>
               integer,
             </td>
               <td>public</td>
@@ -1121,7 +1040,7 @@ generic,
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-nest~2"></span>
+              <span class="anchor" id="variable-nest"></span>
               integer,
             </td>
               <td>public</td>
@@ -1189,7 +1108,7 @@ generic,
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-smoothing~4"></span>
+              <span class="anchor" id="variable-smoothing"></span>
               real(kind=RKIND),
             </td>
               <td>public</td>
@@ -1206,7 +1125,7 @@ generic,
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-t~19"></span>
+              <span class="anchor" id="variable-t~5"></span>
               real(kind=RKIND),
             </td>
               <td>public,</td>
@@ -1223,7 +1142,7 @@ generic,
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-w~5"></span>
+              <span class="anchor" id="variable-w"></span>
               real(kind=RKIND),
             </td>
               <td>public,</td>
@@ -1274,7 +1193,7 @@ generic,
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-x~43"></span>
+              <span class="anchor" id="variable-x~9"></span>
               real(kind=RKIND),
             </td>
               <td>public,</td>
@@ -1291,7 +1210,7 @@ generic,
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-y~5"></span>
+              <span class="anchor" id="variable-y"></span>
               real(kind=RKIND),
             </td>
               <td>public,</td>
@@ -1308,7 +1227,7 @@ generic,
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-z~2"></span>
+              <span class="anchor" id="variable-z"></span>
               real(kind=RKIND),
             </td>
               <td>public,</td>
@@ -1350,53 +1269,33 @@ generic,
         <table class="table table-striped varlist">
           <tbody>
               <tr>
-                <td>
-                    procedure
-                    ,                  public
-                  :: <strong><a href='../type/fitpack_surface.html#boundprocedure-destroy'>destroy</a></strong>
- =>
-                    surf_destroy
-<small>Subroutine</small>                </td>
-                <td><p>Clean memory</p></td>
+                <td>  procedure, public ::
+  <strong><a href='..\type\fitpack_surface.html#boundprocedure-destroy'>destroy</a></strong> => surf_destroy</td>
+                  <td><p>Clean memory</p></td>
               </tr>
               <tr>
-                <td>
-                    procedure
-                    ,                  public
-                  :: <strong><a href='../type/fitpack_surface.html#boundprocedure-fit'>fit</a></strong>
- =>
-                    surface_fit_automatic_knots
-<small>Function</small>                </td>
-                <td><p>Generate/update fitting curve, with optional smoothing</p></td>
+                <td>  procedure, public ::
+  <strong><a href='..\type\fitpack_surface.html#boundprocedure-fit'>fit</a></strong> => surface_fit_automatic_knots</td>
+                  <td><p>Generate/update fitting curve, with optional smoothing</p></td>
               </tr>
               <tr>
-                <td>
-                    procedure
-                    ,                  public
-                  :: <strong><a href='../type/fitpack_surface.html#boundprocedure-new_fit'>new_fit</a></strong>
- =>
-                    surf_new_fit
-<small>Function</small>                </td>
-                <td><p>Generate new fit</p></td>
+                <td>  procedure, public ::
+  <strong><a href='..\type\fitpack_surface.html#boundprocedure-new_fit'>new_fit</a></strong> => surf_new_fit</td>
+                  <td><p>Generate new fit</p></td>
               </tr>
               <tr>
-                <td>
-                    procedure
-                    ,                  public
-                  :: <strong><a href='../type/fitpack_surface.html#boundprocedure-new_points'>new_points</a></strong>
- =>
-                    surf_new_points
-<small>Subroutine</small>                </td>
-                <td><p>Set new points</p></td>
+                <td>  procedure, public ::
+  <strong><a href='..\type\fitpack_surface.html#boundprocedure-new_points'>new_points</a></strong> => surf_new_points</td>
+                  <td><p>Set new points</p></td>
               </tr>
           </tbody>
         </table>
     </div>
   </div>
 
-    </section>
-  <br>
-    
+        </section>
+        <br>
+
 
 
 
@@ -1404,50 +1303,26 @@ generic,
     </div>
   </div>
 
-    <hr>    
+      <hr>
     </div> <!-- /container -->
     <footer>
       <div class="container">
-      <div class="row">
-        <div class="col-xs-6 col-md-6"><p>FRICTION was developed by Jason Christopherson<br>&copy; 2026 
+        <div class="row justify-content-between">
+          <div class="col">
+            <p>
+              FRICTION
+ was developed by Jason Christopherson<br>              &copy; 2026 
 </p>
+          </div>
+          <div class="col">
+            <p class="text-end">
+              Documentation generated by
+              <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
+ on 2026-08-13 15:24 -0500             </p>
+          </div>
         </div>
-        <div class="col-xs-6 col-md-6">
-          <p class="text-right">
-            Documentation generated by 
-            <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2026-07-17 15:07            </p>
-        </div>
-      </div>
-      <br>
-      </div> <!-- /container -->    
+        <br>
+      </div> <!-- /container -->
     </footer>
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-<!--
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
--->
-    <script src="../js/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../js/ie10-viewport-bug-workaround.js"></script>
-
-    <!-- MathJax JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
-        jax: ['input/TeX','input/MathML','output/HTML-CSS'],
-        extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
-      });
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    
-    <script src="../tipuesearch/tipuesearch_content.js"></script>
-    <script src="../tipuesearch/tipuesearch_set.js"></script>
-    <script src="../tipuesearch/tipuesearch.js"></script>
-    
   </body>
 </html>

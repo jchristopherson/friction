@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,14 +12,29 @@
 
     <title> FRICTION </title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link href="./css/pygments.css" rel="stylesheet">
-    <link href="./css/font-awesome.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link href="./css/fontawesome.min.css" rel="stylesheet">
+    <link href="./css/brands.min.css" rel="stylesheet">
+    <link href="./css/regular.min.css" rel="stylesheet">
+    <link href="./css/solid.min.css" rel="stylesheet">
+    <link href="./css/v4-font-face.min.css" rel="stylesheet">
+    <link href="./css/v4-shims.min.css" rel="stylesheet">
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } }
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML" async
+            integrity="sha256-DViIOMYdwlM/axqoGDPeUyf0urLoHMN4QACBKyB58Uw=" crossorigin="anonymous"></script>
+    <!-- Other scripts and stylesheets -->
     <link href="./css/local.css" rel="stylesheet">
-      <link  href="./tipuesearch/tipuesearch.css" rel="stylesheet">
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link href="./css/pygments.css" rel="stylesheet">
     <script src="./js/svg-pan-zoom.min.js"></script>
   </head>
 
@@ -59,14 +76,18 @@
     </div>
 
     <div class="container">
-      <!-- Main component for a primary marketing message or call to action -->
-      <div class="p-5 mb-4 bg-light border rounded-3" id="jumbotron">
-        <p>A library containing routines for calculating the frictional response of contacting bodies.</p>
-	<p> Find us on&hellip;</p>
-        <p>
-          <a class="btn btn-lg btn-primary" href="https://github.com/jchristopherson/friction" role="button">GitHub</a>
-        </p>
-      </div>
+  <!-- Main component for a primary marketing message or call to action -->
+    <div class="p-5 mb-4 bg-light border rounded-3" id="jumbotron">
+      <p>A library containing routines for calculating the frictional response of contacting bodies.</p>
+        <p> Find us on&hellip;</p>
+      <p>
+        <a class="btn btn-lg btn-primary" href="https://github.com/jchristopherson/friction" role="button">GitHub</a>
+        
+        
+        
+        
+      </p>
+    </div>
 
       <div class="row" id='text'>
         <div class=col-md-8>
@@ -74,7 +95,7 @@
           
         </div>
           <div class="col-md-4">
-	        <div class="card card-body bg-light">
+            <div class="card card-body bg-light">
               <h2 class="card-title">Developer Info</h2>
               <h4 class="card-text">Jason Christopherson</h4>
               <p class="card-text"></p>
@@ -86,7 +107,7 @@
           <div class="col-xs-6 col-sm-3">
             <div>
               <h3>Source Files</h3>
-              <ul><li><a href='sourcefile\friction.f90.html'>friction.f90</a></li><li><a href='sourcefile\friction_core.f90.html'>friction_core.f90</a></li><li><a href='sourcefile\friction_coulomb.f90.html'>friction_coulomb.f90</a></li><li><a href='sourcefile\friction_errors.f90.html'>friction_errors.f90</a></li><li><a href='sourcefile\friction_gmsm.f90.html'>friction_gmsm.f90</a></li><li><a href='sourcefile\friction_lugre.f90.html'>friction_lugre.f90</a></li><li><a href='sourcefile\friction_maxwell.f90.html'>friction_maxwell.f90</a></li><li><a href='sourcefile\friction_modified_stribeck.f90.html'>friction_modified_stribeck.f90</a></li><li><a href='sourcefile\friction_stribeck.f90.html'>friction_stribeck.f90</a></li></ul>
+              <ul><li><a href='sourcefile\fitpack.f90.html'>fitpack.f90</a></li><li><a href='sourcefile\fitpack_core.f90.html'>fitpack_core.f90</a></li><li><a href='sourcefile\friction.f90.html'>friction.f90</a></li><li><a href='sourcefile\friction_core.f90.html'>friction_core.f90</a></li><li><a href='sourcefile\friction_coulomb.f90.html'>friction_coulomb.f90</a></li><li><a href='sourcefile\friction_errors.f90.html'>friction_errors.f90</a></li><li><a href='sourcefile\friction_gmsm.f90.html'>friction_gmsm.f90</a></li><li><a href='sourcefile\friction_lugre.f90.html'>friction_lugre.f90</a></li><li><a href='sourcefile\friction_maxwell.f90.html'>friction_maxwell.f90</a></li><li><a href='sourcefile\friction_modified_stribeck.f90.html'>friction_modified_stribeck.f90</a></li></ul>
             </div>
             <div>
               <ul>
@@ -97,7 +118,7 @@
           <div class="col-xs-6 col-sm-3">
             <div>
               <h3>Modules</h3>
-              <ul><li><a href='module\friction.html'>friction</a></li><li><a href='module\friction_core.html'>friction_core</a></li><li><a href='module\friction_coulomb.html'>friction_coulomb</a></li><li><a href='module\friction_errors.html'>friction_errors</a></li><li><a href='module\friction_gmsm.html'>friction_gmsm</a></li><li><a href='module\friction_lugre.html'>friction_lugre</a></li><li><a href='module\friction_maxwell.html'>friction_maxwell</a></li><li><a href='module\friction_modified_stribeck.html'>friction_modified_stribeck</a></li><li><a href='module\friction_stribeck.html'>friction_stribeck</a></li></ul>
+              <ul><li><a href='module\fitpack.html'>fitpack</a></li><li><a href='module\fitpack_core.html'>fitpack_core</a></li><li><a href='module\friction.html'>friction</a></li><li><a href='module\friction_core.html'>friction_core</a></li><li><a href='module\friction_coulomb.html'>friction_coulomb</a></li><li><a href='module\friction_errors.html'>friction_errors</a></li><li><a href='module\friction_gmsm.html'>friction_gmsm</a></li><li><a href='module\friction_lugre.html'>friction_lugre</a></li><li><a href='module\friction_maxwell.html'>friction_maxwell</a></li><li><a href='module\friction_modified_stribeck.html'>friction_modified_stribeck</a></li></ul>
             </div>
             <div>
               <ul>
@@ -108,7 +129,7 @@
           <div class="col-xs-6 col-sm-3">
             <div>
               <h3>Procedures</h3>
-              <ul><li><a href='interface\friction_evaluation.html'>friction_evaluation</a></li><li><a href='interface\friction_integer_query.html'>friction_integer_query</a></li><li><a href='interface\friction_logical_query.html'>friction_logical_query</a></li><li><a href='interface\friction_model_from_array.html'>friction_model_from_array</a></li><li><a href='interface\friction_model_to_array.html'>friction_model_to_array</a></li><li><a href='interface\friction_state_model.html'>friction_state_model</a></li></ul>
+              <ul><li><a href='proc\bispeu.html'>bispeu</a></li><li><a href='proc\bispev.html'>bispev</a></li><li><a href='proc\clocur.html'>clocur</a></li><li><a href='proc\cocosp.html'>cocosp</a></li><li><a href='proc\concon.html'>concon</a></li><li><a href='proc\concur.html'>concur</a></li><li><a href='proc\cualde.html'>cualde</a></li><li><a href='proc\curev.html'>curev</a></li><li><a href='proc\curfit.html'>curfit</a></li><li><a href='proc\dblint.html'>dblint</a></li></ul>
             </div>
             <div>
               <ul>
@@ -119,7 +140,7 @@
           <div class="col-xs-6 col-sm-3">
             <div>
               <h3>Derived Types</h3>
-              <ul><li><a href='type\coulomb_model.html'>coulomb_model</a></li><li><a href='type\friction_model.html'>friction_model</a></li><li><a href='type\generalized_maxwell_slip_model.html'>generalized_maxwell_slip_model</a></li><li><a href='type\lugre_model.html'>lugre_model</a></li><li><a href='type\maxwell_model.html'>maxwell_model</a></li><li><a href='type\modified_stribeck_model.html'>modified_stribeck_model</a></li><li><a href='type\stribeck_model.html'>stribeck_model</a></li></ul>
+              <ul><li><a href='type\coulomb_model.html'>coulomb_model</a></li><li><a href='type\fitpack_curve.html'>fitpack_curve</a></li><li><a href='type\fitpack_surface.html'>fitpack_surface</a></li><li><a href='type\friction_model.html'>friction_model</a></li><li><a href='type\generalized_maxwell_slip_model.html'>generalized_maxwell_slip_model</a></li><li><a href='type\lugre_model.html'>lugre_model</a></li><li><a href='type\maxwell_model.html'>maxwell_model</a></li><li><a href='type\modified_stribeck_model.html'>modified_stribeck_model</a></li><li><a href='type\stribeck_model.html'>stribeck_model</a></li></ul>
             </div>
             <div>
               <ul>
@@ -133,40 +154,21 @@
     <footer>
       <div class="container">
         <div class="row justify-content-between">
-          <div class="col"><p>FRICTION was developed by Jason Christopherson<br>&copy; 2024 
+          <div class="col">
+            <p>
+              FRICTION
+ was developed by Jason Christopherson<br>              &copy; 2026 
 </p>
           </div>
           <div class="col">
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2024-09-18 15:33              </p>
+ on 2026-08-13 15:24 -0500             </p>
           </div>
         </div>
         <br>
       </div> <!-- /container -->
     </footer>
-
-    <!-- Bootstrap core JavaScript -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
-
-    <!-- MathJax JavaScript
-             ================================================== -->
-             <!-- Placed at the end of the document so the pages load faster -->
-        <script type="text/x-mathjax-config">
-          MathJax.Hub.Config({
-          TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } },
-          jax: ['input/TeX','input/MathML','output/HTML-CSS'],
-          extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']
-          });
-        </script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-          <script src="./tipuesearch/tipuesearch_content.js"></script>
-          <script src="./tipuesearch/tipuesearch_set.js"></script>
-          <script src="./tipuesearch/tipuesearch.js"></script>
-
   </body>
 </html>
