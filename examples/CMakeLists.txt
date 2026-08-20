@@ -1,23 +1,7 @@
 # Get Dependencies
 add_subdirectory(fortran_csv_module)
 include(FetchContent)
-find_package(ferror QUIET)
 find_package(fplot QUIET)
-find_package(collections QUIET)
-find_package(diffeq QUIET)
-find_package(linalg QUIET)
-
-if (NOT ferror_FOUND)
-    FetchContent_Declare(
-        ferror
-        GIT_TAG "origin/master"
-        GIT_REPOSITORY https://github.com/jchristopherson/ferror
-    )
-    FetchContent_MakeAvailable(ferror)
-    set(FERROR_LIBRARIES ferror)
-else()
-    set(FERROR_LIBRARIES ferror::ferror)
-endif()
 
 if (NOT fplot_FOUND)
     FetchContent_Declare(
@@ -29,44 +13,6 @@ if (NOT fplot_FOUND)
     set(FPLOT_LIBRARIES fplot)
 else()
     set(FPLOT_LIBRARIES fplot::fplot)
-endif()
-
-if (NOT collections_FOUND)
-    message(STATUS "COLLECTIONS could not be found.  A reference version will be employed.")
-    FetchContent_Declare(
-        collections
-        GIT_REPOSITORY "https://github.com/jchristopherson/collections"
-        GIT_TAG main
-    )
-    FetchContent_MakeAvailable(collections)
-    set(COLLECTIONS_LIBRARIES collections)
-else()
-    set(COLLECTIONS_LIBRARIES collections::collections)
-endif()
-
-if (NOT diffeq_FOUND)
-    message(STATUS "DIFFEQ could not be found.  A reference version will be employed.")
-    FetchContent_Declare(
-        diffeq
-        GIT_REPOSITORY "https://github.com/jchristopherson/diffeq"
-        GIT_TAG main
-    )
-    FetchContent_MakeAvailable(diffeq)
-    set(DIFFEQ_LIBRARIES diffeq)
-else()
-    set(DIFFEQ_LIBRARIES diffeq::diffeq)
-endif()
-
-if (NOT linalg_FOUND)
-    message(STATUS "LINALG could not be found.  A reference version will be employed.")
-    FetchContent_Declare(
-        linalg
-        GIT_REPOSITORY "https://github.com/jchristopherson/linalg"
-    )
-    FetchContent_MakeAvailable(linalg)
-    set(LINALG_LIBRARIES linalg)
-else()
-    set(LINALG_LIBRARIES linalg::linalg)
 endif()
 
 # Coulomb Example
@@ -89,7 +35,6 @@ target_link_libraries(
     lugre_example
     ${PROJECT_NAME}
     ${FPLOT_LIBRARIES}
-    ${DIFFEQ_LIBRARIES}
 )
 
 # Maxwell Example

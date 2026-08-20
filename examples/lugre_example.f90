@@ -50,7 +50,7 @@ program example
 
     ! Plot Variables
     type(plot_2d) :: plt
-    type(plot_data_2d) :: pd
+    type(plot_data_2d) :: pd1, pd2
     class(plot_axis), pointer :: xAxis, yAxis, y2Axis
     class(legend), pointer :: lgnd
 
@@ -82,14 +82,15 @@ program example
     call y2Axis%set_title("v_{drive} - v(t)")
     call lgnd%set_is_visible(.true.)
 
-    call pd%define_data(sol(:,1), sol(:,2))
-    call pd%set_name("Position")
-    call pd%set_line_width(2.0)
-    call plt%push(pd)
+    call pd1%define_data(sol(:,1), sol(:,2))
+    call pd1%set_name("Position")
+    call pd1%set_line_width(2.0)
+    call plt%push(pd1)
 
-    call pd%define_data(sol(:,1), v - sol(:,3))
-    call pd%set_draw_against_y2(.true.)
-    call pd%set_name("Velocity")
-    call plt%push(pd)
+    call pd2%define_data(sol(:,1), v - sol(:,3))
+    call pd2%set_line_width(2.0)
+    call pd2%set_draw_against_y2(.true.)
+    call pd2%set_name("Velocity")
+    call plt%push(pd2)
     call plt%draw()
 end program
