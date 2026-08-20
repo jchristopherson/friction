@@ -93,6 +93,7 @@ module friction_gmsm
         procedure, public :: element_state => gmsm_element_state_model
         procedure, public :: get_constraint_equation_count => &
             gmsm_get_constraint_count
+        procedure, public :: constraint_equations => gmsm_constraints
     end type
 contains
 ! ------------------------------------------------------------------------------
@@ -122,6 +123,7 @@ function gmsm_eval(this, t, x, dxdt, nrm, svars) result(rst)
     real(real64) :: dzdt, ki, bi
 
     ! Process
+    if (.not.present(svars)) error stop FRICTION_INVALID_OPERATION_ERROR
     n = this%get_element_count()
     rst = 0.0d0
     do i = 1, n
@@ -313,9 +315,7 @@ subroutine gmsm_initialize(this, n)
     m = n * PER_ELEMENT_COUNT
 
     ! Input Checking
-    if (n < 1) then
-        ! TO DO: Handle error
-    end if
+    if (n < 1) error stop FRICTION_ARRAY_SIZE_ERROR
 
     ! Process
     if (.not.allocated(this%m_params)) then
