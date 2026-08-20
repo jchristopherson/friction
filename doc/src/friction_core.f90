@@ -292,7 +292,8 @@ end subroutine
 
 ! ------------------------------------------------------------------------------
 subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
-    alpha, integrator, controls, settings, info, stats, fmod, resid)
+    alpha, integrator, controls, settings, info, stats, fmod, resid, &
+    initial_state)
     !! Attempts to fit a friction model to the supplied data using a 
     !! Levenberg-Marquardt solver.
     class(friction_model), intent(inout), target :: this
@@ -350,13 +351,19 @@ subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
         !! results.
     real(real64), intent(out), optional, target, dimension(:) :: resid
         !! An optional N-element array containing the fitted residuals.
+    real(real64), intent(in), optional, dimension(:) :: initial_state
+        !! An optional array containing the initial conditions for the
+        !! model's internal state variables.  Its size must match 
+        !! @ref get_state_variable_count.  Only used if the model relies
+        !! upon internal state variables.  The default is an array of
+        !! all zeros.
 
     ! Local Variables
     integer(int32) :: i, npts, nparams, np, flag
     real(real64), allocatable, target, dimension(:) :: params, initstate, &
-        tc, fc, fmc, rc
+        tc, fc, fmc, rc, wc
     real(real64), allocatable, dimension(:,:) :: dzdt
-    real(real64), pointer, dimension(:) :: fmodptr, residptr, tptr, fptr
+    real(real64), pointer, dimension(:) :: fmodptr, residptr, tptr, fptr, wptr
     real(real64), allocatable, target, dimension(:) :: fmoddef, residdef
     procedure(regression_function), pointer :: fcn
     type(fitpack_curve), target :: xinterp, vinterp, ninterp
@@ -379,6 +386,13 @@ subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
     if (size(v) /= npts) error stop FRICTION_ARRAY_SIZE_ERROR
     if (size(f) /= npts) error stop FRICTION_ARRAY_SIZE_ERROR
     if (size(n) /= npts) error stop FRICTION_ARRAY_SIZE_ERROR
+    if (present(weights)) then
+        if (size(weights) /= npts) error stop FRICTION_ARRAY_SIZE_ERROR
+    end if
+    if (present(initial_state)) then
+        if (size(initial_state) /= this%get_state_variable_count()) &
+            error stop FRICTION_ARRAY_SIZE_ERROR
+    end if
 
     ! Memory Allocations
     allocate(params(nparams))
@@ -419,9 +433,22 @@ subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
             allocate(rc(np), source = 0.0d0)
             residptr(1:np) => rc(1:np)
         end if
+
+        ! The constraint rows carry no data weighting of their own; pad
+        ! the user-supplied (or default) weights out to np elements so
+        ! the sizes agree with tptr/fptr as required by the solver.
+        allocate(wc(np), source = 1.0d0)
+        if (present(weights)) wc(1:npts) = weights
+        wptr(1:np) => wc(1:np)
     else
         tptr(1:npts) => t
         fptr(1:npts) => f
+        if (present(weights)) then
+            allocate(wc(npts), source = weights)
+            wptr(1:npts) => wc(1:npts)
+        else
+            wptr => null()
+        end if
     end if
 
     ! Assign pointers
@@ -446,7 +473,11 @@ subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
 
         ! Set up the integrator
         mdl%fcn => internal_state_odes
-        allocate(initstate(this%get_state_variable_count()), source = 0.0d0)
+        if (present(initial_state)) then
+            initstate = initial_state
+        else
+            allocate(initstate(this%get_state_variable_count()), source = 0.0d0)
+        end if
 
         ! Assign pointers
         args%mdl => mdl
@@ -458,10 +489,17 @@ subroutine fmdl_fit(this, t, x, v, f, n, weights, maxp, minp, &
         fcn => fit_fcn
     end if
 
-    call nonlinear_least_squares(fcn, tptr, fptr, params, fmodptr, residptr, &
-        weights = weights, maxp = maxp, minp = minp, alpha = alpha, &
-        controls = controls, settings = settings, info = info, stats = stats, &
-        args = args)
+    if (associated(wptr)) then
+        call nonlinear_least_squares(fcn, tptr, fptr, params, fmodptr, &
+            residptr, weights = wptr, maxp = maxp, minp = minp, &
+            alpha = alpha, controls = controls, settings = settings, &
+            info = info, stats = stats, args = args)
+    else
+        call nonlinear_least_squares(fcn, tptr, fptr, params, fmodptr, &
+            residptr, maxp = maxp, minp = minp, alpha = alpha, &
+            controls = controls, settings = settings, info = info, &
+            stats = stats, args = args)
+    end if
     call this%from_array(params)
 
     ! Handle outputs, if constraints are employed
