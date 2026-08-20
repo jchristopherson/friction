@@ -88,7 +88,7 @@
 
             <li class="list-inline-item" id="statements"><i class="fa fa-list-ol"></i>
               <a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true"
-                 title=" 2.5% of total for modules and submodules.">273 statements</a>
+                 title=" 2.5% of total for modules and submodules.">274 statements</a>
             </li>
 
             <li class="list-inline-item" id="source-file">
@@ -166,9 +166,9 @@
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <ul class="list-inline">
-                  <li class="list-inline-item"><a href='friction_core.html'>friction_core</a></li>
                   <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/ieee_arithmetic'>ieee_arithmetic</a></li>
                   <li class="list-inline-item"><a href='http://fortranwiki.org/fortran/show/iso_fortran_env'>iso_fortran_env</a></li>
+                  <li class="list-inline-item"><a href='friction_core.html'>friction_core</a></li>
                   <li class="list-inline-item"><a href='friction_errors.html'>friction_errors</a></li>
               </ul>
             </li>
@@ -228,7 +228,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-coulomb_coefficient~2"></span>
+              <span class="anchor" id="variable-coulomb_coefficient"></span>
               real(kind=real64),
             </td>
               <td>public</td>
@@ -245,7 +245,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-shape_parameter~2"></span>
+              <span class="anchor" id="variable-shape_parameter"></span>
               real(kind=real64),
             </td>
               <td>public</td>
@@ -262,7 +262,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-static_coefficient~2"></span>
+              <span class="anchor" id="variable-static_coefficient"></span>
               real(kind=real64),
             </td>
               <td>public</td>
@@ -279,7 +279,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-stiffness~2"></span>
+              <span class="anchor" id="variable-stiffness"></span>
               real(kind=real64),
             </td>
               <td>public</td>
@@ -296,7 +296,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-stribeck_velocity~3"></span>
+              <span class="anchor" id="variable-stribeck_velocity~2"></span>
               real(kind=real64),
             </td>
               <td>public</td>
@@ -313,7 +313,7 @@
         </tr>
         <tr>
             <td>
-              <span class="anchor" id="variable-viscous_damping~3"></span>
+              <span class="anchor" id="variable-viscous_damping~2"></span>
               real(kind=real64),
             </td>
               <td>public</td>
@@ -339,7 +339,7 @@
           <tbody>
               <tr>
                 <td>  procedure, public ::
-  <strong><a href='..\type\friction_model.html#boundprocedure-constraint_equations'>constraint_equations</a></strong> => fmdl_constraints</td>
+  <strong><a href='..\type\generalized_maxwell_slip_model.html#boundprocedure-constraint_equations'>constraint_equations</a></strong> => gmsm_constraints</td>
                   <td></td>
               </tr>
               <tr>
@@ -349,7 +349,7 @@
               </tr>
               <tr>
                 <td>  procedure, public ::
-  <strong><a href='..\type\generalized_maxwell_slip_model.html#boundprocedure-evaluate~4'>evaluate</a></strong> => gmsm_eval</td>
+  <strong><a href='..\type\generalized_maxwell_slip_model.html#boundprocedure-evaluate~3'>evaluate</a></strong> => gmsm_eval</td>
                   <td></td>
               </tr>
               <tr>
@@ -359,7 +359,7 @@
               </tr>
               <tr>
                 <td>  procedure, public ::
-  <strong><a href='..\type\generalized_maxwell_slip_model.html#boundprocedure-from_array~4'>from_array</a></strong> => gmsm_from_array</td>
+  <strong><a href='..\type\generalized_maxwell_slip_model.html#boundprocedure-from_array~3'>from_array</a></strong> => gmsm_from_array</td>
                   <td></td>
               </tr>
               <tr>
@@ -389,12 +389,12 @@
               </tr>
               <tr>
                 <td>  procedure, public ::
-  <strong><a href='..\type\generalized_maxwell_slip_model.html#boundprocedure-get_state_variable_count~4'>get_state_variable_count</a></strong> => gmsm_get_state_var_count</td>
+  <strong><a href='..\type\generalized_maxwell_slip_model.html#boundprocedure-get_state_variable_count~3'>get_state_variable_count</a></strong> => gmsm_get_state_var_count</td>
                   <td></td>
               </tr>
               <tr>
                 <td>  procedure, public ::
-  <strong><a href='..\type\generalized_maxwell_slip_model.html#boundprocedure-has_internal_state~4'>has_internal_state</a></strong> => gmsm_has_state_vars</td>
+  <strong><a href='..\type\generalized_maxwell_slip_model.html#boundprocedure-has_internal_state~3'>has_internal_state</a></strong> => gmsm_has_state_vars</td>
                   <td></td>
               </tr>
               <tr>
@@ -404,7 +404,7 @@
               </tr>
               <tr>
                 <td>  procedure, public ::
-  <strong><a href='..\type\generalized_maxwell_slip_model.html#boundprocedure-parameter_count~4'>parameter_count</a></strong> => gmsm_parameter_count</td>
+  <strong><a href='..\type\generalized_maxwell_slip_model.html#boundprocedure-parameter_count~3'>parameter_count</a></strong> => gmsm_parameter_count</td>
                   <td></td>
               </tr>
               <tr>
@@ -429,7 +429,7 @@
               </tr>
               <tr>
                 <td>  procedure, public ::
-  <strong><a href='..\type\generalized_maxwell_slip_model.html#boundprocedure-state~4'>state</a></strong> => gmsm_state_model</td>
+  <strong><a href='..\type\generalized_maxwell_slip_model.html#boundprocedure-state~3'>state</a></strong> => gmsm_state_model</td>
                   <td></td>
               </tr>
               <tr>
@@ -439,7 +439,7 @@
               </tr>
               <tr>
                 <td>  procedure, public ::
-  <strong><a href='..\type\generalized_maxwell_slip_model.html#boundprocedure-to_array~4'>to_array</a></strong> => gmsm_to_array</td>
+  <strong><a href='..\type\generalized_maxwell_slip_model.html#boundprocedure-to_array~3'>to_array</a></strong> => gmsm_to_array</td>
                   <td></td>
               </tr>
           </tbody>
@@ -472,7 +472,7 @@
             <p class="text-end">
               Documentation generated by
               <a href="https://github.com/Fortran-FOSS-Programmers/ford">FORD</a>
- on 2026-08-13 15:24 -0500             </p>
+ on 2026-08-20 09:37 -0500             </p>
           </div>
         </div>
         <br>
