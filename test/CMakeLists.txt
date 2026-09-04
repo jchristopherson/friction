@@ -4,16 +4,18 @@ set(friction_test_sources
 )
 
 # Dependencies
-include(FetchContent)
 find_package(fortran_test_helper QUIET)
-
 if (NOT fortran_test_helper_FOUND)
+    include(FetchContent)
     FetchContent_Declare(
         fortran_test_helper
         GIT_TAG "origin/main"
         GIT_REPOSITORY https://github.com/jchristopherson/fortran_test_helper
     )
+    set(_linalg_build_testing ${BUILD_TESTING})
+    set(BUILD_TESTING OFF)
     FetchContent_MakeAvailable(fortran_test_helper)
+    set(BUILD_TESTING ${_linalg_build_testing})
     set(FTH_LIBRARIES fortran_test_helper)
 else()
     set(FTH_LIBRARIES fortran_test_helper::fortran_test_helper)
