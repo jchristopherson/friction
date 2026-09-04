@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.24)
 project(
     friction
     LANGUAGES Fortran
-    VERSION 1.1.4
+    VERSION 1.1.5
 )
 set(CMAKE_Fortran_STANDARD 2018)
 set(CMAKE_Fortran_STANDARD_REQUIRED TRUE)
