@@ -1,6 +1,6 @@
 name = "friction"
-version = "1.1.5"
-license = "GPL-3.0"
+version = "1.2.0"
+license = "MIT"
 author = "Jason Christopherson"
 maintainer = "Jason Christopherson"
 copyright = "Copyright 2026, Jason Christopherson"
