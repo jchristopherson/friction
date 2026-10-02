@@ -1,6 +1,7 @@
 # Get Dependencies
 include(FetchContent)
 find_package(fplot QUIET)
+find_package(diffeq QUIET)
 
 if (NOT fplot_FOUND)
     FetchContent_Declare(
@@ -12,6 +13,18 @@ if (NOT fplot_FOUND)
     set(FPLOT_LIBRARIES fplot)
 else()
     set(FPLOT_LIBRARIES fplot::fplot)
+endif()
+
+if (NOT diffeq_FOUND)
+    FetchContent_Declare(
+        diffeq
+        GIT_TAG "origin/master"
+        GIT_REPOSITORY https://github.com/jchristopherson/diffeq
+    )
+    FetchContent_MakeAvailable(diffeq)
+    set(DIFFEQ_LIBRARIES diffeq)
+else()
+    set(DIFFEQ_LIBRARIES diffeq::diffeq)
 endif()
 
 # Coulomb Example
@@ -34,6 +47,7 @@ target_link_libraries(
     lugre_example
     ${PROJECT_NAME}
     ${FPLOT_LIBRARIES}
+    ${DIFFEQ_LIBRARIES}
 )
 
 # Maxwell Example
@@ -89,6 +103,18 @@ target_link_libraries(
     modified_stribeck_fit_example
     ${PROJECT_NAME}
     ${FPLOT_LIBRARIES}
+)
+
+# GMSM Example
+add_executable(
+    gmsm_example
+    gmsm_example.f90
+)
+target_link_libraries(
+    gmsm_example
+    ${PROJECT_NAME}
+    ${FPLOT_LIBRARIES}
+    ${DIFFEQ_LIBRARIES}
 )
 
 if (${BUILD_SHARED_LIBS} AND WIN32)
