@@ -1,5 +1,4 @@
 # Get Dependencies
-add_subdirectory(fortran_csv_module)
 include(FetchContent)
 find_package(fplot QUIET)
 
@@ -57,9 +56,7 @@ target_link_libraries(
     maxwell_fit_example
     ${PROJECT_NAME}
     ${FPLOT_LIBRARIES}
-    ${fortran-csv-module_LIBRARY}
 )
-target_include_directories(maxwell_fit_example PUBLIC ${fortran-csv-module_INCLUDE_DIR})
 
 # Stribeck Example
 add_executable(
@@ -92,9 +89,7 @@ target_link_libraries(
     modified_stribeck_fit_example
     ${PROJECT_NAME}
     ${FPLOT_LIBRARIES}
-    ${fortran-csv-module_LIBRARY}
 )
-target_include_directories(modified_stribeck_fit_example PUBLIC ${fortran-csv-module_INCLUDE_DIR})
 
 if (${BUILD_SHARED_LIBS} AND WIN32)
     add_custom_command(

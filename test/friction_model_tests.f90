@@ -278,13 +278,14 @@ end function
 ! ------------------------------------------------------------------------------
 function test_friction_data_io() result(rst)
     logical :: rst
-    integer(int32) :: unit, ios
+    integer(int32) :: i, unit, ios
     character(len=128) :: header_line
     type(friction_data) :: data, roundtrip, semicolon_data
     character(len=*), parameter :: input_file = 'friction_data_io_input.csv'
     character(len=*), parameter :: output_file = 'friction_data_io_output.csv'
     character(len=*), parameter :: semicolon_file = &
         'friction_data_io_semicolon.csv'
+    character(len=*), parameter :: large_file = 'friction_data_io_large.csv'
     character(len=*), parameter :: custom_header = &
         't|x|v|normal|friction'
 
@@ -417,9 +418,36 @@ function test_friction_data_io() result(rst)
         end if
     end if
 
+    open(newunit=unit, file=large_file, status='replace', action='write', &
+        iostat=ios)
+    if (ios /= 0) then
+        rst = .false.
+        print *, "TEST FAILED: test_friction_data_io large fixture"
+    else
+        do i = 1, 2500
+            write(unit, '(I0,A,I0,A,I0,A,I0,A,I0)') i, ',', i + 1, ',', &
+                i + 2, ',', i + 3, ',', i + 4
+        end do
+        close(unit)
+        call read_friction_data(large_file, roundtrip, has_header=.false., &
+            io_status=ios)
+        if (ios /= 0) then
+            rst = .false.
+            print *, "TEST FAILED: test_friction_data_io large read"
+        else if (size(roundtrip%time) /= 2500) then
+            rst = .false.
+            print *, "TEST FAILED: test_friction_data_io storage growth count"
+        else if (.not.assert(roundtrip%time(2500), 2500.0d0) .or. &
+            .not.assert(roundtrip%friction_force(2500), 2504.0d0)) then
+            rst = .false.
+            print *, "TEST FAILED: test_friction_data_io storage growth values"
+        end if
+    end if
+
     call delete_test_file(input_file)
     call delete_test_file(output_file)
     call delete_test_file(semicolon_file)
+    call delete_test_file(large_file)
 end function
 
 ! ------------------------------------------------------------------------------

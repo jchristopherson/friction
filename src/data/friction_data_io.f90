@@ -13,6 +13,7 @@ module friction_data_io
         '"Time","Position","Velocity","Normal Force","Friction Force"'
     integer(int32), parameter :: DATA_COLUMN_COUNT = 5
     integer(int32), parameter :: RECORD_LENGTH = 65536
+    integer(int32), parameter :: INITIAL_CAPACITY = 1024
 contains
 ! ------------------------------------------------------------------------------
 subroutine read_friction_data(filename, data, delimiter, has_header, io_status)
@@ -51,8 +52,9 @@ subroutine read_friction_data(filename, data, delimiter, has_header, io_status)
     integer(int32), intent(out), optional :: io_status
         !! Optional error status; zero indicates success.
 
-    integer(int32) :: i, row_count, unit, ios, close_status
+    integer(int32) :: row_count, capacity, unit, ios, close_status
     real(real64), dimension(DATA_COLUMN_COUNT) :: values
+    real(real64), allocatable, dimension(:,:) :: rows, grown_rows
     character(len=RECORD_LENGTH) :: line
     character(len=1) :: separator
     logical :: skip_header, first_record
@@ -67,6 +69,13 @@ subroutine read_friction_data(filename, data, delimiter, has_header, io_status)
         iostat=ios)
     if (ios /= 0) then
         call report_io_error(ios, io_status)
+        return
+    end if
+
+    allocate(rows(DATA_COLUMN_COUNT, INITIAL_CAPACITY), stat=ios)
+    if (ios /= 0) then
+        close(unit)
+        call report_io_error(FRICTION_MEMORY_ERROR, io_status)
         return
     end if
 
@@ -85,15 +94,23 @@ subroutine read_friction_data(filename, data, delimiter, has_header, io_status)
             first_record = .false.
             if (skip_header) cycle
         end if
-        row_count = row_count + 1
-    end do
 
-    rewind(unit, iostat=ios)
-    if (ios /= 0) then
-        close(unit)
-        call report_io_error(ios, io_status)
-        return
-    end if
+        capacity = size(rows, 2)
+        if (row_count == capacity) then
+            allocate(grown_rows(DATA_COLUMN_COUNT, 2 * capacity), stat=ios)
+            if (ios /= 0) then
+                close(unit)
+                call report_io_error(FRICTION_MEMORY_ERROR, io_status)
+                return
+            end if
+            grown_rows(:,1:row_count) = rows(:,1:row_count)
+            call move_alloc(grown_rows, rows)
+        end if
+
+        call parse_data_row(trim(line), separator, values)
+        row_count = row_count + 1
+        rows(:,row_count) = values
+    end do
 
     allocate(data%time(row_count), data%position(row_count), &
         data%velocity(row_count), data%normal_force(row_count), &
@@ -103,31 +120,14 @@ subroutine read_friction_data(filename, data, delimiter, has_header, io_status)
         call report_io_error(FRICTION_MEMORY_ERROR, io_status)
         return
     end if
+    if (row_count > 0) then
+        data%time = rows(1,1:row_count)
+        data%position = rows(2,1:row_count)
+        data%velocity = rows(3,1:row_count)
+        data%normal_force = rows(4,1:row_count)
+        data%friction_force = rows(5,1:row_count)
+    end if
 
-    first_record = .true.
-    i = 0
-    do
-        read(unit, '(A)', iostat=ios) line
-        if (ios < 0) exit
-        if (ios > 0) then
-            close(unit)
-            call report_io_error(ios, io_status)
-            return
-        end if
-        if (len_trim(line) == 0) cycle
-        if (first_record) then
-            first_record = .false.
-            if (skip_header) cycle
-        end if
-
-        call parse_data_row(trim(line), separator, values)
-        i = i + 1
-        data%time(i) = values(1)
-        data%position(i) = values(2)
-        data%velocity(i) = values(3)
-        data%normal_force(i) = values(4)
-        data%friction_force(i) = values(5)
-    end do
     close(unit, iostat=close_status)
     if (close_status /= 0) call report_io_error(close_status, io_status)
 end subroutine

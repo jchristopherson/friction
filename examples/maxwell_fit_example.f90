@@ -22,17 +22,16 @@
 program example
     use iso_fortran_env
     use fplot_core
-    use csv_module
     use friction
     implicit none
 
     ! Local Variables
-    type(csv_file) :: file
     logical :: ok
     integer(int32) :: npts
     real(real64), allocatable, dimension(:) :: t, x, v, nrm, frc, fmod
     type(maxwell_model) :: mdl
     type(regression_statistics), allocatable, dimension(:) :: stats
+    type(friction_data) :: file
 
     ! Plot Variables
     type(plot_2d) :: plt
@@ -41,16 +40,14 @@ program example
     type(plot_data_2d) :: pd1, pd2
 
     ! Read the data file
-    call file%read("examples\data\friction_data_1.csv", header_row = 1, status_ok = ok)
-    if (.not.ok) then
-        print *, "Could not open file."
-        stop -1
-    end if
-    call file%get(1, t, ok)
-    call file%get(2, x, ok)
-    call file%get(3, v, ok)
-    call file%get(4, nrm, ok)
-    call file%get(5, frc, ok)
+    print "(A)", "Reading the data file..."
+    call read_friction_data("examples\data\friction_data_1.csv", file)
+    print "(A)", "Data file read completed.  Fitting the data..."
+    t = file%time
+    x = file%position
+    v = file%velocity
+    nrm = file%normal_force
+    frc = file%friction_force
 
     ! Attempt to fit the data
     npts = size(t)
