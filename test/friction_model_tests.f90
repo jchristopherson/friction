@@ -164,71 +164,133 @@ function test_gmsm() result(rst)
     logical :: check
     integer(int32) :: i, j
     type(generalized_maxwell_slip_model) :: mdl
-    real(real64) :: f, nrm, c, x, v, muc, mus, bv, s0, alpha, vs
-    real(real64) :: dzdt(3), z(3), f_ans, g, a1, a2, s
-    real(real64) :: args(9)
+    type(generalized_maxwell_slip_model) :: mdl_copy
+    real(real64) :: f, nrm, x, v, muc, mus, bv, vs, splus
+    real(real64), dimension(3) :: dzdt, z, z_scale, expected_rate
+    real(real64) :: expected_force, normalized_state, eta_a, eta_b
+    real(real64), dimension(16) :: params
+    real(real64), parameter, dimension(2) :: velocities = &
+        [0.2d0, -0.2d0]
 
     ! Initialization
     rst = .true.
     call mdl%initialize(3)
-    call random_number(nrm)
-    call random_number(c)
-    call random_number(x)
-    call random_number(v)
-    call random_number(muc)
-    call random_number(mus)
-    call random_number(bv)
-    call random_number(s0)
-    call random_number(alpha)
-    call random_number(vs)
-    call random_number(args)
-    call random_number(z)
-
-    ! Ensure sum(vi) = 1
-    args(3) = 1.0d0 - (args(6) + args(9))
+    nrm = 10.0d0
+    x = 0.0d0
+    muc = 0.4d0
+    mus = 0.8d0
+    bv = 0.15d0
+    vs = 0.5d0
 
     ! Define the model
-    j = 0
-    do i = 1, size(args), 3
-        j = j + 1
-        check = mdl%set_element_stiffness(j, args(i))
-        check = mdl%set_element_damping(j, args(i+1))
-        check = mdl%set_element_scaling(j, args(i+2))
+    do i = 1, 3
+        check = mdl%set_element_stiffness(i, real(i + 1, real64))
+        if (.not.check) then
+            rst = .false.
+            return
+        end if
+        check = mdl%set_element_damping(i, 0.05d0 * real(i, real64))
+        if (.not.check) then
+            rst = .false.
+            return
+        end if
+        check = mdl%set_element_scaling(i, 0.1d0 * real(i, real64))
+        if (.not.check) then
+            rst = .false.
+            return
+        end if
     end do
-    mdl%attraction_coefficient = c
     mdl%coulomb_coefficient = muc
-    mdl%shape_parameter = alpha
     mdl%static_coefficient = mus
-    mdl%stiffness = s0
     mdl%stribeck_velocity = vs
     mdl%viscous_damping = bv
+    mdl%transition_sharpness = 100.0d0
+    mdl%sliding_margin = 0.95d0
+    mdl%reversal_sharpness = 10.0d0
 
-    ! Compute the solution
-    a1 = mdl%coulomb_coefficient * nrm / mdl%stiffness
-    a2 = nrm * (mdl%static_coefficient - mdl%coulomb_coefficient) / &
-        mdl%stiffness
-    s = abs(v) / mdl%stribeck_velocity
-    g = a1 + a2 / (1.0d0 + s**mdl%shape_parameter)
-    f_ans = 0.0d0
+    splus = nrm * (muc + (mus - muc) * &
+        exp(-(velocities(1) / vs)**2))
     do i = 1, 3
-        if (abs(z(i)) < g) then
-            dzdt(i) = v
-        else
-            dzdt(i) = sign(1.0d0, v) * mdl%get_element_scaling(i) * &
-                mdl%attraction_coefficient * &
-                (1.0d0 - z(i) / (mdl%get_element_scaling(i) * g))
-        end if
-        f_ans = f_ans + mdl%get_element_stiffness(i) * z(i) + &
-            mdl%get_element_damping(i) * dzdt(i)
+        z_scale(i) = mdl%get_element_scaling(i) * splus / &
+            mdl%get_element_stiffness(i)
     end do
-    f_ans = f_ans + mdl%viscous_damping * v
+    z = [0.4d0 * z_scale(1), 0.97d0 * z_scale(2), &
+        -0.5d0 * z_scale(3)]
 
-    ! Test
-    f = mdl%evaluate(0.0d0, x, v, nrm, z)
-    if (.not.assert(f, f_ans))  then
+    do j = 1, size(velocities)
+        v = velocities(j)
+        expected_force = 0.0d0
+        do i = 1, 3
+            normalized_state = z(i) / z_scale(i)
+            eta_a = 1.0d0 - 0.5d0 * tanh(mdl%transition_sharpness * &
+                (normalized_state + mdl%sliding_margin)) + 0.5d0 * &
+                tanh(mdl%transition_sharpness * &
+                (normalized_state - mdl%sliding_margin))
+            eta_b = 0.5d0 + 0.5d0 * tanh(mdl%reversal_sharpness * &
+                normalized_state * v / vs)
+            expected_rate(i) = v - eta_a * eta_b * abs(v) * &
+                normalized_state
+            expected_force = expected_force + &
+                mdl%get_element_stiffness(i) * z(i) + &
+                mdl%get_element_damping(i) * expected_rate(i)
+        end do
+        expected_force = expected_force + bv * v
+
+        call mdl%state(0.0d0, x, v, nrm, z, dzdt)
+        f = mdl%evaluate(0.0d0, x, v, nrm, z)
+        do i = 1, 3
+            if (.not.assert(dzdt(i), expected_rate(i))) then
+                rst = .false.
+                print *, "TEST FAILED: test_gmsm state rate", j, i
+            end if
+        end do
+        if (.not.assert(f, expected_force)) then
+            rst = .false.
+            print *, "TEST FAILED: test_gmsm force", j
+        end if
+    end do
+
+    ! A velocity reversal resets the slipping weight toward presliding.
+    v = -velocities(1)
+    dzdt(1) = mdl%element_state(1, 0.0d0, x, v, nrm, z_scale(1))
+    if (abs(dzdt(1) - v) > 1.0d-3) then
         rst = .false.
-        print *, "TEST FAILED: test_gmsm -1"
+        print *, "TEST FAILED: test_gmsm reversal"
     end if
+
+    ! The smoothed state rate has no jump at the presliding/sliding boundary.
+    v = velocities(1)
+    dzdt(1) = mdl%element_state(1, 0.0d0, x, v, nrm, &
+        z_scale(1) * (mdl%sliding_margin - 1.0d-8))
+    expected_rate(1) = mdl%element_state(1, 0.0d0, x, v, nrm, &
+        z_scale(1) * (mdl%sliding_margin + 1.0d-8))
+    if (abs(dzdt(1) - expected_rate(1)) > 1.0d-5) then
+        rst = .false.
+        print *, "TEST FAILED: test_gmsm smooth transition"
+    end if
+
+    ! A stationary input must not move any internal state, even outside z_s.
+    v = 0.0d0
+    z = 2.0d0 * z_scale
+    call mdl%state(0.0d0, x, v, nrm, z, dzdt)
+    if (any(dzdt /= 0.0d0)) then
+        rst = .false.
+        print *, "TEST FAILED: test_gmsm zero velocity"
+    end if
+
+    ! Check the public parameter-array mapping for the new S-GMS parameters.
+    call mdl%to_array(params)
+    call mdl_copy%initialize(3)
+    call mdl_copy%from_array(params)
+    if (.not.assert(mdl_copy%transition_sharpness, &
+        mdl%transition_sharpness) .or. &
+        .not.assert(mdl_copy%sliding_margin, mdl%sliding_margin) .or. &
+        .not.assert(mdl_copy%reversal_sharpness, &
+        mdl%reversal_sharpness)) then
+        rst = .false.
+        print *, "TEST FAILED: test_gmsm parameter mapping"
+    end if
+
     if (.not.mdl%has_internal_state()) then
         rst = .false.
         print *, "TEST FAILED: test_gmsm -2"
