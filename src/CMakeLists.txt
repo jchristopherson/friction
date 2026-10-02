@@ -6,12 +6,12 @@ set(FRICTION_SOURCES
     ${dir}/friction.f90
     ${dir}/friction_core.f90
     ${dir}/friction_errors.f90
-    ${dir}/friction_coulomb.f90
-    ${dir}/friction_lugre.f90
-    ${dir}/friction_maxwell.f90
-    ${dir}/friction_gmsm.f90
-    ${dir}/friction_stribeck.f90
-    ${dir}/friction_modified_stribeck.f90
+    ${dir}/models/friction_coulomb.f90
+    ${dir}/models/friction_lugre.f90
+    ${dir}/models/friction_maxwell.f90
+    ${dir}/models/friction_gmsm.f90
+    ${dir}/models/friction_stribeck.f90
+    ${dir}/models/friction_modified_stribeck.f90
     ${dir}/fitpack/fitpack_core.f90
     ${dir}/fitpack/fitpack.f90
 )
