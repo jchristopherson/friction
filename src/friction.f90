@@ -29,4 +29,6 @@ module friction
     use friction_gmsm
     use friction_stribeck
     use friction_modified_stribeck
+    use friction_data_handling
+    use friction_data_io
 end module

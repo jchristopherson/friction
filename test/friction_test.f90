@@ -48,6 +48,9 @@ program test
 
     check = test_gmsm()
     if (.not.check) flag = 4
+
+    check = test_friction_data_io()
+    if (.not.check) flag = 7
     
     ! End
     stop flag

@@ -22,7 +22,9 @@
 module friction_model_tests
     use iso_fortran_env
     use friction
+    use friction_data_io
     use fortran_test_helper
+    use, intrinsic :: ieee_arithmetic, only : ieee_is_nan
     implicit none
 contains
 ! ------------------------------------------------------------------------------
@@ -272,6 +274,162 @@ function test_modified_stribeck() result(rst)
         print *, "TEST FAILED: test_modified_stribeck reset"
     end if
 end function
+
+! ------------------------------------------------------------------------------
+function test_friction_data_io() result(rst)
+    logical :: rst
+    integer(int32) :: unit, ios
+    character(len=128) :: header_line
+    type(friction_data) :: data, roundtrip, semicolon_data
+    character(len=*), parameter :: input_file = 'friction_data_io_input.csv'
+    character(len=*), parameter :: output_file = 'friction_data_io_output.csv'
+    character(len=*), parameter :: semicolon_file = &
+        'friction_data_io_semicolon.csv'
+    character(len=*), parameter :: custom_header = &
+        't|x|v|normal|friction'
+
+    rst = .true.
+    open(newunit=unit, file=input_file, status='replace', action='write', &
+        iostat=ios)
+    if (ios /= 0) then
+        rst = .false.
+        print *, "TEST FAILED: test_friction_data_io fixture open"
+        return
+    end if
+    write(unit, '(A)') 'Time,Position,Velocity,Normal Force,Friction Force'
+    write(unit, '(A)') '0.0,1.0,,3.0,4.0'
+    write(unit, '(A)') ''
+    write(unit, '(A)') '0.1,2.0,3.0,,5.0'
+    write(unit, '(A)') '0.2,2.5,3.5,4.5'
+    write(unit, '(A)') '0.3,invalid,3.6,4.6,5.6'
+    close(unit)
+
+    call read_friction_data(input_file, data, io_status=ios)
+    if (ios /= 0) then
+        rst = .false.
+        print *, "TEST FAILED: test_friction_data_io read CSV"
+    else
+        if (size(data%time) /= 4) then
+            rst = .false.
+            print *, "TEST FAILED: test_friction_data_io blank row handling"
+        else
+            if (.not.assert(data%time(4), 0.3d0) .or. &
+                .not.ieee_is_nan(data%velocity(1)) .or. &
+                .not.ieee_is_nan(data%normal_force(2)) .or. &
+                .not.ieee_is_nan(data%friction_force(3)) .or. &
+                .not.ieee_is_nan(data%position(4))) then
+                rst = .false.
+                print *, "TEST FAILED: test_friction_data_io missing data"
+            end if
+        end if
+    end if
+
+    call write_friction_data(output_file, data, io_status=ios)
+    if (ios /= 0) then
+        rst = .false.
+        print *, "TEST FAILED: test_friction_data_io write CSV"
+    else
+        open(newunit=unit, file=output_file, status='old', action='read', &
+            iostat=ios)
+        if (ios /= 0) then
+            rst = .false.
+            print *, "TEST FAILED: test_friction_data_io output open"
+        else
+            read(unit, '(A)', iostat=ios) header_line
+            close(unit)
+            if (ios /= 0 .or. trim(header_line) /= &
+                '"Time","Position","Velocity","Normal Force","Friction Force"') then
+                rst = .false.
+                print *, "TEST FAILED: test_friction_data_io default header"
+            end if
+        end if
+        call read_friction_data(output_file, roundtrip, io_status=ios)
+        if (ios /= 0) then
+            rst = .false.
+            print *, "TEST FAILED: test_friction_data_io round trip read"
+        else if (size(roundtrip%time) /= size(data%time)) then
+            rst = .false.
+            print *, "TEST FAILED: test_friction_data_io round trip rows"
+        else if (.not.ieee_is_nan(roundtrip%velocity(1)) .or. &
+            .not.assert(roundtrip%time(2), data%time(2))) then
+            rst = .false.
+            print *, "TEST FAILED: test_friction_data_io round trip values"
+        end if
+    end if
+
+    open(newunit=unit, file=semicolon_file, status='replace', &
+        action='write', iostat=ios)
+    if (ios /= 0) then
+        rst = .false.
+        print *, "TEST FAILED: test_friction_data_io semicolon fixture"
+    else
+        write(unit, '(A)') '1;2;3;4;5'
+        write(unit, '(A)') ''
+        write(unit, '(A)') '6;;8;9;10'
+        close(unit)
+        call read_friction_data(semicolon_file, semicolon_data, &
+            delimiter=';', has_header=.false., io_status=ios)
+        if (ios /= 0) then
+            rst = .false.
+            print *, "TEST FAILED: test_friction_data_io headerless read"
+        else if (size(semicolon_data%time) /= 2) then
+            rst = .false.
+            print *, "TEST FAILED: test_friction_data_io headerless rows"
+        else if (.not.assert(semicolon_data%friction_force(1), 5.0d0) .or. &
+            .not.ieee_is_nan(semicolon_data%position(2))) then
+            rst = .false.
+            print *, "TEST FAILED: test_friction_data_io custom delimiter"
+        end if
+
+        call write_friction_data(output_file, semicolon_data, &
+            delimiter='|', header=custom_header, io_status=ios)
+        if (ios /= 0) then
+            rst = .false.
+            print *, "TEST FAILED: test_friction_data_io custom write"
+        else
+            open(newunit=unit, file=output_file, status='old', &
+                action='read', iostat=ios)
+            if (ios /= 0) then
+                rst = .false.
+                print *, "TEST FAILED: test_friction_data_io custom output open"
+            else
+                read(unit, '(A)', iostat=ios) header_line
+                close(unit)
+                if (ios /= 0 .or. trim(header_line) /= custom_header) then
+                    rst = .false.
+                    print *, "TEST FAILED: test_friction_data_io custom header"
+                end if
+            end if
+            call read_friction_data(output_file, roundtrip, delimiter='|', &
+                io_status=ios)
+            if (ios /= 0) then
+                rst = .false.
+                print *, "TEST FAILED: test_friction_data_io custom round trip"
+            else if (size(roundtrip%time) /= 2) then
+                rst = .false.
+                print *, "TEST FAILED: test_friction_data_io custom row count"
+            else if (.not.assert(roundtrip%time(2), 6.0d0) .or. &
+                .not.ieee_is_nan(roundtrip%position(2)) .or. &
+                .not.assert(roundtrip%friction_force(2), 10.0d0)) then
+                rst = .false.
+                print *, "TEST FAILED: test_friction_data_io custom values"
+            end if
+        end if
+    end if
+
+    call delete_test_file(input_file)
+    call delete_test_file(output_file)
+    call delete_test_file(semicolon_file)
+end function
+
+! ------------------------------------------------------------------------------
+subroutine delete_test_file(filename)
+    character(len=*), intent(in) :: filename
+    integer(int32) :: unit, ios
+
+    open(newunit=unit, file=filename, status='old', iostat=ios)
+    if (ios == 0) close(unit, status='delete')
+end subroutine
 
 ! ------------------------------------------------------------------------------
 function test_gmsm() result(rst)
