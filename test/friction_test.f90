@@ -40,8 +40,17 @@ program test
     check = test_maxwell()
     if (.not.check) flag = 3
 
+    check = test_stribeck()
+    if (.not.check) flag = 5
+
+    check = test_modified_stribeck()
+    if (.not.check) flag = 6
+
     check = test_gmsm()
     if (.not.check) flag = 4
+
+    check = test_friction_data_io()
+    if (.not.check) flag = 7
     
     ! End
     stop flag
