@@ -88,13 +88,17 @@ function sf_eval(this, t, x, dxdt, nrm, svars) result(rst)
     real(real64) :: rst
         !! The friction force.
 
-    real(real64) :: fv, Fc, Fs
+    real(real64) :: dry_force, Fc, Fs
+
+    if (dxdt == 0.0d0) then
+        rst = 0.0d0
+        return
+    end if
 
     Fc = this%coulomb_friction_coefficient * nrm
     Fs = this%static_friction_coefficient * nrm
-    fv = Fc + (Fs - Fc) * exp(-abs(dxdt / this%stribeck_velocity)**2) + &
-        this%viscous_damping * dxdt
-    rst = sign(1.0d0, dxdt) * fv
+    dry_force = Fc + (Fs - Fc) * exp(-abs(dxdt / this%stribeck_velocity)**2)
+    rst = sign(1.0d0, dxdt) * dry_force + this%viscous_damping * dxdt
 end function
 
 ! ------------------------------------------------------------------------------

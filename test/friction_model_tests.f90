@@ -31,33 +31,33 @@ function test_coulomb() result(rst)
     logical :: rst
 
     ! Local Variables
-    real(real64) :: normal, coeff, vel, ans, f
+    real(real64) :: normal, f
     type(coulomb_model) :: mdl
 
     ! Initialization
     rst = .true.
-    call random_number(normal)
-    call random_number(coeff)
-    call random_number(vel)
-    vel = vel - 0.5d0
-    mdl%friction_coefficient = coeff
-
-    ! Compute the actual solution
-    if (vel == 0.0d0) then
-        ans = 0.0d0
-    else
-        ans = coeff * normal * sign(1.0d0, vel)
-    end if
+    normal = 12.0d0
+    mdl%friction_coefficient = 0.35d0
 
     ! Test
-    f = mdl%evaluate(0.0d0, 0.0d0, vel, normal)
-    if (.not.assert(f, ans)) then
+    f = mdl%evaluate(0.0d0, 0.0d0, 0.2d0, normal)
+    if (.not.assert(f, 4.2d0)) then
         rst = .false.
         print *, "TEST FAILED: test_coulomb -1"
     end if
-    if (mdl%has_internal_state()) then
+    f = mdl%evaluate(0.0d0, 0.0d0, -0.2d0, normal)
+    if (.not.assert(f, -4.2d0)) then
         rst = .false.
         print *, "TEST FAILED: test_coulomb -2"
+    end if
+    f = mdl%evaluate(0.0d0, 0.0d0, 0.0d0, normal)
+    if (.not.assert(f, 0.0d0)) then
+        rst = .false.
+        print *, "TEST FAILED: test_coulomb -3"
+    end if
+    if (mdl%has_internal_state()) then
+        rst = .false.
+        print *, "TEST FAILED: test_coulomb -4"
     end if
 end function
 
@@ -67,23 +67,24 @@ function test_lugre() result(rst)
     logical :: rst
 
     ! Local Variables
+    integer(int32) :: i
     real(real64) :: mus, mud, k, b, bv, vs, a, s, dsdt(1), v, n, f, &
         fans, dsans, g, a1, a2, Fc, Fs
+    real(real64), parameter, dimension(2) :: velocities = &
+        [0.2d0, -0.2d0]
     type(lugre_model) :: mdl
 
     ! Initialization
     rst = .true.
-    call random_number(mus)
-    call random_number(mud)
-    call random_number(k)
-    call random_number(b)
-    call random_number(bv)
-    call random_number(vs)
-    call random_number(a)
-    call random_number(s)
-    call random_number(v)
-    call random_number(n)
-    v = v - 0.5d0
+    mus = 0.8d0
+    mud = 0.4d0
+    k = 100.0d0
+    b = 1.5d0
+    bv = 0.2d0
+    vs = 0.5d0
+    a = 2.0d0
+    s = 0.01d0
+    n = 10.0d0
     mdl%static_coefficient = mus
     mdl%coulomb_coefficient = mud
     mdl%stribeck_velocity = vs
@@ -92,30 +93,42 @@ function test_lugre() result(rst)
     mdl%damping = b
     mdl%viscous_damping = bv
 
-    ! Compute the solution
-    Fc = mdl%coulomb_coefficient * n
-    Fs = mdl%static_coefficient * n
-    a1 = Fc / mdl%stiffness
-    a2 = (Fs - Fc) / mdl%stiffness
-    g = a1 + a2 / (1.0d0 + (abs(v) / mdl%stribeck_velocity)**mdl%shape_parameter)
-    dsans = v - abs(v) * s / g
-    fans = k * s + b * dsans + bv * v
+    do i = 1, size(velocities)
+        v = velocities(i)
+        Fc = mdl%coulomb_coefficient * n
+        Fs = mdl%static_coefficient * n
+        a1 = Fc / mdl%stiffness
+        a2 = (Fs - Fc) / mdl%stiffness
+        g = a1 + a2 / &
+            (1.0d0 + (abs(v) / mdl%stribeck_velocity)**mdl%shape_parameter)
+        dsans = v - abs(v) * s / g
+        fans = k * s + b * dsans + bv * v
 
+        call mdl%state(0.0d0, 0.0d0, v, n, [s], dsdt)
+        f = mdl%evaluate(0.0d0, 0.0d0, v, n, [s])
+        if (.not.assert(dsans, dsdt(1))) then
+            rst = .false.
+            print *, "TEST FAILED: test_lugre state", i
+        end if
+        if (.not.assert(fans, f)) then
+            rst = .false.
+            print *, "TEST FAILED: test_lugre force", i
+        end if
+    end do
+    v = 0.0d0
     call mdl%state(0.0d0, 0.0d0, v, n, [s], dsdt)
-    f = mdl%evaluate(0.0d0, 0.0d0, v, n, [s])
-
-    ! Test
-    if (.not.assert(dsans, dsdt(1))) then
+    if (.not.assert(dsdt(1), 0.0d0)) then
         rst = .false.
-        print *, "TEST FAILED: test_lugre -1"
+        print *, "TEST FAILED: test_lugre zero velocity"
     end if
-    if (.not.assert(fans, f)) then
+    f = mdl%evaluate(0.0d0, 0.0d0, v, n, [s])
+    if (.not.assert(f, k * s)) then
         rst = .false.
-        print *, "TEST FAILED: test_lugre -2"
+        print *, "TEST FAILED: test_lugre zero-velocity force"
     end if
     if (.not.mdl%has_internal_state()) then
         rst = .false.
-        print *, "TEST FAILED: test_lugre -3"
+        print *, "TEST FAILED: test_lugre state flag"
     end if
 end function
 
@@ -125,33 +138,138 @@ function test_maxwell() result(rst)
     logical :: rst
 
     ! Local Variables
-    real(real64) :: stiff, normal, coeff, pos, ans, f, sdelta, delta
+    real(real64) :: f, normal
     type(maxwell_model) :: mdl
 
     ! Initialization
     rst = .true.
-    call random_number(stiff)
-    call random_number(normal)
-    call random_number(coeff)
-    call random_number(pos)
-    pos = pos - 0.5d0
-    mdl%stiffness = stiff
-    mdl%friction_coefficient = coeff
-
-    ! Compute the actual solution
-    delta = normal * mdl%friction_coefficient / mdl%stiffness
-    sdelta = min(abs(pos), delta) * sign(1.0d0, pos)
-    ans = mdl%stiffness * sdelta
+    normal = 10.0d0
+    mdl%stiffness = 100.0d0
+    mdl%friction_coefficient = 0.3d0
 
     ! Test
-    f = mdl%evaluate(0.0d0, pos, 0.0d0, normal)
-    if (.not.assert(f, ans)) then
+    f = mdl%evaluate(0.0d0, 0.01d0, 0.0d0, normal)
+    if (.not.assert(f, 1.0d0)) then
         rst = .false.
-        print *, "TEST FAILED: test_maxwell -1"
+        print *, "TEST FAILED: test_maxwell elastic loading"
+    end if
+    f = mdl%evaluate(0.0d0, 0.2d0, 0.0d0, normal)
+    if (.not.assert(f, 3.0d0)) then
+        rst = .false.
+        print *, "TEST FAILED: test_maxwell positive saturation"
+    end if
+    f = mdl%evaluate(0.0d0, 0.19d0, 0.0d0, normal)
+    if (.not.assert(f, 2.0d0)) then
+        rst = .false.
+        print *, "TEST FAILED: test_maxwell unloading"
+    end if
+    f = mdl%evaluate(0.0d0, 0.0d0, 0.0d0, normal)
+    if (.not.assert(f, -3.0d0)) then
+        rst = .false.
+        print *, "TEST FAILED: test_maxwell reversal"
+    end if
+    call mdl%reset()
+    f = mdl%evaluate(0.0d0, 0.0d0, 0.0d0, normal)
+    if (.not.assert(f, 0.0d0)) then
+        rst = .false.
+        print *, "TEST FAILED: test_maxwell reset"
     end if
     if (mdl%has_internal_state()) then
         rst = .false.
-        print *, "TEST FAILED: test_maxwell -2"
+        print *, "TEST FAILED: test_maxwell state flag"
+    end if
+end function
+
+! ------------------------------------------------------------------------------
+function test_stribeck() result(rst)
+    logical :: rst
+    real(real64) :: nrm, dry_force, f, velocity
+    type(stribeck_model) :: mdl
+
+    rst = .true.
+    nrm = 10.0d0
+    velocity = 0.25d0
+    mdl%static_friction_coefficient = 0.8d0
+    mdl%coulomb_friction_coefficient = 0.4d0
+    mdl%stribeck_velocity = 0.5d0
+    mdl%viscous_damping = 2.0d0
+    dry_force = nrm * (mdl%coulomb_friction_coefficient + &
+        (mdl%static_friction_coefficient - &
+        mdl%coulomb_friction_coefficient) * &
+        exp(-(velocity / mdl%stribeck_velocity)**2))
+
+    f = mdl%evaluate(0.0d0, 0.0d0, velocity, nrm)
+    if (.not.assert(f, dry_force + mdl%viscous_damping * velocity)) then
+        rst = .false.
+        print *, "TEST FAILED: test_stribeck positive velocity"
+    end if
+    f = mdl%evaluate(0.0d0, 0.0d0, -velocity, nrm)
+    if (.not.assert(f, -dry_force - mdl%viscous_damping * velocity)) then
+        rst = .false.
+        print *, "TEST FAILED: test_stribeck negative velocity"
+    end if
+    f = mdl%evaluate(0.0d0, 0.0d0, 0.0d0, nrm)
+    if (.not.assert(f, 0.0d0)) then
+        rst = .false.
+        print *, "TEST FAILED: test_stribeck zero velocity"
+    end if
+    if (mdl%has_internal_state()) then
+        rst = .false.
+        print *, "TEST FAILED: test_stribeck state flag"
+    end if
+end function
+
+! ------------------------------------------------------------------------------
+function test_modified_stribeck() result(rst)
+    logical :: rst
+    real(real64) :: f, nrm
+    type(modified_stribeck_model) :: mdl
+
+    rst = .true.
+    nrm = 10.0d0
+    mdl%static_friction_coefficient = 0.8d0
+    mdl%coulomb_friction_coefficient = 0.4d0
+    mdl%stribeck_velocity = 0.5d0
+    mdl%viscous_damping = 2.0d0
+    mdl%stiffness = 100.0d0
+
+    f = mdl%evaluate(0.0d0, 0.03d0, 0.0d0, nrm)
+    if (.not.assert(f, 3.0d0)) then
+        rst = .false.
+        print *, "TEST FAILED: test_modified_stribeck presliding"
+    end if
+    f = mdl%evaluate(0.0d0, 0.2d0, 0.0d0, nrm)
+    if (.not.assert(f, 8.0d0)) then
+        rst = .false.
+        print *, "TEST FAILED: test_modified_stribeck positive saturation"
+    end if
+    f = mdl%evaluate(0.0d0, 0.18d0, 0.0d0, nrm)
+    if (.not.assert(f, 6.0d0)) then
+        rst = .false.
+        print *, "TEST FAILED: test_modified_stribeck unloading"
+    end if
+    f = mdl%evaluate(0.0d0, 0.0d0, 0.0d0, nrm)
+    if (.not.assert(f, -8.0d0)) then
+        rst = .false.
+        print *, "TEST FAILED: test_modified_stribeck reversal"
+    end if
+    call mdl%reset()
+    f = mdl%evaluate(0.0d0, 0.0d0, 0.25d0, nrm)
+    if (.not.assert(f, mdl%viscous_damping * 0.25d0)) then
+        rst = .false.
+        print *, "TEST FAILED: test_modified_stribeck viscous force"
+    end if
+    call mdl%reset()
+    f = mdl%evaluate(0.0d0, 0.0d0, -0.25d0, nrm)
+    if (.not.assert(f, -mdl%viscous_damping * 0.25d0)) then
+        rst = .false.
+        print *, "TEST FAILED: test_modified_stribeck reverse viscous force"
+    end if
+    call mdl%reset()
+    f = mdl%evaluate(0.0d0, 0.0d0, 0.0d0, nrm)
+    if (.not.assert(f, 0.0d0)) then
+        rst = .false.
+        print *, "TEST FAILED: test_modified_stribeck reset"
     end if
 end function
 
