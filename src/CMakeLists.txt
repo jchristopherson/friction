@@ -14,6 +14,8 @@ set(FRICTION_SOURCES
     ${dir}/models/friction_modified_stribeck.f90
     ${dir}/fitpack/fitpack_core.f90
     ${dir}/fitpack/fitpack.f90
+    ${dir}/data/friction_data_handling.f90
+    ${dir}/data/friction_data_io.f90
 )
 
 # Dependencies

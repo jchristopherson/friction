@@ -36,28 +36,29 @@ F = k \delta
 ```math
 \Delta = \frac{N \mu_c}{k}
 ```
-- Generalized Maxwell Slip Model
+- Smoothed Generalized Maxwell Slip (S-GMS) Model
 ```math
 F = \sum_{i=1}^{n} \left( k_{i} z_{i} + b_{i} \frac{dz_{i}}{dt} \right) + b_{v} v
 ```
 ```math
-\begin{equation}
-\frac{dz_{i}}{dt} = 
-\begin{cases}
-v & \text{if} |z_{i}| \le g(v) \\
-\text{sgn} \left( v \right) \nu_{i} C \left( 1 - \frac{z_{i}}{\nu_{i} g(v)} \right) & \text{otherwise}
-\end{cases}
-\end{equation}
+\frac{dz_i}{dt} = v - \eta_i(z_i,v) |v| \frac{z_i}{z_{s,i}^{+}(v)}
 ```
 ```math
-g(v) = a_{1} + \frac{a_{2}}{1 + s^{\alpha}}
+\eta_i = \eta_{A,i}\eta_{B,i}
 ```
 ```math
-a_{1} = \frac{\mu_{c} N}{\sigma_{0}}, a_{2} = \frac{\mu_{s} N - \mu_{c} N}{\sigma_{0}}, s = \frac{\left| v \right|}{v_{s}}
+\eta_{A,i} = 1 - \frac{1}{2}\tanh\left[\lambda\left(\frac{z_i}{z_{s,i}^{+}}+\zeta\right)\right] + \frac{1}{2}\tanh\left[\lambda\left(\frac{z_i}{z_{s,i}^{+}}-\zeta\right)\right]
+```
+```math
+\eta_{B,i} = \frac{1}{2} + \frac{1}{2}\tanh\left(\gamma\frac{z_i}{z_{s,i}^{+}}\frac{v}{v_s}\right)
+```
+```math
+z_{s,i}^{+}(v) = \frac{\nu_i}{k_i} S^{+}(v), \quad S^{+}(v) = N\left[\mu_c + (\mu_s-\mu_c)\exp\left(-\left(\frac{|v|}{v_s}\right)^2\right)\right]
 ```
 ```math
 \sum_{i=1}^{n} \nu_{i} = 1
 ```
+Here, $\lambda$, $\zeta$, and $\gamma$ control the presliding/sliding transition and velocity-reversal reset; the model returns zero state rate at zero velocity.
 - Stribeck Model
 ```math
 F = \text{sgn} \left( v \right) \left( \mu_c N + N \left( mu_s - mu_c \right) \exp(-|\frac{v}{v_s}|^2) \right) + b_v v
@@ -84,4 +85,5 @@ a_{1} = \frac{\mu_c N}{k}, a_{2} = \frac{\mu_s N - \mu_c N}{k}
 5. Lampaert, Vincent & Al-Bender, Farid & Swevers, Jan. (2003). A generalized Maxwell-slip friction model appropriate for control purposes. 4. 1170- 1177 vol.4. 10.1109/PHYCON.2003.1237071. 
 6. Al-Bender, Farid & Swevers, Jan. (2009). Characterization of friction force dynamics. Control Systems, IEEE. 28. 64 - 81. 10.1109/MCS.2008.929279. 
 7. Al-Bender, Farid. (2010). Fundamentals of friction modeling. Proceedings - ASPE Spring Topical Meeting on Control of Precision Systems, ASPE 2010. 48. 
-8. Al-Bender, Farid & Moerlooze, K.. (2011). Characterization and modeling of friction and wear: an overview. International Journal Sustainable Construction & Design. 2. 19-28. 10.21825/scad.v2i1.20431. 
+8. Al-Bender, Farid & Moerlooze, K.. (2011). Characterization and modeling of friction and wear: an overview. International Journal Sustainable Construction & Design. 2. 19-28. 10.21825/scad.v2i1.20431.
+9. Boegli, Max & De Laet, Tinne & De Schutter, Joris & Swevers, Jan. (2012). A Smoothed GMS Friction Model Suited for Gradient-Based Friction State Estimation. 2012 American Control Conference, 2627-2632. [10.1109/ACC.2012.6315360](https://doi.org/10.1109/ACC.2012.6315360).

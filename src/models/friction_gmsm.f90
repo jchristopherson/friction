@@ -37,14 +37,14 @@ module friction_gmsm
     type, extends(friction_model) :: generalized_maxwell_slip_model
         !! A representation of the Generalized Maxwell Slip model.
         !!
-        !! The Generalized Maxwell Slip model is defined as follows.
+        !! The smoothed Generalized Maxwell Slip model is defined as follows.
         !!
         !! $$ F = \sum\limits_{i=1}^{n} \left( k_i z_i + b_i \frac{dz_i}{dt} \right) + b_v v $$
-        !! $$ \frac{dz_i}{dt} = \begin{cases} v & \text{if } |z_i| \le g(v) \\ sgn{ \left( v \right)} \nu_i C \left( 1 - \frac{z_i}{\nu_i g(v)} \right) & \text{otherwise} \end{cases} $$
-        !! $$ g(v) = a_{1} + \frac{a_2}{1 + s^{\alpha}} $$
-        !! $$ a_{1} = \frac{\mu_c N}{\sigma_{0}} $$
-        !! $$ a_{2} = \frac{\mu_s N - \mu_c N}{\sigma_{0}} $$
-        !! $$ s = \frac{\left| v \right|}{v_s} $$
+        !! $$ \frac{dz_i}{dt} = v - \eta_i(z_i,v) |v| \frac{z_i}{z_{s,i}^{+}(v)} $$
+        !! $$ \eta_i = \eta_{A,i}\eta_{B,i} $$
+        !! $$ \eta_{A,i} = 1 - \frac{1}{2}\tanh\left[\lambda\left(\frac{z_i}{z_{s,i}^{+}}+\zeta\right)\right] + \frac{1}{2}\tanh\left[\lambda\left(\frac{z_i}{z_{s,i}^{+}}-\zeta\right)\right] $$
+        !! $$ \eta_{B,i} = \frac{1}{2} + \frac{1}{2}\tanh\left(\gamma\frac{z_i}{z_{s,i}^{+}}\frac{v}{v_s}\right) $$
+        !! $$ z_{s,i}^{+}(v) = \frac{\nu_i}{k_i}N\left[\mu_c+(\mu_s-\mu_c)\exp\left(-\left(\frac{|v|}{v_s}\right)^2\right)\right] $$
         !! $$ \sum\limits_{i=1}^n {\nu_i} = 1 $$
         !!
         !! where:
@@ -52,8 +52,6 @@ module friction_gmsm
         !! \( F = \) Friction Force 
         !!    
         !! \( N = \) Normal Force
-        !!
-        !! \( C = \) Attraction Coefficient
         !!
         !! \( x = \) Position
         !! 
@@ -69,13 +67,11 @@ module friction_gmsm
         !!
         !! \( b_v = \) Viscous Damping Coefficient
         !!
-        !! \( \sigma_0 = \) Frictional Stiffness
-        !! 
-        !! \( \alpha = \) Stribeck Curve Shape Factor
-        !!
         !! \( v_s = \) Stribeck Velocity Coefficient
         !!
         !! \( \nu_i = \) i-th Element Scaling Factor
+        !!
+        !! \( \lambda, \gamma, \zeta = \) S-GMS smoothing parameters
         integer(int32), private :: m_nModels = 0
             !! The number of elements in the model
         real(real64), private, allocatable, dimension(:) :: m_params
@@ -88,12 +84,14 @@ module friction_gmsm
             !! The Stribeck velocity parameter.
         real(real64) :: shape_parameter
             !! The Stribeck curve shape parameter.
-        real(real64) :: attraction_coefficient
-            !! The attraction coefficient.
         real(real64) :: viscous_damping
             !! The viscous damping coefficient.
-        real(real64) :: stiffness
-            !! The frictional stiffness.
+        real(real64) :: transition_sharpness
+            !! The sharpness of the presliding/sliding transition (lambda).
+        real(real64) :: sliding_margin
+            !! The normalized state margin before full sliding (zeta).
+        real(real64) :: reversal_sharpness
+            !! The sharpness of the velocity-reversal transition (gamma).
     contains
         procedure, public :: evaluate => gmsm_eval
         procedure, public :: has_internal_state => gmsm_has_state_vars
@@ -215,15 +213,15 @@ subroutine gmsm_to_array(this, x)
         !!
         !!  2. coulomb_coefficient
         !!
-        !!  3. attraction_coefficient
+        !!  3. viscous_damping
         !!
-        !!  4. stiffness
+        !!  4. stribeck_velocity
         !!
-        !!  5. viscous_damping
+        !!  5. transition_sharpness (lambda)
         !!
-        !!  6. stribeck_velocity
+        !!  6. sliding_margin (zeta)
         !!
-        !!  7. shape_parameter
+        !!  7. reversal_sharpness (gamma)
         !!
         !!  8. element stiffness
         !!  
@@ -235,11 +233,11 @@ subroutine gmsm_to_array(this, x)
     if (size(x) /= this%parameter_count()) error stop FRICTION_ARRAY_SIZE_ERROR
     x(1) = this%static_coefficient
     x(2) = this%coulomb_coefficient
-    x(3) = this%attraction_coefficient
-    x(4) = this%stiffness
-    x(5) = this%viscous_damping
-    x(6) = this%stribeck_velocity
-    x(7) = this%shape_parameter
+    x(3) = this%viscous_damping
+    x(4) = this%stribeck_velocity
+    x(5) = this%transition_sharpness
+    x(6) = this%sliding_margin
+    x(7) = this%reversal_sharpness
     x(8:) = this%m_params
 end subroutine
 
@@ -257,15 +255,15 @@ subroutine gmsm_from_array(this, x)
         !!
         !!  2. coulomb_coefficient
         !!
-        !!  3. attraction_coefficient
+        !!  3. viscous_damping
         !!
-        !!  4. stiffness
+        !!  4. stribeck_velocity
         !!
-        !!  5. viscous_damping
+        !!  5. transition_sharpness (lambda)
         !!
-        !!  6. stribeck_velocity
+        !!  6. sliding_margin (zeta)
         !!
-        !!  7. shape_parameter
+        !!  7. reversal_sharpness (gamma)
         !!
         !!  8. element stiffness
         !!  
@@ -278,11 +276,11 @@ subroutine gmsm_from_array(this, x)
     if (size(x) /= this%parameter_count()) error stop FRICTION_ARRAY_SIZE_ERROR
     this%static_coefficient = x(1)
     this%coulomb_coefficient = x(2)
-    this%attraction_coefficient = x(3)
-    this%stiffness = x(4)
-    this%viscous_damping = x(5)
-    this%stribeck_velocity = x(6)
-    this%shape_parameter = x(7)
+    this%viscous_damping = x(3)
+    this%stribeck_velocity = x(4)
+    this%transition_sharpness = x(5)
+    this%sliding_margin = x(6)
+    this%reversal_sharpness = x(7)
     this%m_params = x(8:)
 end subroutine
 
@@ -499,18 +497,15 @@ pure function gmsm_stribeck_curve(this, dxdt, nrm) result(rst)
     real(real64), intent(in) :: nrm
         !! The normal force between the contacting bodies.
     real(real64) :: rst
-        !! The value of the Stribeck function.  The units are units of
-        !! position.
+        !! The positive Stribeck friction force.
 
     ! Local Variables
-    real(real64) :: a1, a2, s
+    real(real64) :: s
 
     ! Process
-    a1 = this%coulomb_coefficient * nrm / this%stiffness
-    a2 = nrm * (this%static_coefficient - this%coulomb_coefficient) / &
-        this%stiffness
     s = abs(dxdt) / this%stribeck_velocity
-    rst = a1 + a2 / (1.0d0 + s**this%shape_parameter)
+    rst = nrm * (this%coulomb_coefficient + &
+        (this%static_coefficient - this%coulomb_coefficient) * exp(-s**2))
 end function
 
 ! ------------------------------------------------------------------------------
@@ -538,19 +533,21 @@ pure function gmsm_element_state_model(this, i, t, x, dxdt, nrm, z) &
         !! The value of the state equation.
 
     ! Local Variables
-    real(real64) :: s, vi, C
+    real(real64) :: s, zs, u, eta_a, eta_b
 
-    ! Compute the Stribeck function
+    ! Compute the element's positive steady-state deflection.
     s = this%stribeck_function(dxdt, nrm)
+    zs = this%get_element_scaling(i) * s / &
+        this%get_element_stiffness(i)
+    u = z / zs
 
-    ! Process
-    if (abs(z) <= s) then
-        rst = dxdt
-    else
-        C = this%attraction_coefficient
-        vi = this%get_element_scaling(i)
-        rst = sign(1.0d0, dxdt) * vi * C * (1.0d0 - z / (vi * s))
-    end if
+    ! Smoothly blend presliding, sliding, and velocity-reversal behavior.
+    eta_a = 1.0d0 - 0.5d0 * tanh(this%transition_sharpness * &
+        (u + this%sliding_margin)) + 0.5d0 * &
+        tanh(this%transition_sharpness * (u - this%sliding_margin))
+    eta_b = 0.5d0 + 0.5d0 * tanh(this%reversal_sharpness * u * &
+        dxdt / this%stribeck_velocity)
+    rst = dxdt - eta_a * eta_b * abs(dxdt) * u
 end function
 
 ! ------------------------------------------------------------------------------
