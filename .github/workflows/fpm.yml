@@ -123,20 +123,17 @@ jobs:
           FPM_FC: ${{ steps.setup-fortran.outputs.fc }}
           FPM_CC: ${{ steps.setup-fortran.outputs.cc }}
           SHARED: ${{ matrix.shared }}
+          OPENMP_FLAG: ${{ matrix.compiler == 'intel' && '-qopenmp' || '-fopenmp' }}
         run: |
-          FLAGS=""
+          FLAGS="$OPENMP_FLAG"
           if [[ "$SHARED" == "true" ]]; then
             if [[ "$RUNNER_OS" == "Windows" ]]; then
-              FLAGS="--flag=-Wl,--export-all-symbols"
+              FLAGS="$FLAGS -Wl,--export-all-symbols"
             else
-              FLAGS="--flag=-fPIC"
+              FLAGS="$FLAGS -fPIC"
             fi
           fi
-          if [[ -n "$FLAGS" ]]; then
-            fpm build $FLAGS
-          else
-            fpm build
-          fi
+          fpm build --flag="$FLAGS" --link-flag="$FLAGS"
 
       - name: Run tests
         shell: bash
@@ -146,24 +143,21 @@ jobs:
           FPM_FC: ${{ steps.setup-fortran.outputs.fc }}
           FPM_CC: ${{ steps.setup-fortran.outputs.cc }}
           SHARED: ${{ matrix.shared }}
+          OPENMP_FLAG: ${{ matrix.compiler == 'intel' && '-qopenmp' || '-fopenmp' }}
         run: |
           if [[ "$RUNNER_OS" == "Windows" ]]; then
             export PATH="$PATH:/c/msys64/mingw64/bin"
           fi
-          FLAGS=""
+          FLAGS="$OPENMP_FLAG"
           if [[ "$RUNNER_OS" == "Windows" ]]; then
             ALIAS_DIR="$(cygpath -u "$RUNNER_TEMP")/blas-lapack-alias"
-            FLAGS="--flag=-L$ALIAS_DIR --flag=-L/c/msys64/mingw64/lib"
+            FLAGS="$FLAGS -L$ALIAS_DIR -L/c/msys64/mingw64/lib"
           fi
           if [[ "$SHARED" == "true" ]]; then
             if [[ "$RUNNER_OS" == "Windows" ]]; then
-              FLAGS="$FLAGS --flag=-Wl,--export-all-symbols"
+              FLAGS="$FLAGS -Wl,--export-all-symbols"
             else
-              FLAGS="--flag=-fPIC"
+              FLAGS="$FLAGS -fPIC"
             fi
           fi
-          if [[ -n "$FLAGS" ]]; then
-            fpm test $FLAGS
-          else
-            fpm test
-          fi
+          fpm test --flag="$FLAGS" --link-flag="$FLAGS"
