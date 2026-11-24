@@ -108,7 +108,7 @@ contains
             !! The current state vector.
         real(real64), intent(out), dimension(:) :: dxdt
             !! The derivatives.
-        class(*), intent(inout), optional :: args
+        class(*), intent(in), optional :: args
             !! User arguments
 
         ! Local Variables
