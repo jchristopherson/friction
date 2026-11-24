@@ -93,7 +93,7 @@ jobs:
           mkdir -p "$ALIAS_DIR"
           cp "$OPENBLAS_LIB" "$ALIAS_DIR/libblas.a"
           cp "$OPENBLAS_LIB" "$ALIAS_DIR/liblapack.a"
-          echo "LIBRARY_PATH=$ALIAS_DIR:$LIB_DIR${LIBRARY_PATH:+:$LIBRARY_PATH}" >> "$GITHUB_ENV"
+          echo "LIBRARY_PATH=$(cygpath -m "$ALIAS_DIR");$(cygpath -m "$LIB_DIR")${LIBRARY_PATH:+;$LIBRARY_PATH}" >> "$GITHUB_ENV"
 
       - name: Show compiler version
         shell: bash
@@ -149,10 +149,6 @@ jobs:
             export PATH="$PATH:/c/msys64/mingw64/bin"
           fi
           FLAGS="$OPENMP_FLAG"
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            ALIAS_DIR="$(cygpath -u "$RUNNER_TEMP")/blas-lapack-alias"
-            FLAGS="$FLAGS -L$ALIAS_DIR -L/c/msys64/mingw64/lib"
-          fi
           if [[ "$SHARED" == "true" ]]; then
             if [[ "$RUNNER_OS" == "Windows" ]]; then
               FLAGS="$FLAGS -Wl,--export-all-symbols"
