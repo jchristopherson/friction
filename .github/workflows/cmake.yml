@@ -83,25 +83,9 @@ jobs:
             brew update
             brew install openblas
           elif [ "${{ runner.os }}" = "Windows" ]; then
-            C:/msys64/usr/bin/pacman.exe -S --noconfirm mingw-w64-x86_64-openblas
-            ALIAS_DIR="$RUNNER_TEMP/blas-lapack-alias"
-            mkdir -p "$ALIAS_DIR"
-            OPENBLAS_LIB=""
-            for CANDIDATE in /c/msys64/mingw64/lib/libopenblas.dll.a /c/msys64/mingw64/lib/libopenblas.a; do
-              if [ -f "$CANDIDATE" ]; then
-                OPENBLAS_LIB="$CANDIDATE"
-                break
-              fi
-            done
-            if [ -z "$OPENBLAS_LIB" ]; then
-              echo "Unable to locate OpenBLAS library"
-              ls -la /c/msys64/mingw64/lib/libopenblas* || true
-              exit 1
-            fi
-            cp "$OPENBLAS_LIB" "$ALIAS_DIR/libblas.a"
-            cp "$OPENBLAS_LIB" "$ALIAS_DIR/liblapack.a"
+            C:/msys64/usr/bin/pacman.exe -S --noconfirm mingw-w64-x86_64-blas mingw-w64-x86_64-lapack
             echo "MSYS2_MINGW_BIN=/c/msys64/mingw64/bin" >> "$GITHUB_ENV"
-            echo "LIBRARY_PATH=$ALIAS_DIR:C:/msys64/mingw64/lib" >> "$GITHUB_ENV"
+            echo "LIBRARY_PATH=C:/msys64/mingw64/lib" >> "$GITHUB_ENV"
           fi
 
       - name: Configure CMake
@@ -145,7 +129,7 @@ jobs:
           mkdir -p consumer
           cat > consumer/CMakeLists.txt <<'EOF'
           cmake_minimum_required(VERSION 3.24)
-          project(friction_consumer LANGUAGES Fortran)
+          project(friction_consumer LANGUAGES Fortran C)
 
           find_package(friction CONFIG REQUIRED)
 
@@ -167,7 +151,7 @@ jobs:
             -DCMAKE_C_COMPILER=${{ env.CC }}
           )
           if [ "${{ runner.os }}" = "Windows" ]; then
-            INSTALL_PREFIX="${GITHUB_WORKSPACE//\\//}/install"
+            INSTALL_PREFIX="${GITHUB_WORKSPACE//\\//}/install;/c/msys64/mingw64"
             CMAKE_OPTIONS+=( -G "MinGW Makefiles" )
           else
             INSTALL_PREFIX="${{ github.workspace }}/install"
