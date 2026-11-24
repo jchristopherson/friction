@@ -169,12 +169,11 @@ module friction_core
 contains
 ! ------------------------------------------------------------------------------
 ! Routine for fitting the friction model - uses module-level variables
-subroutine fit_fcn(x, p, f, stop_, args)
+subroutine fit_fcn(x, p, f, args)
     ! Arguments
     real(real64), intent(in), dimension(:) :: x, p
     real(real64), intent(out), dimension(:) :: f
-    logical, intent(out) :: stop_
-    class(*), intent(inout), optional :: args
+    class(*), intent(in), optional :: args
 
     ! Local Variables
     integer(int32) :: i, n, npts
@@ -184,7 +183,6 @@ subroutine fit_fcn(x, p, f, stop_, args)
     ! Initialization
     n = size(x)    
     if (.not.present(args)) then
-        stop_ = .true.
         return
     end if
     select type (args)
@@ -212,18 +210,14 @@ subroutine fit_fcn(x, p, f, stop_, args)
         call fmdl_%constraint_equations(t_(:npts), x_(:npts), v_(:npts), &
             n_(:npts), f_(:npts), f(npts+1:))
     end if
-
-    ! No need to stop
-    stop_ = .false.
 end subroutine
 
 ! Routine for fitting if internal variables are used by the model
-subroutine internal_var_fit_fcn(x, p, f, stop_, args)
+subroutine internal_var_fit_fcn(x, p, f, args)
     ! Arguments
     real(real64), intent(in), dimension(:) :: x, p
     real(real64), intent(out), dimension(:) :: f
-    logical, intent(out) :: stop_
-    class(*), intent(inout), optional :: args
+    class(*), intent(in), optional :: args
 
     ! Local Variables
     integer(int32) :: i, n, npts
@@ -236,7 +230,6 @@ subroutine internal_var_fit_fcn(x, p, f, stop_, args)
     ! Initialization
     n = size(x)
     if (.not.present(args)) then
-        stop_ = .true.
         return
     end if
     select type (args)
@@ -271,9 +264,6 @@ subroutine internal_var_fit_fcn(x, p, f, stop_, args)
         call fmdl_%constraint_equations(t_(:npts), x_(:npts), v_(:npts), &
             n_(:npts), f_(:npts), f(npts+1:))
     end if
-
-    ! No need to stop
-    stop_ = .false.
 end subroutine
 
 ! ODE Routine
@@ -282,7 +272,7 @@ subroutine internal_state_odes(t, z, dzdt, args)
     real(real64), intent(in) :: t
     real(real64), intent(in), dimension(:) :: z
     real(real64), intent(out), dimension(:) :: dzdt
-    class(*), intent(inout), optional :: args
+    class(*), intent(in), optional :: args
 
     ! Local Variables
     real(real64) :: x, v, n

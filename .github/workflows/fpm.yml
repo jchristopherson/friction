@@ -32,7 +32,7 @@ jobs:
             shared: true
           - os: ubuntu-latest
             compiler: intel
-            version: '2023.2'
+            version: '2026.0'
             shared: true
           - os: windows-latest
             compiler: gcc
@@ -93,7 +93,7 @@ jobs:
           mkdir -p "$ALIAS_DIR"
           cp "$OPENBLAS_LIB" "$ALIAS_DIR/libblas.a"
           cp "$OPENBLAS_LIB" "$ALIAS_DIR/liblapack.a"
-          echo "LIBRARY_PATH=$ALIAS_DIR:$LIB_DIR${LIBRARY_PATH:+:$LIBRARY_PATH}" >> "$GITHUB_ENV"
+          echo "LIBRARY_PATH=$(cygpath -m "$ALIAS_DIR");$(cygpath -m "$LIB_DIR")${LIBRARY_PATH:+;$LIBRARY_PATH}" >> "$GITHUB_ENV"
 
       - name: Show compiler version
         shell: bash
@@ -123,20 +123,17 @@ jobs:
           FPM_FC: ${{ steps.setup-fortran.outputs.fc }}
           FPM_CC: ${{ steps.setup-fortran.outputs.cc }}
           SHARED: ${{ matrix.shared }}
+          OPENMP_FLAG: ${{ matrix.compiler == 'intel' && '-qopenmp' || '-fopenmp' }}
         run: |
-          FLAGS=""
+          FLAGS="$OPENMP_FLAG"
           if [[ "$SHARED" == "true" ]]; then
             if [[ "$RUNNER_OS" == "Windows" ]]; then
-              FLAGS="--flag=-Wl,--export-all-symbols"
+              FLAGS="$FLAGS -Wl,--export-all-symbols"
             else
-              FLAGS="--flag=-fPIC"
+              FLAGS="$FLAGS -fPIC"
             fi
           fi
-          if [[ -n "$FLAGS" ]]; then
-            fpm build $FLAGS
-          else
-            fpm build
-          fi
+          fpm build --flag="$FLAGS" --link-flag="$FLAGS"
 
       - name: Run tests
         shell: bash
@@ -146,24 +143,17 @@ jobs:
           FPM_FC: ${{ steps.setup-fortran.outputs.fc }}
           FPM_CC: ${{ steps.setup-fortran.outputs.cc }}
           SHARED: ${{ matrix.shared }}
+          OPENMP_FLAG: ${{ matrix.compiler == 'intel' && '-qopenmp' || '-fopenmp' }}
         run: |
           if [[ "$RUNNER_OS" == "Windows" ]]; then
             export PATH="$PATH:/c/msys64/mingw64/bin"
           fi
-          FLAGS=""
-          if [[ "$RUNNER_OS" == "Windows" ]]; then
-            ALIAS_DIR="$(cygpath -u "$RUNNER_TEMP")/blas-lapack-alias"
-            FLAGS="--flag=-L$ALIAS_DIR --flag=-L/c/msys64/mingw64/lib"
-          fi
+          FLAGS="$OPENMP_FLAG"
           if [[ "$SHARED" == "true" ]]; then
             if [[ "$RUNNER_OS" == "Windows" ]]; then
-              FLAGS="$FLAGS --flag=-Wl,--export-all-symbols"
+              FLAGS="$FLAGS -Wl,--export-all-symbols"
             else
-              FLAGS="--flag=-fPIC"
+              FLAGS="$FLAGS -fPIC"
             fi
           fi
-          if [[ -n "$FLAGS" ]]; then
-            fpm test $FLAGS
-          else
-            fpm test
-          fi
+          fpm test --flag="$FLAGS" --link-flag="$FLAGS"
